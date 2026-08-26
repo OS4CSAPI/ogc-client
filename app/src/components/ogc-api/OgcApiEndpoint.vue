@@ -2,6 +2,8 @@
   <div class="pico">
     <div style="display: flex; flex-direction: row; gap: 16px">
       <input
+        type="text"
+        style="flex-grow: 1"
         autofocus
         placeholder="Enter an OGC API endpoint URL here"
         v-model="url"
@@ -9,6 +11,7 @@
       />
       <button type="button" @click="createEndpoint()">Analyze</button>
     </div>
+    <br />
     <Async v-if="endpointSummary" :promise="endpointSummary">
       <template v-slot:then="{ result }">
         <InfoList :info="result.info"></InfoList>

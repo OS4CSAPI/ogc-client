@@ -2,6 +2,8 @@
   <div class="pico">
     <div style="display: flex; flex-direction: row; gap: 16px">
       <input
+        type="text"
+        style="flex-grow: 1"
         autofocus
         placeholder="Enter a TMS endpoint URL here"
         v-model="url"
@@ -9,6 +11,7 @@
       />
       <button type="button" @click="createEndpoint()">Analyze</button>
     </div>
+    <br />
     <Async v-if="loadPromise" :promise="loadPromise">
       <template v-slot:then="{ result }">
         <InfoList :info="result.info" />
