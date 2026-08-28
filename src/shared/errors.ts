@@ -8,7 +8,18 @@ import {
   stripNamespace,
 } from '../shared/xml-utils.js';
 
+/**
+ * This error will be thrown whenever there's an issue to connect to an endpoint of any kind.
+ *
+ * The properties of the error will give more information of the nature of the issue encountered.
+ */
 export class EndpointError extends Error {
+  /**
+   * @param message Error message
+   * @param [httpStatus] HTTP status encountered, if an HTTP error response was received; will be undefined otherwise, for instance if the host is unreachable or a network error happens.
+   * @param [isCrossOriginRelated] Will be true if it turns out a service is not reachable because of [CORS-related issues](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/CORS). In that case, no HTTP code is available.
+   * @private (hidden from API docs)
+   */
   constructor(
     message: string,
     public readonly httpStatus?: number,
@@ -22,17 +33,16 @@ export class EndpointError extends Error {
 /**
  * Representation of an Exception reported by an OWS service
  *
- * This is usually contained in a ServiceExceptionReport or ExceptionReport
- * document and represented as a ServiceException or Exception element
+ * This is typically thrown when an OWS service answers with a `ServiceExceptionReport` XML document.
  */
 export class ServiceExceptionError extends Error {
   /**
-   * Constructor
    * @param message Error message
    * @param requestUrl URL which resulted in the ServiceException
    * @param code Optional ServiceException code
    * @param locator Optional ServiceException locator
    * @param response Optional response content received
+   * @private (hidden from API docs)
    */
   public constructor(
     message: string,

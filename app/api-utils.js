@@ -51,6 +51,17 @@ export function formatTypeToString(typeObj) {
     const returnType = typeObj.declaration?.signatures?.[0]?.type;
     return `() => ${formatTypeToString(returnType)}`;
   }
+  if (
+    typeObj.type === 'reflection' &&
+    typeObj.declaration?.kind & 65536 // ReflectionKind.TypeLiteral
+  ) {
+    const properties = typeObj.declaration?.children
+      ?.map((propEl) => {
+        return `${propEl.name}: ${formatTypeToString(propEl.type)}`;
+      })
+      .join(', ');
+    return `{ ${properties} }`;
+  }
   if (typeObj.type === 'reference') {
     switch (typeObj.name) {
       case 'Record':
@@ -62,9 +73,12 @@ export function formatTypeToString(typeObj) {
       case 'Error':
         return `[Error](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error)`;
       case 'Promise':
-        return `[Promise](https://developer.mozilla.org/en-US/docs/Web/API/Promise)&lt;${formatTypeToString(
+        // we include a zero-width space after the opening < have more readable line breaks (https://en.wikipedia.org/wiki/Zero-width_space)
+        return `[Promise](https://developer.mozilla.org/en-US/docs/Web/API/Promise)&lt;<wbr>${formatTypeToString(
           typeObj.typeArguments[0],
-        )}&gt;`;
+        )}<wbr>&gt;`;
+      case 'Omit':
+        return formatTypeToString(typeObj.typeArguments[0]);
     }
     const ref = API.children.find((el) => el.id === typeObj.target);
     if (ref) {

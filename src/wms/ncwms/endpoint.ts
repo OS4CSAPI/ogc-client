@@ -13,11 +13,16 @@ import { setQueryParams } from '../../shared/url-utils.js';
  * Represents an NcWMS endpoint, a WMS extension for scientific data with
  * additional rendering parameters (color palette, scale range, log scale).
  *
+ * Documentation for the NcWMS protocol can be found [here](https://github.com/Reading-eScience-Centre/ncwms/blob/master/docs/04-usage.md).
+ *
  * NcWMS is used by servers such as Thredds, ERDDAP, BODC and CMEMS.
  */
 export class NcwmsEndpoint extends WmsEndpoint {
   private _baseUrl: string;
 
+  /**
+   * @param url NcWMS endpoint url. This should also work as a valid WMS endpoint url, since NcWMS is a subset of that protocol.
+   */
   constructor(url: string) {
     super(url);
     this._baseUrl = setQueryParams(url, {

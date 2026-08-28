@@ -4,6 +4,7 @@ import {
   LayerStyle,
   type MetadataURL,
   TimeInterval,
+  MimeType,
 } from '../shared/models.js';
 
 export type WmsLayerAttribution = {
@@ -168,3 +169,32 @@ export type WmsLayerDescription = {
 };
 
 export type WmsVersion = '1.1.0' | '1.1.1' | '1.3.0';
+
+export type WmsGetMapUrlOptions = {
+  /** Width of the output image in pixels. */
+  widthPx: number;
+  /** Height of the output image in pixels. */
+  heightPx: number;
+  /** Coordinate reference system to use for the image. */
+  crs: CrsCode;
+  /** Bounding box expressed in the requested CRS. */
+  extent: BoundingBox;
+  /** MIME type for the output format. */
+  outputFormat: MimeType;
+  /** List of styles to use, one for each layer requested; leave out or use empty string for default style. */
+  styles?: string[];
+  /** Time value for the request; refer to the `timeDimension` property of the layer for available values. */
+  time?: Date | Date[] | Omit<TimeInterval, 'period'> | 'current';
+  /** Elevation value for the request; refer to the `elevationDimension` property of the layer for available values. */
+  elevation?:
+    | WmsLayerDimensionValue
+    | WmsLayerDimensionValue[]
+    | Omit<WmsLayerDimensionInterval, 'resolution'>;
+  /** Other dimension values; they are added under the form DIM_* in the request. */
+  dimensions?: Record<
+    string,
+    | WmsLayerDimensionValue
+    | WmsLayerDimensionValue[]
+    | Omit<WmsLayerDimensionInterval, 'resolution'>
+  >;
+};

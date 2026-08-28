@@ -25,6 +25,7 @@ export type {
   WmsLayerTimeDimension,
   WmsLayerDimensionInterval,
   WmsLayerDimensionValue,
+  WmsGetMapUrlOptions,
 } from './wms/model.js';
 export { default as WpsEndpoint } from './wps/endpoint.js';
 export type {
@@ -53,6 +54,8 @@ export type {
   WmtsEndpointInfo,
   WmtsLayer,
   WmtsMatrixSet,
+  LayerDimension,
+  WmtsRequestEncoding,
 } from './wmts/model.js';
 export type {
   Address,
