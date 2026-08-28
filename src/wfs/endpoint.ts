@@ -2,7 +2,8 @@ import {
   parseWfsCapabilities,
   queryWfsFeatureTypeDetails,
 } from '../worker/index.js';
-import { queryXmlDocument, setQueryParams } from '../shared/http-utils.js';
+import { queryXmlDocument } from '../shared/http-utils.js';
+import { setQueryParams } from '../shared/url-utils.js';
 import { parseFeatureTypeInfo } from './featuretypeinfo.js';
 import { useCache } from '../shared/cache.js';
 import {
@@ -11,6 +12,7 @@ import {
 } from './url.js';
 import { stripNamespace } from '../shared/xml-utils.js';
 import {
+  FieldSort,
   GenericEndpointInfo,
   type HttpMethod,
   type OperationName,
@@ -18,6 +20,7 @@ import {
 } from '../shared/models.js';
 import {
   WfsFeatureTypeBrief,
+  WfsFeatureTypeFull,
   WfsFeatureTypeInternal,
   WfsFeatureTypeSummary,
   WfsGetFeatureOptions,
@@ -26,11 +29,16 @@ import {
 import { isMimeTypeJson } from '../shared/mime-type.js';
 
 /**
- * Represents a WFS endpoint advertising several feature types
+ * Represents a WFS endpoint advertising several feature types.
+ *
+ * Always use the class like so to make sure that all its internals are correctly initialized:
+ * ```js
+ * const endpoint = await new WfsEndpoint(url).isReady();
+ * ```
  */
 export default class WfsEndpoint {
   private _capabilitiesUrl: string;
-  private _capabilitiesPromise: Promise<void>;
+  private _capabilitiesPromise: Promise<WfsEndpoint>;
   private _info: GenericEndpointInfo | null;
   private _featureTypes: WfsFeatureTypeInternal[] | null;
   private _url: Record<OperationName, OperationUrl>;
@@ -46,29 +54,30 @@ export default class WfsEndpoint {
       SERVICE: 'WFS',
       REQUEST: 'GetCapabilities',
     });
-
-    /**
-     * This fetches the capabilities doc and parses its contents
-     */
-    this._capabilitiesPromise = useCache(
-      () => parseWfsCapabilities(this._capabilitiesUrl),
-      'WFS',
-      'CAPABILITIES',
-      this._capabilitiesUrl
-    ).then(({ info, featureTypes, url, version }) => {
-      this._info = info;
-      this._featureTypes = featureTypes;
-      this._url = url;
-      this._version = version;
-    });
   }
 
   /**
+   * **This should be called before any other method to initialize the endpoint!**
+   *
    * Resolves when the endpoint is ready to use. Returns the same endpoint object for convenience.
    * @throws {EndpointError}
    */
   isReady() {
-    return this._capabilitiesPromise.then(() => this);
+    if (!this._capabilitiesPromise) {
+      this._capabilitiesPromise = useCache(
+        () => parseWfsCapabilities(this._capabilitiesUrl),
+        'WFS',
+        'CAPABILITIES',
+        this._capabilitiesUrl,
+      ).then(({ info, featureTypes, url, version }) => {
+        this._info = info;
+        this._featureTypes = featureTypes;
+        this._url = url;
+        this._version = version;
+        return this;
+      });
+    }
+    return this._capabilitiesPromise;
   }
 
   /**
@@ -81,7 +90,7 @@ export default class WfsEndpoint {
   /**
    * Returns an array of feature types
    */
-  getFeatureTypes() {
+  getFeatureTypes(): WfsFeatureTypeBrief[] {
     return this._featureTypes.map(
       (featureType) =>
         ({
@@ -91,7 +100,7 @@ export default class WfsEndpoint {
           ...('latLonBoundingBox' in featureType && {
             boundingBox: featureType.latLonBoundingBox,
           }),
-        } as WfsFeatureTypeBrief)
+        }) as WfsFeatureTypeBrief,
     );
   }
 
@@ -102,7 +111,7 @@ export default class WfsEndpoint {
       this._featureTypes.find((featureType) =>
         isQualified
           ? featureType.name === name
-          : stripNamespace(featureType.name) === name
+          : stripNamespace(featureType.name) === name,
       ) || null
     );
   }
@@ -113,7 +122,7 @@ export default class WfsEndpoint {
    * @param name Feature type name property (unique in the WFS service)
    * @return return null if layer was not found or endpoint is not ready
    */
-  getFeatureTypeSummary(name: string) {
+  getFeatureTypeSummary(name: string): WfsFeatureTypeSummary | null {
     const featureType = this._getFeatureTypeByName(name);
     if (!featureType) return null;
 
@@ -138,7 +147,7 @@ export default class WfsEndpoint {
    * @param name Feature type name property (unique in the WFS service)
    * @return {Promise<WfsFeatureTypeFull>|null} return null if layer was not found or endpoint is not ready
    */
-  getFeatureTypeFull(name: string) {
+  getFeatureTypeFull(name: string): Promise<WfsFeatureTypeFull> {
     const featureType = this._getFeatureTypeByName(name);
     if (!featureType) return null;
 
@@ -147,7 +156,7 @@ export default class WfsEndpoint {
         const describeUrl = generateDescribeFeatureTypeUrl(
           this.getOperationUrl('DescribeFeatureType'),
           this._version,
-          name
+          name,
         );
         const getFeatureUrl = generateGetFeatureUrl(
           this.getOperationUrl('GetFeature'),
@@ -156,7 +165,7 @@ export default class WfsEndpoint {
           undefined,
           undefined,
           undefined,
-          true
+          true,
         );
 
         return Promise.all([
@@ -167,14 +176,14 @@ export default class WfsEndpoint {
             featureType,
             describeResponse,
             getFeatureResponse,
-            this._version
-          )
+            this._version,
+          ),
         );
       },
       'WFS',
       'FEATURETYPEINFO',
       this._capabilitiesUrl,
-      name
+      name,
     );
   }
 
@@ -202,12 +211,12 @@ export default class WfsEndpoint {
         queryWfsFeatureTypeDetails(
           this._capabilitiesUrl,
           this._version,
-          featureTypeFull
+          featureTypeFull,
         ).then((result) => result.props),
       'WFS',
       'FEATURETYPEPROPDETAILS',
       this._capabilitiesUrl,
-      name
+      name,
     );
   }
 
@@ -224,7 +233,7 @@ export default class WfsEndpoint {
     const featureTypeInfo = this._getFeatureTypeByName(featureType);
     if (!featureTypeInfo) {
       throw new Error(
-        `The following feature type was not found in the service: ${featureType}`
+        `The following feature type was not found in the service: ${featureType}`,
       );
     }
     const candidates = featureTypeInfo.outputFormats.filter(isMimeTypeJson);
@@ -268,11 +277,12 @@ export default class WfsEndpoint {
       startIndex,
       attributes,
       hitsOnly,
+      sortBy,
     } = options || {};
     const internalFeatureType = this._getFeatureTypeByName(featureType);
     if (!internalFeatureType) {
       throw new Error(
-        `The following feature type was not found in the service: ${featureType}`
+        `The following feature type was not found in the service: ${featureType}`,
       );
     }
     let format = outputFormat;
@@ -280,7 +290,7 @@ export default class WfsEndpoint {
       format = this._getJsonCompatibleOutputFormat(featureType) || undefined;
       if (!format) {
         throw new Error(
-          `The endpoint does not appear to support GeoJSON for the feature type ${internalFeatureType.name}`
+          `The endpoint does not appear to support GeoJSON for the feature type ${internalFeatureType.name}`,
         );
       }
     } else if (
@@ -289,7 +299,7 @@ export default class WfsEndpoint {
     ) {
       // do not prevent using this output format, because it still might work! but give a warning at least
       console.warn(
-        `[ogc-client] The following output format type was not found in the feature type ${internalFeatureType.name}: ${outputFormat}`
+        `[ogc-client] The following output format type was not found in the feature type ${internalFeatureType.name}: ${outputFormat}`,
       );
     }
     return generateGetFeatureUrl(
@@ -303,12 +313,15 @@ export default class WfsEndpoint {
       outputCrs,
       extent,
       extentCrs,
-      startIndex
+      startIndex,
+      sortBy && typeof sortBy[0] === 'string'
+        ? [sortBy as FieldSort]
+        : (sortBy as FieldSort[]),
     );
   }
 
   /**
-   * Returns the Capabilities URL of the WMS
+   * Returns the Capabilities URL of the WFS
    *
    * This is the URL reported by the service if available, otherwise the URL
    * passed to the constructor
@@ -319,7 +332,7 @@ export default class WfsEndpoint {
       return this._capabilitiesUrl;
     }
     return setQueryParams(baseUrl, {
-      SERVICE: 'WMS',
+      SERVICE: 'WFS',
       REQUEST: 'GetCapabilities',
     });
   }

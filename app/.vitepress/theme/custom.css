@@ -1,0 +1,85 @@
+body {
+  --brand-dark: #ea569a;
+  --brand-dark-halo: rgba(234, 86, 154, 0.15);
+  --brand-dark-hover: #c54681;
+  --brand-light: #ffc52d;
+}
+
+div.lib-logo {
+  font-size: 5em;
+  border-radius: 10em;
+  background: linear-gradient(#ffc52d, #ff26ba);
+  line-height: 0.5em;
+  margin: auto;
+  width: fit-content;
+  padding: 0.35em 0.4em 0.4em;
+  font-family: 'Comfortaa';
+  white-space: nowrap;
+  color: white;
+  font-weight: bolder;
+  text-shadow:
+    0 0 0.3em rgb(124 50 67 / 47%),
+    0 0 0.1em rgb(124 50 67 / 35%);
+}
+
+span.lib-name {
+  color: var(--brand-dark);
+  font-weight: bolder;
+}
+
+a.VPSocialLink.no-icon {
+  width: auto;
+  padding: 0 8px;
+}
+a.VPSocialLink.no-icon svg {
+  width: auto;
+}
+
+.vp-doc h5 {
+  margin: 18px 0 0;
+}
+
+.pico button {
+  appearance: none;
+  background-color: var(--brand-dark);
+  border: 1px solid rgba(27, 31, 35, 0.15);
+  border-radius: 6px;
+  box-shadow: var(--brand-dark-halo) 0 1px 0;
+  color: white;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+  padding: 6px 16px;
+  position: relative;
+  text-align: center;
+  text-decoration: none;
+  user-select: none;
+}
+.pico button:hover,
+.pico button:active {
+  background-color: var(--brand-dark-hover);
+  box-shadow: var(--brand-dark-halo) 0 1px 0 inset;
+}
+.pico button:focus {
+  box-shadow: var(--brand-dark-halo) 0 0 0 3px;
+  outline: none;
+}
+
+.pico input,
+.pico select {
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 4px;
+  font-size: 14px;
+  line-height: 20px;
+  padding: 6px 12px;
+  position: relative;
+}
+.pico input:hover,
+.pico input:active,
+.pico select:hover,
+.pico select:active,
+.pico input:focus,
+.pico select:focus {
+  border-color: var(--vp-c-brand-1);
+}

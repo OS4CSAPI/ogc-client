@@ -27,7 +27,7 @@ export function getCache() {
   cachePromise = caches.open('ogc-client').catch((e) => {
     console.info(
       '[ogc-client] Cache could not be accessed for the following reason:',
-      e
+      e,
     );
     return null;
   });
@@ -50,12 +50,12 @@ export async function storeCacheEntry(object: unknown, ...keys: string[]) {
         headers: {
           'x-expiry': (Date.now() + getCacheExpiryDuration()).toString(10),
         },
-      })
+      }),
     );
   } catch (e) {
     console.info(
       '[ogc-client] Caching failed once for the following reason and will not be retried:',
-      e
+      e,
     );
     cachePromise = Promise.resolve(null); // this will disable caching
   }
@@ -107,7 +107,8 @@ export async function useCache<T>(
   }
   const taskRun = factory();
   if (taskRun instanceof Promise) {
-    taskRun.then(() => tasksMap.delete(taskKey));
+    const clear = () => tasksMap.delete(taskKey);
+    taskRun.then(clear, clear);
     tasksMap.set(taskKey, taskRun);
   }
   const result = await taskRun;

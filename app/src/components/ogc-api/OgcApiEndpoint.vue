@@ -1,20 +1,24 @@
 <template>
-  <div>
-    <div class="d-flex flex-row my-4">
+  <div class="pico">
+    <div style="display: flex; flex-direction: row; gap: 16px">
       <input
-        class="form-control me-3"
+        type="text"
+        style="flex-grow: 1"
+        autofocus
         placeholder="Enter an OGC API endpoint URL here"
         v-model="url"
+        @keydown.enter="createEndpoint()"
       />
-      <div class="spacer-s"></div>
-      <button type="button" class="btn btn-primary" @click="createEndpoint()">
-        Analyze
-      </button>
+      <button type="button" @click="createEndpoint()">Analyze</button>
     </div>
+    <br />
     <Async v-if="endpointSummary" :promise="endpointSummary">
       <template v-slot:then="{ result }">
         <InfoList :info="result.info"></InfoList>
-        <ItemsTree :items="result.collections" style="min-height: 200px">
+        <ItemsTree
+          :items="result.collections"
+          style="min-height: 200px; max-height: 500px; overflow-y: auto"
+        >
           <template v-slot="{ item }">
             <span>{{ item }}</span>
           </template>
@@ -74,7 +78,7 @@ export default {
             hasEnvironmentalDataRetrieval,
           },
           collections,
-        })
+        }),
       );
     },
   },

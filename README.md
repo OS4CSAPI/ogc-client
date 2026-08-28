@@ -12,10 +12,12 @@ The following standards are partially implemented:
 - WMS - _Web Map Service_
 - WFS - _Web Feature Service_
 - WMTS - _Web Map Tile Service_
+- WPS - _Web Processing Service_
 - OGC API (Records and Features)
 - OGC API — Connected Systems (CSAPI)
 - TMS - _Tile Map Service_
 - STAC API - _SpatioTemporal Asset Catalog_
+- NcWMS - _Extended WMS for scientific data (Thredds, ERDDAP, CMEMS…)_
 
 ## Why use it?
 
@@ -37,7 +39,12 @@ $ npm install --save @camptocamp/ogc-client
 To use, import API symbols like so:
 
 ```js
-import { WmsEndpoint, WfsEndpoint, StacEndpoint } from '@camptocamp/ogc-client';
+import {
+  WmsEndpoint,
+  WfsEndpoint,
+  StacEndpoint,
+  NcwmsEndpoint,
+} from '@camptocamp/ogc-client';
 ```
 
 Note: if you want to disable web worker usage, for example to solve issues with the `Referer` header on outgoing
@@ -76,11 +83,40 @@ You will need to supply it with valid OGC service urls.
 
 ## Quick Examples
 
+### NcWMS
+
+```js
+import { NcwmsEndpoint } from '@camptocamp/ogc-client';
+
+const endpoint = new NcwmsEndpoint(
+  'https://my.thredds.server/thredds/wms/dataset',
+);
+
+// Detect NcWMS and get available palettes and scale range
+const details = await endpoint.getLayerDetails('temperature');
+if (details) {
+  console.log(details.palettes); // ['rainbow', 'occam', ...]
+  console.log(details.scaleRange); // [-2, 35]
+  console.log(details.units); // '°C'
+}
+
+// Auto-detect min/max from the current map extent
+const { min, max } = await endpoint.getMinMax('temperature', [-10, 30, 10, 50]);
+
+// Build a legend image URL (no network request)
+const legendUrl = endpoint.getLegendUrl('temperature', {
+  style: 'boxfill/rainbow',
+  colorScaleRange: [min, max],
+  logScale: false,
+});
+```
+
 ### STAC API
 
 See the [`examples/`](./examples/) directory for more complete examples, including:
 
 - `examples/stac-query.js` - Full STAC API query example with spatial and temporal filters
+- `examples/wps-sextant.mjs` - WPS 1.0.0 example: read service info, list/describe processes and run one asynchronously
 
 Run examples with:
 

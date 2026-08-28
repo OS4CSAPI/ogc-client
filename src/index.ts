@@ -5,6 +5,7 @@ export type {
   WfsFeatureTypeSummary,
   WfsFeatureTypeBrief,
   FeatureGeometryType,
+  FeaturePropertyValue,
   FeaturePropertyType,
   WfsFeatureTypeFull,
   WfsFeatureTypePropDetails,
@@ -13,13 +14,40 @@ export type {
   WfsGetFeatureOptions,
 } from './wfs/model.js';
 export { default as WmsEndpoint } from './wms/endpoint.js';
+export {
+  getDimensionDefaultValue,
+  expandDimensionValues,
+  parseIso8601Duration,
+  parseIso8601DurationMs,
+} from './wms/dimension.js';
 export type {
   WmsLayerFull,
+  WmsLayerDimension,
   WmsVersion,
   WmsLayerSummary,
   WmsLayerAttribution,
   WmsLayerDescription,
 } from './wms/model.js';
+export { default as WpsEndpoint } from './wps/endpoint.js';
+export type {
+  WpsVersion,
+  WpsProcessSummary,
+  WpsProcessFull,
+  WpsProcessInput,
+  WpsProcessOutput,
+  WpsLiteralData,
+  WpsComplexData,
+  WpsBoundingBoxData,
+  WpsFormat,
+  WpsInputType,
+  WpsInputValue,
+  WpsOutputSelection,
+  WpsExecuteOptions,
+  WpsExecuteResponse,
+  WpsExecuteOutputResult,
+  WpsExecuteStatus,
+  WpsEndpointInfo,
+} from './wps/model.js';
 export { default as WmtsEndpoint } from './wmts/endpoint.js';
 export type {
   WmtsLayerDimensionValue,
@@ -52,10 +80,18 @@ export type {
   StacEndpointInfo,
   StacItemsDocument,
 } from './stac/index.js';
+export { NcwmsEndpoint } from './wms/ncwms/endpoint.js';
+export type { NcwmsLayerDetails, NcwmsMinMax } from './wms/ncwms/model.js';
 
-export { useCache, clearCache } from './shared/cache.js';
+export {
+  useCache,
+  clearCache,
+  setCacheExpiryDuration,
+  getCacheExpiryDuration,
+} from './shared/cache.js';
 export {
   sharedFetch,
+  postXmlDocument,
   setFetchOptions,
   resetFetchOptions,
 } from './shared/http-utils.js';

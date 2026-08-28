@@ -1,6 +1,6 @@
 import { WmtsRequestEncoding } from './model.js';
 import { MimeType } from '../shared/models.js';
-import { setQueryParams } from '../shared/http-utils.js';
+import { setQueryParams } from '../shared/url-utils.js';
 
 export function generateGetTileUrl(
   baseUrl: string,
@@ -11,7 +11,7 @@ export function generateGetTileUrl(
   tileMatrix: string,
   tileRow: number,
   tileCol: number,
-  outputFormat: MimeType
+  outputFormat: MimeType,
 ): string {
   const context = {
     layer: layerName,

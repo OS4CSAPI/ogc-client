@@ -20,7 +20,7 @@ export function parseFeatureTypeInfo(
   featureType: WfsFeatureTypeInternal,
   describeFeatureTypeDoc: XmlDocument,
   getFeatureHitsDoc: XmlDocument,
-  serviceVersion: WfsVersion
+  serviceVersion: WfsVersion,
 ): WfsFeatureTypeFull {
   const {
     name,
@@ -38,13 +38,13 @@ export function parseFeatureTypeInfo(
     ? 'numberMatched'
     : 'numberOfFeatures';
   const objectCount = parseInt(
-    getElementAttribute(getRootElement(getFeatureHitsDoc), hitsAttr)
+    getElementAttribute(getRootElement(getFeatureHitsDoc), hitsAttr),
   );
 
   const complexTypeEl = findChildrenElement(
     getRootElement(describeFeatureTypeDoc),
     'complexType',
-    true
+    true,
   )[0];
   const typeElementsEls = findChildrenElement(complexTypeEl, 'element', true);
   const properties = typeElementsEls
@@ -53,14 +53,14 @@ export function parseFeatureTypeInfo(
       (prev, curr) => ({
         ...prev,
         [getElementAttribute(curr, 'name')]: getTypeFromXsdType(
-          getElementAttribute(curr, 'type')
+          getElementAttribute(curr, 'type'),
         ),
       }),
-      {}
+      {},
     );
 
   const geomEl = typeElementsEls.filter((el) =>
-    getElementAttribute(el, 'type').startsWith('gml:')
+    getElementAttribute(el, 'type').startsWith('gml:'),
   )[0];
   const geometryName = geomEl ? getElementAttribute(geomEl, 'name') : undefined;
   const geometryType = geomEl
@@ -87,11 +87,18 @@ export function parseFeatureTypeInfo(
 function getTypeFromXsdType(xsdType: string): FeaturePropertyType {
   const xsdTypeNoNamespace =
     xsdType.indexOf(':') > -1
-      ? xsdType.substr(xsdType.indexOf(':') + 1)
+      ? xsdType.substring(xsdType.indexOf(':') + 1)
       : xsdType;
 
   switch (xsdTypeNoNamespace) {
     case 'string':
+    case 'duration':
+    case 'time':
+    case 'gMonth':
+    case 'gMonthDay':
+    case 'gDay':
+    case 'gYear':
+    case 'gYearMonth':
       return 'string';
     case 'boolean':
       return 'boolean';
@@ -113,6 +120,9 @@ function getTypeFromXsdType(xsdType: string): FeaturePropertyType {
     case 'unsignedShort':
     case 'unsignedByte':
       return 'integer';
+    case 'dateTime':
+    case 'date':
+      return 'date';
     default:
       return 'string';
   }

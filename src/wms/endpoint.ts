@@ -1,6 +1,7 @@
 import { parseWmsCapabilities } from '../worker/index.js';
 import { useCache } from '../shared/cache.js';
-import { queryXmlDocument, setQueryParams } from '../shared/http-utils.js';
+import { queryXmlDocument } from '../shared/http-utils.js';
+import { setQueryParams } from '../shared/url-utils.js';
 import {
   BoundingBox,
   CrsCode,
@@ -21,10 +22,15 @@ import { parseDescribeLayerResponse } from './describelayer.js';
 
 /**
  * Represents a WMS endpoint advertising several layers arranged in a tree structure.
+ *
+ * Always use the class like so to make sure that all its internals are correctly initialized:
+ * ```js
+ * const endpoint = await new WmsEndpoint(url).isReady();
+ * ```
  */
 export default class WmsEndpoint {
   private _capabilitiesUrl: string;
-  private _capabilitiesPromise: Promise<void>;
+  private _capabilitiesPromise: Promise<WmsEndpoint>;
   private _info: GenericEndpointInfo | null;
   private _layers: WmsLayerFull[] | null;
   private _url: Record<OperationName, OperationUrl>;
@@ -39,29 +45,30 @@ export default class WmsEndpoint {
       SERVICE: 'WMS',
       REQUEST: 'GetCapabilities',
     });
-
-    /**
-     * This fetches the capabilities doc and parses its contents
-     */
-    this._capabilitiesPromise = useCache(
-      () => parseWmsCapabilities(this._capabilitiesUrl),
-      'WMS',
-      'CAPABILITIES',
-      this._capabilitiesUrl
-    ).then(({ info, layers, url, version }) => {
-      this._info = info;
-      this._layers = layers;
-      this._url = url;
-      this._version = version;
-    });
   }
 
   /**
+   * **This should be called before any other method to initialize the endpoint!**
+   *
    * Resolves when the endpoint is ready to use. Returns the same endpoint object for convenience.
    * @throws {EndpointError}
    */
   isReady() {
-    return this._capabilitiesPromise.then(() => this);
+    if (!this._capabilitiesPromise) {
+      this._capabilitiesPromise = useCache(
+        () => parseWmsCapabilities(this._capabilitiesUrl),
+        'WMS',
+        'CAPABILITIES',
+        this._capabilitiesUrl,
+      ).then(({ info, layers, url, version }) => {
+        this._info = info;
+        this._layers = layers;
+        this._url = url;
+        this._version = version;
+        return this;
+      });
+    }
+    return this._capabilitiesPromise;
   }
 
   /**
@@ -156,6 +163,7 @@ export default class WmsEndpoint {
    * @param {BoundingBox} options.extent Expressed in the requested CRS
    * @param {MimeType} options.outputFormat
    * @param {string} [options.styles] List of styles to use, one for each layer requested; leave out or use empty string for default style
+   * @param {Object} [options.dimensions] Dimension values keyed by uppercase dimension name (e.g. { TIME: '...' })
    * @returns Returns null if endpoint is not ready
    */
   getMapUrl(
@@ -167,12 +175,14 @@ export default class WmsEndpoint {
       extent: BoundingBox;
       outputFormat: MimeType;
       styles?: string[];
-    }
+      dimensions?: Record<string, string>;
+    },
   ) {
     if (!this._layers) {
       return null;
     }
-    const { widthPx, heightPx, crs, extent, outputFormat, styles } = options;
+    const { widthPx, heightPx, crs, extent, outputFormat, styles, dimensions } =
+      options;
     // TODO: check supported CRS
     // TODO: check supported output formats
     // TODO: check supported styles
@@ -185,7 +195,8 @@ export default class WmsEndpoint {
       crs,
       extent,
       outputFormat,
-      styles !== undefined ? styles.join(',') : ''
+      styles !== undefined ? styles.join(',') : '',
+      dimensions,
     );
   }
 
@@ -225,16 +236,16 @@ export default class WmsEndpoint {
         const url = generateDescribeLayerUrl(
           describeLayerBaseUrl,
           this._version,
-          layerName
+          layerName,
         );
         return queryXmlDocument(url).then((doc) =>
-          parseDescribeLayerResponse(doc, layerName)
+          parseDescribeLayerResponse(doc, layerName),
         );
       },
       'WMS',
       'DESCRIBELAYER',
       this._capabilitiesUrl,
-      layerName
+      layerName,
     );
   }
 

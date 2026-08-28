@@ -22,20 +22,20 @@ import {
 export function parseFeatureProps(
   getFeaturesDoc: XmlDocument,
   featureTypeFull: WfsFeatureTypeFull,
-  serviceVersion: WfsVersion
+  serviceVersion: WfsVersion,
 ): WfsFeatureWithProps[] {
   const collection = getRootElement(getFeaturesDoc);
   let members: XmlElement[];
   if (serviceVersion.startsWith('2.0')) {
     members = findChildrenElement(collection, 'member').map(
-      (parent) => getChildrenElement(parent)[0]
+      (parent) => getChildrenElement(parent)[0],
     );
   } else {
     const membersRoot = findChildElement(collection, 'featureMembers');
     members = membersRoot
       ? getChildrenElement(membersRoot)
       : findChildrenElement(collection, 'featureMember').map(
-          (parent) => getChildrenElement(parent)[0]
+          (parent) => getChildrenElement(parent)[0],
         );
   }
   const idAttr = serviceVersion === '1.0.0' ? 'fid' : 'gml:id';
@@ -53,6 +53,8 @@ export function parseFeatureProps(
         return parseFloat(valueAsString);
       case 'boolean':
         return valueAsString === 'true';
+      case 'date':
+        return new Date(valueAsString);
       default:
         return valueAsString;
     }
@@ -77,28 +79,10 @@ export function parseFeatureProps(
 }
 
 /**
- * Returns an array of features with their id and properties
- */
-export function parseFeaturePropsGeojson(
-  getFeaturesGeojson: Record<string, unknown>
-): WfsFeatureWithProps[] {
-  if (
-    !('features' in getFeaturesGeojson) ||
-    !Array.isArray(getFeaturesGeojson.features)
-  ) {
-    throw new Error('Geojson object is apparently not a FeatureCollection');
-  }
-  return getFeaturesGeojson.features.map((feature) => ({
-    id: feature.id,
-    properties: { ...feature.properties },
-  }));
-}
-
-/**
  * Returns details regarding the features prop values
  */
 export function computeFeaturePropsDetails(
-  featuresWithProps: WfsFeatureWithProps[]
+  featuresWithProps: WfsFeatureWithProps[],
 ): WfsFeatureTypePropsDetails {
   return featuresWithProps.reduce((prev, curr) => {
     for (const propName in curr.properties) {
@@ -107,7 +91,7 @@ export function computeFeaturePropsDetails(
         prev[propName] = { uniqueValues: [] };
       }
       const uniqueValue = prev[propName].uniqueValues.find(
-        (v) => v.value === propValue
+        (v) => v.value === propValue,
       );
       if (uniqueValue) uniqueValue.count++;
       else prev[propName].uniqueValues.push({ value: propValue, count: 1 });

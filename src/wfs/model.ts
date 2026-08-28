@@ -1,6 +1,7 @@
 import {
   BoundingBox,
   CrsCode,
+  FieldSort,
   MetadataURL,
   MimeType,
 } from '../shared/models.js';
@@ -19,7 +20,9 @@ export type WfsFeatureTypeInternal = {
   metadata?: MetadataURL[];
 };
 
-export type FeaturePropertyType = string | number | boolean;
+export type FeaturePropertyValue = string | number | boolean | Date;
+export type FeaturePropertyType =
+  'string' | 'float' | 'integer' | 'boolean' | 'date';
 
 export type FeatureGeometryType =
   | 'linestring'
@@ -93,7 +96,7 @@ export type WfsFeatureWithProps = {
   /**
    * Feature properties
    */
-  properties: Record<string, FeaturePropertyType>;
+  properties: Record<string, FeaturePropertyValue>;
 };
 
 export type WfsFeatureTypeUniqueValue = {
@@ -149,4 +152,8 @@ export type WfsGetFeatureOptions = {
    * note: this might not work for WFS version < 2
    */
   hitsOnly?: boolean;
+  /**
+   * attributes to sort by on, by either ascending or descending order
+   */
+  sortBy?: FieldSort | FieldSort[];
 };

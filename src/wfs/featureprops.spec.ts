@@ -10,12 +10,9 @@ import getFeatureStates100 from '../../fixtures/wfs/getfeature-props-states-1-0-
 import getFeatureStates110 from '../../fixtures/wfs/getfeature-props-states-1-1-0.xml';
 // @ts-expect-error ts-migrate(7016)
 import getFeatureStates200 from '../../fixtures/wfs/getfeature-props-states-2-0-0.xml';
-// @ts-expect-error ts-migrate(7016)
-import getFeatureStates200Geojson from '../../fixtures/wfs/getfeature-props-states-2-0-0.json';
 import {
   computeFeaturePropsDetails,
   parseFeatureProps,
-  parseFeaturePropsGeojson,
 } from './featureprops.js';
 import { parseXmlString } from '../shared/xml-utils.js';
 import { WfsFeatureTypeFull } from './model.js';
@@ -110,8 +107,8 @@ describe('feature props utils', () => {
           parseFeatureProps(
             parseXmlString(getFeatureCities100),
             featureTypeFull,
-            '1.0.0'
-          )
+            '1.0.0',
+          ),
         ).toEqual(expected);
       });
       it('version 1.1.0', () => {
@@ -119,8 +116,8 @@ describe('feature props utils', () => {
           parseFeatureProps(
             parseXmlString(getFeatureCities110),
             featureTypeFull,
-            '1.1.0'
-          )
+            '1.1.0',
+          ),
         ).toEqual(expected);
       });
       it('version 2.0.0', () => {
@@ -128,8 +125,8 @@ describe('feature props utils', () => {
           parseFeatureProps(
             parseXmlString(getFeatureCities200),
             featureTypeFull,
-            '2.0.0'
-          )
+            '2.0.0',
+          ),
         ).toEqual(expected);
       });
     });
@@ -145,6 +142,7 @@ describe('feature props utils', () => {
           PERSONS: 'integer',
           STATE_ABBR: 'string',
           STATE_NAME: 'string',
+          MyDate: 'date',
         },
       };
       const expected = [
@@ -156,6 +154,7 @@ describe('feature props utils', () => {
             PERSONS: 563626,
             STATE_ABBR: 'WY',
             STATE_NAME: 'Wyoming',
+            MyDate: new Date('2020-03-05T00:00:00.000Z'),
           },
         },
         {
@@ -166,6 +165,7 @@ describe('feature props utils', () => {
             PERSONS: 12702379,
             STATE_ABBR: 'PA',
             STATE_NAME: 'Pennsylvania',
+            MyDate: new Date('2020-03-05T00:00:00.000Z'),
           },
         },
         {
@@ -176,6 +176,7 @@ describe('feature props utils', () => {
             PERSONS: 11536504,
             STATE_ABBR: 'OH',
             STATE_NAME: 'Ohio',
+            MyDate: new Date('2020-03-05T00:00:00.000Z'),
           },
         },
         {
@@ -186,6 +187,7 @@ describe('feature props utils', () => {
             PERSONS: 2059179,
             STATE_ABBR: 'NM',
             STATE_NAME: 'New Mexico',
+            MyDate: new Date('2020-03-05T00:00:00.000Z'),
           },
         },
         {
@@ -196,6 +198,7 @@ describe('feature props utils', () => {
             PERSONS: 5773552,
             STATE_ABBR: 'MD',
             STATE_NAME: 'Maryland',
+            MyDate: new Date('2020-03-05T00:00:00.000Z'),
           },
         },
         {
@@ -206,6 +209,7 @@ describe('feature props utils', () => {
             PERSONS: 1052567,
             STATE_ABBR: 'RI',
             STATE_NAME: 'Rhode Island',
+            MyDate: new Date('2020-03-05T00:00:00.000Z'),
           },
         },
         {
@@ -216,6 +220,7 @@ describe('feature props utils', () => {
             PERSONS: 3831074,
             STATE_ABBR: 'OR',
             STATE_NAME: 'Oregon',
+            MyDate: new Date('2020-03-05T00:00:00.000Z'),
           },
         },
         {
@@ -226,6 +231,7 @@ describe('feature props utils', () => {
             PERSONS: 3725789,
             STATE_ABBR: 'PR',
             STATE_NAME: 'Puerto Rico',
+            MyDate: new Date('2020-03-05T00:00:00.000Z'),
           },
         },
         {
@@ -236,6 +242,7 @@ describe('feature props utils', () => {
             PERSONS: 5686986,
             STATE_ABBR: 'WI',
             STATE_NAME: 'Wisconsin',
+            MyDate: new Date('2020-03-05T00:00:00.000Z'),
           },
         },
         {
@@ -246,6 +253,7 @@ describe('feature props utils', () => {
             PERSONS: 672591,
             STATE_ABBR: 'ND',
             STATE_NAME: 'North Dakota',
+            MyDate: new Date('2020-03-05T00:00:00.000Z'),
           },
         },
         {
@@ -256,6 +264,7 @@ describe('feature props utils', () => {
             PERSONS: 2700551,
             STATE_ABBR: 'NV',
             STATE_NAME: 'Nevada',
+            MyDate: new Date('2020-03-05T00:00:00.000Z'),
           },
         },
         {
@@ -266,6 +275,7 @@ describe('feature props utils', () => {
             PERSONS: 9687653,
             STATE_ABBR: 'GA',
             STATE_NAME: 'Georgia',
+            MyDate: new Date('2020-03-05T00:00:00.000Z'),
           },
         },
         {
@@ -276,6 +286,7 @@ describe('feature props utils', () => {
             PERSONS: 19378102,
             STATE_ABBR: 'NY',
             STATE_NAME: 'New York',
+            MyDate: new Date('2020-03-05T00:00:00.000Z'),
           },
         },
         {
@@ -286,6 +297,7 @@ describe('feature props utils', () => {
             PERSONS: 2915918,
             STATE_ABBR: 'AR',
             STATE_NAME: 'Arkansas',
+            MyDate: new Date('2020-03-05T00:00:00.000Z'),
           },
         },
       ];
@@ -294,8 +306,8 @@ describe('feature props utils', () => {
           parseFeatureProps(
             parseXmlString(getFeatureStates100),
             featureTypeFull,
-            '1.0.0'
-          )
+            '1.0.0',
+          ),
         ).toEqual(expected);
       });
       it('version 1.1.0', () => {
@@ -303,8 +315,8 @@ describe('feature props utils', () => {
           parseFeatureProps(
             parseXmlString(getFeatureStates110),
             featureTypeFull,
-            '1.1.0'
-          )
+            '1.1.0',
+          ),
         ).toEqual(expected);
       });
       it('version 2.0.0', () => {
@@ -312,14 +324,9 @@ describe('feature props utils', () => {
           parseFeatureProps(
             parseXmlString(getFeatureStates200),
             featureTypeFull,
-            '2.0.0'
-          )
+            '2.0.0',
+          ),
         ).toEqual(expected);
-      });
-      it('geojson format', () => {
-        expect(parseFeaturePropsGeojson(getFeatureStates200Geojson)).toEqual(
-          expected
-        );
       });
     });
     describe('additional props not present in the feature info', () => {
@@ -355,7 +362,7 @@ describe('feature props utils', () => {
 
       it('ignores props not listed in the feature type info', () => {
         expect(
-          parseFeatureProps(parseXmlString(xml), featureTypeFull, '2.0.0')
+          parseFeatureProps(parseXmlString(xml), featureTypeFull, '2.0.0'),
         ).toEqual(expected);
       });
     });
@@ -414,7 +421,7 @@ describe('feature props utils', () => {
 
       it('only saves defined props on objects', () => {
         expect(
-          parseFeatureProps(parseXmlString(xml), featureTypeFull, '2.0.0')
+          parseFeatureProps(parseXmlString(xml), featureTypeFull, '2.0.0'),
         ).toStrictEqual(expected);
       });
     });

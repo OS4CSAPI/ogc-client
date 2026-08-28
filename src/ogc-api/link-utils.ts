@@ -4,27 +4,25 @@ import {
   OgcApiDocumentLink,
 } from '../ogc-api/model.js';
 import { EndpointError } from '../shared/errors.js';
-import { sharedFetch } from '../shared/http-utils.js';
-import { getParentPath, getBaseUrl } from '../shared/url-utils.js';
+import { queryJsonDocument } from '../shared/http-utils.js';
+import { getBaseUrl, getParentPath } from '../shared/url-utils.js';
+
+// During endpoint discovery we may fetch an `/items` URL just to inspect its links.
+// Cap that response so initial endpoint loading does not pull a full collection.
+function capItemsForDiscovery(url: string): string {
+  const urlObj = new URL(url, getBaseUrl());
+  if (urlObj.pathname.replace(/\/$/, '').endsWith('/items')) {
+    urlObj.searchParams.set('limit', '1');
+  }
+  return urlObj.toString();
+}
 
 export function fetchDocument<T extends OgcApiDocument>(
-  url: string
+  url: string,
 ): Promise<T> {
   const urlObj = new URL(url, getBaseUrl());
   urlObj.searchParams.set('f', 'json');
-  return sharedFetch(urlObj.toString(), 'GET', true).then((resp) => {
-    if (!resp.ok) {
-      throw new Error(`The document at ${urlObj} could not be fetched.`);
-    }
-    return resp
-      .clone()
-      .json()
-      .catch((e) => {
-        throw new Error(
-          `The document at ${urlObj} does not appear to be valid JSON. Error was: ${e.message}`
-        );
-      }) as Promise<T>;
-  });
+  return queryJsonDocument(urlObj.toString());
 }
 
 function checkIsLandingPage(doc: OgcApiDocument): boolean {
@@ -40,13 +38,13 @@ function checkIsLandingPage(doc: OgcApiDocument): boolean {
 }
 
 export function fetchRoot(url: string): Promise<OgcApiDocument> {
-  return fetchDocument(url).then((doc) => {
+  return fetchDocument(capItemsForDiscovery(url)).then((doc) => {
     // if no data link, attempt to look at the parent
     if (!checkIsLandingPage(doc)) {
       const parentUrl = getParentPath(url);
       if (!parentUrl) {
         throw new Error(
-          `Could not find a root JSON document containing both a link with rel='data' and a link with rel='service-desc' (or 'service-doc').`
+          `Could not find a root JSON document containing both a link with rel='data' and a link with rel='service-desc' (or 'service-doc').`,
         );
       }
       return fetchRoot(parentUrl);
@@ -58,9 +56,9 @@ export function fetchRoot(url: string): Promise<OgcApiDocument> {
 // This will look for a collection document on the given path
 // Will return null if we end up on the endpoint root before finding a collection
 export function fetchCollectionRoot(
-  url: string
+  url: string,
 ): Promise<OgcApiDocument | null> {
-  return fetchDocument(url).then((doc) => {
+  return fetchDocument(capItemsForDiscovery(url)).then((doc) => {
     // this looks like the root; return null
     if (checkIsLandingPage(doc)) {
       return null;
@@ -86,13 +84,13 @@ export function getLinks(
   doc: OgcApiDocument | OgcApiCollectionInfo,
   relType: string | string[],
   mimeType?: string,
-  assertPresence?: boolean
+  assertPresence?: boolean,
 ): OgcApiDocumentLink[] {
   let links =
     doc.links?.filter((link) =>
       Array.isArray(relType)
         ? relType.indexOf(link.rel) > -1
-        : link.rel === relType
+        : link.rel === relType,
     ) || [];
   if (mimeType) {
     links = links.filter((link) => link.type === mimeType);
@@ -100,11 +98,11 @@ export function getLinks(
   if (assertPresence && links.length === 0) {
     if (!mimeType) {
       throw new EndpointError(
-        `Was expecting at least one link of type '${relType}' but could not find any`
+        `Was expecting at least one link of type '${relType}' but could not find any`,
       );
     }
     throw new EndpointError(
-      `Was expecting at least one link of type '${relType}' with mime type '${mimeType}' but could not find any`
+      `Was expecting at least one link of type '${relType}' with mime type '${mimeType}' but could not find any`,
     );
   }
   return links;
@@ -115,7 +113,7 @@ export function getLinkUrl(
   relType: string | string[],
   baseUrl?: string,
   mimeType?: string,
-  assertPresence?: boolean
+  assertPresence?: boolean,
 ): string | null {
   const link = getLinks(doc, relType, mimeType, assertPresence)[0];
   if (!link) return null;
@@ -125,7 +123,7 @@ export function getLinkUrl(
 export async function fetchLink(
   doc: OgcApiDocument | OgcApiCollectionInfo,
   relType: string | string[],
-  baseUrl?: string
+  baseUrl?: string,
 ): Promise<OgcApiDocument> {
   // this will reject with an error if no valid URL found
   const url = getLinkUrl(doc, relType, baseUrl, undefined, true);
@@ -134,7 +132,7 @@ export async function fetchLink(
 
 export function hasLinks(
   doc: OgcApiDocument | OgcApiCollectionInfo,
-  relType: string | string[]
+  relType: string | string[],
 ): boolean {
   const url = getLinkUrl(doc, relType);
   return !!url;
@@ -142,7 +140,7 @@ export function hasLinks(
 
 export function assertHasLinks(
   doc: OgcApiDocument,
-  relType: string | string[]
+  relType: string | string[],
 ) {
   if (!hasLinks(doc, relType))
     throw new EndpointError(`Could not find link with type: ${relType}`);
