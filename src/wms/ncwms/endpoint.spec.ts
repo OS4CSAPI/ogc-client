@@ -155,13 +155,13 @@ describe('NcwmsEndpoint', () => {
 
     it('includes TIME and ELEVATION when provided', async () => {
       await endpoint.getMinMax('tos', [-10, 30, 10, 50], {
-        time: '2023-01-01T00:00:00Z',
-        elevation: '-10',
+        time: new Date('2023-01-01T00:00:00Z'),
+        elevation: -10,
       });
       const calledUrl: string = (globalThis.fetch as jest.Mock).mock
         .calls[0][0];
-      expect(calledUrl).toContain('time=2023-01-01T00%3A00%3A00Z');
-      expect(calledUrl).toContain('elevation=-10');
+      expect(calledUrl).toContain('TIME=2023-01-01T00%3A00%3A00.000Z');
+      expect(calledUrl).toContain('ELEVATION=-10');
     });
 
     it('returns parsed min/max values', async () => {

@@ -111,7 +111,7 @@ export class NcwmsEndpoint extends WmsEndpoint {
   async getMinMax(
     layerName: string,
     bbox: BoundingBox,
-    options?: { time?: string; elevation?: string },
+    options?: { time?: Date; elevation?: number | string },
   ): Promise<NcwmsMinMax> {
     const params: Record<string, string> = {
       SERVICE: 'WMS',
@@ -124,8 +124,8 @@ export class NcwmsEndpoint extends WmsEndpoint {
       width: '50',
       height: '50',
     };
-    if (options?.time) params['time'] = options.time;
-    if (options?.elevation) params['elevation'] = options.elevation;
+    if (options?.time) params['TIME'] = options.time.toISOString();
+    if (options?.elevation) params['ELEVATION'] = options.elevation.toString();
 
     const url = setQueryParams(this._baseUrl, params);
     const data = await queryJsonDocument<{ min?: unknown; max?: unknown }>(url);
