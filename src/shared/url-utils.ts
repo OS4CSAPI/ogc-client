@@ -58,6 +58,7 @@ export function getChildPath(url: string, childFragment: string): string {
  * proxy, which is an aberration and should be forbidden btw), then the encoded URL
  * will be modified instead.
  * Params set to `null` will be removed.
+ * @private do not make this part of the API doc, but we still allow its use because it's a nice utility!
  */
 export function setQueryParams(
   url: string,

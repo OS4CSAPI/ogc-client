@@ -95,11 +95,8 @@ export {
   setFetchOptions,
   resetFetchOptions,
 } from './shared/http-utils.js';
-export {
-  check,
-  ServiceExceptionError,
-  EndpointError,
-} from './shared/errors.js';
+export { setQueryParams } from './shared/url-utils.js';
+export { ServiceExceptionError, EndpointError } from './shared/errors.js';
 
 export { enableFallbackWithoutWorker } from './worker/index.js';
 import './worker-fallback/index.js';
