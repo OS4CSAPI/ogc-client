@@ -90,3 +90,30 @@ export type FieldSort = ['D' | 'A', FieldName];
 
 export type DateTimeParameter =
   Date | { start: Date } | { end: Date } | { start: Date; end: Date };
+
+/**
+ * This matches the ISO8601 definition of a duration
+ * Will be replaced by the [Temporal API](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Temporal) once support is broad enough
+ */
+export type Duration = {
+  years: number;
+  months: number;
+  days: number;
+  hours: number;
+  minutes: number;
+  seconds: number;
+};
+
+/**
+ * Describes an interval in time. Use the `expandTimeInterval` utility function to expand this interval into a list
+ * of discrete Date objects.
+ */
+export interface TimeInterval {
+  begin: Date;
+  end: Date;
+
+  /**
+   * The period indicates the amount of time between each update of the data
+   */
+  period: Duration;
+}

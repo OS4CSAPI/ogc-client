@@ -1,4 +1,4 @@
-import { Feature, Geometry } from 'geojson';
+import type { Feature, Geometry } from 'geojson';
 
 /**
  * STAC specification version 1.0.0

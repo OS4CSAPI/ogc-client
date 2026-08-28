@@ -3,6 +3,7 @@ import {
   CollectionParameterType,
   CollectionParameterTypes,
   ConformanceClass,
+  OgcApiCollectionCapabilities,
   OgcApiCollectionInfo,
   OgcApiDocument,
   OgcApiEndpointInfo,
@@ -262,25 +263,11 @@ export function parseFullStyleInfo(doc: OgcApiStyleMetadata): OgcStyleFull {
   } as OgcStyleFull;
 }
 
-export function parseCollections(doc: OgcApiDocument): Array<{
-  name: string;
-  hasRecords?: boolean;
-  hasFeatures?: boolean;
-  hasVectorTiles?: boolean;
-  hasMapTiles?: boolean;
-  hasDataQueries?: boolean;
-  hasConnectedSystems?: boolean;
-}> {
+export function parseCollections(
+  doc: OgcApiDocument,
+): Array<OgcApiCollectionCapabilities> {
   return doc.collections.map((collection) => {
-    const result: {
-      name: string;
-      hasRecords?: boolean;
-      hasFeatures?: boolean;
-      hasVectorTiles?: boolean;
-      hasMapTiles?: boolean;
-      hasDataQueries?: boolean;
-      hasConnectedSystems?: boolean;
-    } = {
+    const result: OgcApiCollectionCapabilities = {
       name: collection.id as string,
     };
     if (collection.itemType === 'record') {

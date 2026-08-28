@@ -32,13 +32,27 @@ function processClass(apiElement, importPath) {
   );
   const properties = apiElement.children.filter(
     (item) =>
-      item.kind & 262144 /* ReflectionKind.Accessor */ &&
+      (item.kind & 262144 /* ReflectionKind.Accessor */ ||
+        item.kind & 1024) /* ReflectionKind.Property */ &&
       !item.flags?.isInherited,
   );
   const methods = apiElement.children.filter(
     (item) =>
-      item.kind & 2048 /* ReflectionKind.Method */ && !item.flags?.isInherited,
+      item.kind & 2048 /* ReflectionKind.Method */ &&
+      !item.flags?.isInherited &&
+      !item.flags?.isStatic,
   );
+  const staticMethods = apiElement.children
+    .filter(
+      (item) =>
+        item.kind & 2048 /* ReflectionKind.Method */ &&
+        !item.flags?.isInherited &&
+        item.flags?.isStatic,
+    )
+    .map((methodElement) => ({
+      ...methodElement,
+      name: `${apiElement.name}.${methodElement.name}`,
+    }));
 
   return {
     name: apiElement.name,
@@ -46,17 +60,28 @@ function processClass(apiElement, importPath) {
     importHtml: markdown(`\`\`\`js
 import { ${apiElement.name} } from '${importPath}'
 \`\`\``),
-    constructorSignature: markdownInline(
-      formatConstructorToString(apiElement, constructorElement),
-    ),
-    constructor: processFunction(constructorElement, importPath),
-    constructorDescriptionHtml: markdown(getDescription(constructorElement)),
+    constructorSignature: constructorElement
+      ? markdownInline(
+          formatConstructorToString(apiElement, constructorElement),
+        )
+      : null,
+    constructor: constructorElement
+      ? processFunction(constructorElement, importPath)
+      : null,
+    constructorDescriptionHtml: constructorElement
+      ? markdown(getDescription(constructorElement))
+      : null,
     properties: properties.map((property) => ({
       name: property.name,
-      signature: markdownInline(formatTypeToString(property.getSignature.type)),
+      signature: markdownInline(
+        formatTypeToString(property.getSignature?.type ?? property.type),
+      ),
       descriptionHtml: markdown(getDescription(property)),
     })),
     methods: methods.map((method) => processFunction(method, importPath)),
+    staticMethods: staticMethods.map((method) =>
+      processFunction(method, importPath),
+    ),
     extends: apiElement.extendedTypes?.map((extended) => ({
       signature: markdownInline(formatTypeToString(extended)),
     })),
@@ -64,7 +89,7 @@ import { ${apiElement.name} } from '${importPath}'
 }
 
 function processFunction(apiElement, importPath) {
-  const signature = apiElement?.signatures?.[0];
+  const signature = apiElement.signatures?.[0];
 
   return {
     name: apiElement.name,

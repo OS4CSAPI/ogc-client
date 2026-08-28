@@ -16,10 +16,12 @@ import {
 } from './info.js';
 import {
   ConformanceClass,
+  OgcApiCollectionCapabilities,
   OgcApiCollectionInfo,
   OgcApiCollectionItem,
   OgcApiDocument,
   OgcApiEndpointInfo,
+  OgcApiGetCollectionItemsUrlOptions,
   OgcApiStyleMetadata,
   OgcApiStylesDocument,
   OgcStyleBrief,
@@ -36,12 +38,7 @@ import {
   hasLinks,
 } from './link-utils.js';
 import { EndpointError } from '../shared/errors.js';
-import {
-  BoundingBox,
-  CrsCode,
-  DateTimeParameter,
-  MimeType,
-} from '../shared/models.js';
+import { BoundingBox, DateTimeParameter } from '../shared/models.js';
 import {
   isMimeTypeGeoJson,
   isMimeTypeJson,
@@ -170,17 +167,7 @@ ${e.message}`);
   /**
    * A Promise which resolves to an array of all collection identifiers as strings.
    */
-  get allCollections(): Promise<
-    {
-      name: string;
-      hasRecords?: boolean;
-      hasFeatures?: boolean;
-      hasVectorTiles?: boolean;
-      hasMapTiles?: boolean;
-      hasDataQueries?: boolean;
-      hasConnectedSystems?: boolean;
-    }[]
-  > {
+  get allCollections(): Promise<OgcApiCollectionCapabilities[]> {
     return this.data.then((dataDocument) =>
       dataDocument ? parseCollections(dataDocument) : [],
     );
@@ -208,6 +195,9 @@ ${e.message}`);
       .then((collections) => collections.map((collection) => collection.name));
   }
 
+  /**
+   * A Promise which resolves to an array of the identifiers of collections that support EDR (Environmental Data Retrieval).
+   */
   get edrCollections(): Promise<string[]> {
     return Promise.all([this.data, this.hasEnvironmentalDataRetrieval])
       .then(([data, hasEDR]) => (hasEDR ? data : { collections: [] }))
@@ -302,7 +292,7 @@ ${e.message}`);
   }
 
   /**
-   * A Promise which resolves to a boolean indicating whether the endpoint offers environmental data retrieval (EDR) queries.
+   * A Promise which resolves to a boolean indicating whether the endpoint offers Environmental Data Retrieval (EDR) queries.
    */
   get hasEnvironmentalDataRetrieval(): Promise<boolean> {
     return Promise.all([this.conformanceClasses]).then(
@@ -620,37 +610,12 @@ ${e.message}`);
   /**
    * Asynchronously retrieves a URL for the items of a specified collection, with optional query parameters.
    * @param collectionId - The unique identifier for the collection.
-   * @param options - An object containing optional parameters:
-   *  - query: Additional query parameters to be included in the URL.
-   *  - asJson: Will query items as GeoJson or JSON-FG if available; takes precedence on `outputFormat`.
-   *  - outputFormat: The MIME type for the output format.
-   *  - limit: The maximum number of features to include.
-   *  - extent: Bounding box to limit the features.
-   *  - offset: Pagination offset for the returned results.
-   *  - outputCrs: Coordinate Reference System code for the output.
-   *  - extentCrs: Coordinate Reference System code for the bounding box.
-   *  - skipGeometry: whether to include geometry in the response or not
-   *  - sortBy: attributes by which to sort
-   *  - properties: which properties to include in the response.
-   *  - dateTime: Date parameter, either as a Date object or a range object with start and end properties.
+   * @param options - An object containing optional parameters
    * @returns A promise that resolves to the URL as a string or rejects if an error occurs.
    */
   getCollectionItemsUrl(
     collectionId: string,
-    options: {
-      query?: string;
-      asJson?: boolean;
-      outputFormat?: MimeType;
-      limit?: number;
-      offset?: number;
-      outputCrs?: CrsCode;
-      extent?: BoundingBox;
-      extentCrs?: CrsCode;
-      skipGeometry?: boolean;
-      sortBy?: string[];
-      properties?: string[];
-      dateTime?: DateTimeParameter;
-    } = {},
+    options: OgcApiGetCollectionItemsUrlOptions = {},
   ): Promise<string> {
     return this.getCollectionDocument(collectionId)
       .then((collectionDoc) => {

@@ -10,17 +10,12 @@
  * Run with: node examples/ncwms.js
  */
 
-import { getDimensionDefaultValue, NcwmsEndpoint } from '../dist/dist-node.js';
+import { NcwmsEndpoint } from '../dist/dist-node.js';
 
 const NCWMS_URL =
   'https://tds0.ifremer.fr/thredds/wms/LPO_GLOBANA_ISAS20_ARGO_MNTH_TIME_SERIE?service=WMS&request=GetCapabilities';
 const LAYER_NAME = 'TEMP';
 const SAMPLE_BBOX = [-60, 30, -30, 50];
-
-function getLayerDimensionValue(layer, dimensionName) {
-  const dimension = layer.dimensions?.find((dim) => dim.name === dimensionName);
-  return dimension ? getDimensionDefaultValue(dimension) : null;
-}
 
 async function main() {
   try {
@@ -36,8 +31,8 @@ async function main() {
       throw new Error(`Layer "${LAYER_NAME}" was not found.`);
     }
 
-    const time = getLayerDimensionValue(layer, 'time');
-    const elevation = getLayerDimensionValue(layer, 'elevation');
+    const time = layer.timeDimension?.defaultValue;
+    const elevation = layer.elevationDimension?.defaultValue;
 
     if (!time || !elevation) {
       throw new Error(

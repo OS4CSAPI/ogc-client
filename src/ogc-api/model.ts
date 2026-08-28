@@ -1,5 +1,10 @@
-import { Geometry } from 'geojson';
-import { BoundingBox, CrsCode, MimeType } from '../shared/models.js';
+import type { Geometry } from 'geojson';
+import {
+  BoundingBox,
+  CrsCode,
+  DateTimeParameter,
+  MimeType,
+} from '../shared/models.js';
 export type ConformanceClass = string;
 
 export interface OgcApiEndpointInfo {
@@ -59,6 +64,16 @@ export type EdrParameterInfo = {
     };
   };
 };
+
+export interface OgcApiCollectionCapabilities {
+  name: string;
+  hasRecords?: boolean;
+  hasFeatures?: boolean;
+  hasVectorTiles?: boolean;
+  hasMapTiles?: boolean;
+  hasDataQueries?: boolean;
+  hasConnectedSystems?: boolean;
+}
 
 /**
  * Contains all necessary information about a collection of items
@@ -276,3 +291,30 @@ export type OgcApiStyleMetadata = {
   }[];
   links?: OgcApiDocumentLink[];
 };
+
+export interface OgcApiGetCollectionItemsUrlOptions {
+  /** Additional query parameters to be included in the URL. */
+  query?: string;
+  /** Will query items as GeoJson or JSON-FG if available; takes precedence on `outputFormat`. */
+  asJson?: boolean;
+  /** The MIME type for the output format. */
+  outputFormat?: MimeType;
+  /** The maximum number of features to include. */
+  limit?: number;
+  /** Pagination offset for the returned results. */
+  offset?: number;
+  /** Coordinate Reference System code for the output. */
+  outputCrs?: CrsCode;
+  /** Bounding box to limit the features. */
+  extent?: BoundingBox;
+  /** Coordinate Reference System code for the bounding box. */
+  extentCrs?: CrsCode;
+  /** Whether to include geometry in the response or not. */
+  skipGeometry?: boolean;
+  /** Attributes by which to sort. */
+  sortBy?: string[];
+  /** Which properties to include in the response. */
+  properties?: string[];
+  /** Date parameter, either as a Date object or a range object with start and end properties. */
+  dateTime?: DateTimeParameter;
+}
