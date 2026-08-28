@@ -14,12 +14,7 @@ export type {
   WfsGetFeatureOptions,
 } from './wfs/model.js';
 export { default as WmsEndpoint } from './wms/endpoint.js';
-export {
-  getDimensionDefaultValue,
-  expandDimensionValues,
-  parseIso8601Duration,
-  parseIso8601DurationMs,
-} from './wms/dimension.js';
+export { expandTimeInterval } from './shared/time.js';
 export type {
   WmsLayerFull,
   WmsLayerDimension,
@@ -27,6 +22,9 @@ export type {
   WmsLayerSummary,
   WmsLayerAttribution,
   WmsLayerDescription,
+  WmsLayerTimeDimension,
+  WmsLayerDimensionInterval,
+  WmsLayerDimensionValue,
 } from './wms/model.js';
 export { default as WpsEndpoint } from './wps/endpoint.js';
 export type {
