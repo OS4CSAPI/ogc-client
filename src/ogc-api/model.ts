@@ -1,4 +1,4 @@
-import { Geometry } from 'geojson';
+import type { Geometry } from 'geojson';
 import {
   BoundingBox,
   CrsCode,
