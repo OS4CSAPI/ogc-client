@@ -7,13 +7,13 @@ title: Docs
 
 ## Presentation
 
-<span class="lib-name">ogc-client</span> is a pure Javascript library made for interacting with geospatial web services relying on standard protocols, namely [OGC standards](https://www.ogc.org/docs/is).
+<span class="lib-name">ogc-client</span> is a Typescript library made for interacting with geospatial web services relying on standard protocols, namely [OGC standards](https://www.ogc.org/docs/is).
 
 Its purpose is to help you interact with them in a user-friendly and consistent way.
 
 Its main features include:
 
-- Support for many protoocols such as [WFS](https://www.ogc.org/standards/wfs), [WMS](https://www.ogc.org/standards/wms), [WMTS](https://www.ogc.org/standards/wmts), [WPS](https://www.ogc.org/standards/wps), [OGC API](https://ogcapi.ogc.org/), STAC API, TMS and NcWMS extension
+- Support for many protocols such as [WFS](https://www.ogc.org/standards/wfs), [WMS](https://www.ogc.org/standards/wms), [WMTS](https://www.ogc.org/standards/wmts), [WPS](https://www.ogc.org/standards/wps), [OGC API](https://ogcapi.ogc.org/), STAC API, TMS and NcWMS extension
 - Elaborate cache system to minimize network requests
 - Fast parsing of XML documents using [@rgrove/parse-xml](https://github.com/rgrove/parse-xml)
 - Detection of [CORS](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS)-related issues
