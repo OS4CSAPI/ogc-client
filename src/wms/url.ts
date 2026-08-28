@@ -1,6 +1,15 @@
 import { setQueryParams } from '../shared/url-utils.js';
-import { BoundingBox, CrsCode, MimeType } from '../shared/models.js';
-import { WmsVersion } from './model.js';
+import {
+  BoundingBox,
+  CrsCode,
+  MimeType,
+  TimeInterval,
+} from '../shared/models.js';
+import {
+  WmsLayerDimensionInterval,
+  WmsLayerDimensionValue,
+  WmsVersion,
+} from './model.js';
 
 /**
  * Generates an URL for a GetMap operation
@@ -13,7 +22,9 @@ import { WmsVersion } from './model.js';
  * @param extent Expressed in the requested CRS
  * @param outputFormat
  * @param [styles] Comma-separated list of styles to use; leave out for default style
- * @param [dimensions] Dimension values keyed by dimension name (case-insensitive, e.g. { time: '...' })
+ * @param [time] Time value for the request; refer to the `timeDimension` property of the layer for available values
+ * @param [elevation] Elevation value for the request; refer to the `elevationDimension` property of the layer for available values
+ * @param [dimensions] Dimension values keyed by dimension name (case-insensitive, e.g. { time: '...' }); they are added under the form DIM_* in the request
  */
 export function generateGetMapUrl(
   serviceUrl: string,
@@ -25,7 +36,17 @@ export function generateGetMapUrl(
   extent: BoundingBox,
   outputFormat: MimeType,
   styles?: string,
-  dimensions?: Record<string, string>,
+  time?: Date | Date[] | Omit<TimeInterval, 'period'> | 'current',
+  elevation?:
+    | WmsLayerDimensionValue
+    | WmsLayerDimensionValue[]
+    | Omit<WmsLayerDimensionInterval, 'resolution'>,
+  dimensions?: Record<
+    string,
+    | WmsLayerDimensionValue
+    | WmsLayerDimensionValue[]
+    | Omit<WmsLayerDimensionInterval, 'resolution'>
+  >,
 ): string {
   const crsParam = version === '1.3.0' ? 'CRS' : 'SRS';
 
@@ -35,18 +56,44 @@ export function generateGetMapUrl(
     VERSION: version,
     LAYERS: layers,
     STYLES: styles ?? '',
+    WIDTH: widthPx.toString(),
+    HEIGHT: heightPx.toString(),
+    FORMAT: outputFormat ?? 'image/png',
+    [crsParam]: crs,
+    BBOX: extent.join(','),
   };
-  newParams['WIDTH'] = widthPx.toString();
-  newParams['HEIGHT'] = heightPx.toString();
-  newParams['FORMAT'] = outputFormat ?? 'image/png';
-  newParams[crsParam] = crs;
-  newParams['BBOX'] = extent.join(',');
 
-  // Dimensions are exposed lowercase in the parsed capabilities (e.g. "time"),
-  // but must be uppercased on the wire like every other WMS parameter.
+  function formatDimensionValues(
+    values:
+      | Date
+      | Date[]
+      | Omit<TimeInterval, 'period'>
+      | 'current'
+      | WmsLayerDimensionValue
+      | WmsLayerDimensionValue[]
+      | Omit<WmsLayerDimensionInterval, 'resolution'>,
+  ): string {
+    if (Array.isArray(values)) {
+      return values.map(formatDimensionValues).join(',');
+    }
+    if (values instanceof Object && 'begin' in values && 'end' in values) {
+      return `${formatDimensionValues(values.begin)}/${formatDimensionValues(values.end)}`;
+    }
+    if (values instanceof Date) {
+      return values.toISOString();
+    }
+    return values.toString();
+  }
+
+  if (time !== undefined) {
+    newParams['TIME'] = formatDimensionValues(time);
+  }
+  if (elevation !== undefined) {
+    newParams['ELEVATION'] = formatDimensionValues(elevation);
+  }
   if (dimensions) {
     for (const [name, value] of Object.entries(dimensions)) {
-      newParams[name.toUpperCase()] = value;
+      newParams[`DIM_${name.toUpperCase()}`] = formatDimensionValues(value);
     }
   }
 

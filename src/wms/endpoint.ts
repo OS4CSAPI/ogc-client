@@ -10,9 +10,12 @@ import {
   MimeType,
   type OperationName,
   type OperationUrl,
+  TimeInterval,
 } from '../shared/models.js';
 import {
   WmsLayerDescription,
+  WmsLayerDimensionInterval,
+  WmsLayerDimensionValue,
   WmsLayerFull,
   WmsLayerSummary,
   WmsVersion,
@@ -157,13 +160,15 @@ export default class WmsEndpoint {
    * Returns a URL that can be used to query an image from one or several layers
    * @param layers List of layers to render
    * @param {Object} options
-   * @param {number} options.widthPx
-   * @param {number} options.heightPx
-   * @param {CrsCode} options.crs Coordinate reference system to use for the image
-   * @param {BoundingBox} options.extent Expressed in the requested CRS
-   * @param {MimeType} options.outputFormat
-   * @param {string} [options.styles] List of styles to use, one for each layer requested; leave out or use empty string for default style
-   * @param {Object} [options.dimensions] Dimension values keyed by uppercase dimension name (e.g. { TIME: '...' })
+   * @param options.widthPx
+   * @param options.heightPx
+   * @param options.crs Coordinate reference system to use for the image
+   * @param options.extent Expressed in the requested CRS
+   * @param options.outputFormat
+   * @param [options.styles] List of styles to use, one for each layer requested; leave out or use empty string for default style
+   * @param [options.time] Time value for the request; refer to the `timeDimension` property of the layer for available values
+   * @param [options.elevation] Elevation value for the request; refer to the `elevationDimension` property of the layer for available values
+   * @param [options.dimensions] Other dimensions values; they are added under the form DIM_* in the request
    * @returns Returns null if endpoint is not ready
    */
   getMapUrl(
@@ -175,14 +180,33 @@ export default class WmsEndpoint {
       extent: BoundingBox;
       outputFormat: MimeType;
       styles?: string[];
-      dimensions?: Record<string, string>;
+      time?: Date | Date[] | Omit<TimeInterval, 'period'> | 'current';
+      elevation?:
+        | WmsLayerDimensionValue
+        | WmsLayerDimensionValue[]
+        | Omit<WmsLayerDimensionInterval, 'resolution'>;
+      dimensions?: Record<
+        string,
+        | WmsLayerDimensionValue
+        | WmsLayerDimensionValue[]
+        | Omit<WmsLayerDimensionInterval, 'resolution'>
+      >;
     },
   ) {
     if (!this._layers) {
       return null;
     }
-    const { widthPx, heightPx, crs, extent, outputFormat, styles, dimensions } =
-      options;
+    const {
+      widthPx,
+      heightPx,
+      crs,
+      extent,
+      outputFormat,
+      styles,
+      time,
+      elevation,
+      dimensions,
+    } = options;
     // TODO: check supported CRS
     // TODO: check supported output formats
     // TODO: check supported styles
@@ -196,6 +220,8 @@ export default class WmsEndpoint {
       extent,
       outputFormat,
       styles !== undefined ? styles.join(',') : '',
+      time,
+      elevation,
       dimensions,
     );
   }
