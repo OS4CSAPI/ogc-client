@@ -52,53 +52,53 @@ const VALID_DEPLOYMENT_FEATURE = {
 describe('inferResourceTypeFromPath', () => {
   it('returns System for /systems path', () => {
     expect(inferResourceTypeFromPath('https://server.com/api/systems')).toBe(
-      'System'
+      'System',
     );
   });
 
   it('returns Deployment for /deployments path', () => {
     expect(
-      inferResourceTypeFromPath('https://server.com/api/deployments')
+      inferResourceTypeFromPath('https://server.com/api/deployments'),
     ).toBe('Deployment');
   });
 
   it('returns Procedure for /procedures path', () => {
     expect(inferResourceTypeFromPath('https://server.com/api/procedures')).toBe(
-      'Procedure'
+      'Procedure',
     );
   });
 
   it('returns SamplingFeature for /samplingFeatures path', () => {
     expect(
-      inferResourceTypeFromPath('https://server.com/api/samplingFeatures')
+      inferResourceTypeFromPath('https://server.com/api/samplingFeatures'),
     ).toBe('SamplingFeature');
   });
 
   it('returns null for unrecognized path segment', () => {
     expect(
-      inferResourceTypeFromPath('https://server.com/api/other')
+      inferResourceTypeFromPath('https://server.com/api/other'),
     ).toBeNull();
   });
 
   it('ignores query string and fragment', () => {
     expect(
       inferResourceTypeFromPath(
-        'https://server.com/api/systems?f=json&limit=10#section'
-      )
+        'https://server.com/api/systems?f=json&limit=10#section',
+      ),
     ).toBe('System');
   });
 
   it('handles collection-scoped paths', () => {
     expect(
       inferResourceTypeFromPath(
-        'https://server.com/collections/weather/systems'
-      )
+        'https://server.com/collections/weather/systems',
+      ),
     ).toBe('System');
   });
 
   it('handles individual resource paths (resource ID after segment)', () => {
     expect(
-      inferResourceTypeFromPath('https://server.com/api/systems/abc-123')
+      inferResourceTypeFromPath('https://server.com/api/systems/abc-123'),
     ).toBe('System');
   });
 
@@ -112,10 +112,10 @@ describe('inferResourceTypeFromPath', () => {
 
   it('does not match Part 2 collection segments', () => {
     expect(
-      inferResourceTypeFromPath('https://server.com/api/datastreams')
+      inferResourceTypeFromPath('https://server.com/api/datastreams'),
     ).toBeNull();
     expect(
-      inferResourceTypeFromPath('https://server.com/api/observations')
+      inferResourceTypeFromPath('https://server.com/api/observations'),
     ).toBeNull();
   });
 });
@@ -144,7 +144,7 @@ describe('classifyFeature', () => {
   // Test case 4: featureType null + endpoint hint /deployments → Deployment
   it('returns Deployment hint when featureType is null', () => {
     expect(classifyFeature(NULL_FEATURE_TYPE_FEATURE, 'Deployment')).toBe(
-      'Deployment'
+      'Deployment',
     );
   });
 
@@ -163,7 +163,7 @@ describe('classifyFeature', () => {
 
   it('returns hint for non-feature input with hint', () => {
     expect(classifyFeature({ random: 'object' }, 'Procedure')).toBe(
-      'Procedure'
+      'Procedure',
     );
   });
 });
@@ -175,14 +175,14 @@ describe('classifyFeature', () => {
 describe('end-to-end: path inference → classification', () => {
   it('classifies 52North null-featureType feature from endpoint URL', () => {
     const hint = inferResourceTypeFromPath(
-      'https://csa.demo.52north.org/collections/weather/systems'
+      'https://csa.demo.52north.org/collections/weather/systems',
     );
     expect(classifyFeature(NULL_FEATURE_TYPE_FEATURE, hint)).toBe('System');
   });
 
   it('valid featureType wins even with URL-inferred hint', () => {
     const hint = inferResourceTypeFromPath(
-      'https://server.com/api/deployments'
+      'https://server.com/api/deployments',
     );
     // Feature says sosa:Sensor (→ System), URL says /deployments
     expect(classifyFeature(VALID_SENSOR_FEATURE, hint)).toBe('System');

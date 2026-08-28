@@ -79,12 +79,12 @@ function parseFrameAxis(value: unknown, index: number): FrameAxis {
   }
   if (typeof value.name !== 'string') {
     throw new SensorMLParseError(
-      `axes[${index}] must have a string "name" property`
+      `axes[${index}] must have a string "name" property`,
     );
   }
   if (typeof value.description !== 'string') {
     throw new SensorMLParseError(
-      `axes[${index}] must have a string "description" property`
+      `axes[${index}] must have a string "description" property`,
     );
   }
   return { name: value.name, description: value.description };
@@ -105,21 +105,21 @@ function parseFrameAxis(value: unknown, index: number): FrameAxis {
 function parseSpatialFrame(value: unknown, index: number): SpatialFrame {
   if (!isRecord(value)) {
     throw new SensorMLParseError(
-      `localReferenceFrames[${index}] must be an object`
+      `localReferenceFrames[${index}] must be an object`,
     );
   }
   if (typeof value.origin !== 'string') {
     throw new SensorMLParseError(
-      `localReferenceFrames[${index}] must have a string "origin" property`
+      `localReferenceFrames[${index}] must have a string "origin" property`,
     );
   }
   if (!Array.isArray(value.axes) || value.axes.length === 0) {
     throw new SensorMLParseError(
-      `localReferenceFrames[${index}] must have a non-empty "axes" array`
+      `localReferenceFrames[${index}] must have a non-empty "axes" array`,
     );
   }
   const axes = value.axes.map((a: unknown, ai: number) =>
-    parseFrameAxis(a, ai)
+    parseFrameAxis(a, ai),
   );
 
   const frame: SpatialFrame = { origin: value.origin, axes };
@@ -165,7 +165,7 @@ function parseTemporalFrame(value: unknown, index: number): TemporalFrame {
   }
   if (typeof value.origin !== 'string') {
     throw new SensorMLParseError(
-      `localTimeFrames[${index}] must have a string "origin" property`
+      `localTimeFrames[${index}] must have a string "origin" property`,
     );
   }
   const frame: TemporalFrame = { origin: value.origin };
@@ -361,25 +361,25 @@ export function parsePosition(value: unknown): Position | undefined {
 export function parsePhysicalSystem(json: unknown): PhysicalSystem {
   if (!isRecord(json)) {
     throw new SensorMLParseError(
-      'PhysicalSystem input must be a non-null object'
+      'PhysicalSystem input must be a non-null object',
     );
   }
 
   if (json.type !== 'PhysicalSystem') {
     throw new SensorMLParseError(
-      `Expected type "PhysicalSystem", got "${String(json.type)}"`
+      `Expected type "PhysicalSystem", got "${String(json.type)}"`,
     );
   }
 
   // --- DescribedObject-level properties (required) ---
   if (typeof json.label !== 'string') {
     throw new SensorMLParseError(
-      'PhysicalSystem must have a string "label" property'
+      'PhysicalSystem must have a string "label" property',
     );
   }
   if (typeof json.uniqueId !== 'string') {
     throw new SensorMLParseError(
-      'PhysicalSystem must have a string "uniqueId" property'
+      'PhysicalSystem must have a string "uniqueId" property',
     );
   }
 
@@ -390,11 +390,9 @@ export function parsePhysicalSystem(json: unknown): PhysicalSystem {
   const featuresOfInterest = parseFeatureList(json.featuresOfInterest);
   const inputs = parseIOList(json.inputs, 'inputs') as InputList | undefined;
   const outputs = parseIOList(json.outputs, 'outputs') as
-    | OutputList
-    | undefined;
+    OutputList | undefined;
   const parameters = parseIOList(json.parameters, 'parameters') as
-    | ParameterList
-    | undefined;
+    ParameterList | undefined;
   const modes = parseModes(json.modes);
 
   // --- AbstractPhysicalProcess-level properties ---
@@ -459,25 +457,25 @@ export function parsePhysicalSystem(json: unknown): PhysicalSystem {
 export function parsePhysicalComponent(json: unknown): PhysicalComponent {
   if (!isRecord(json)) {
     throw new SensorMLParseError(
-      'PhysicalComponent input must be a non-null object'
+      'PhysicalComponent input must be a non-null object',
     );
   }
 
   if (json.type !== 'PhysicalComponent') {
     throw new SensorMLParseError(
-      `Expected type "PhysicalComponent", got "${String(json.type)}"`
+      `Expected type "PhysicalComponent", got "${String(json.type)}"`,
     );
   }
 
   // --- DescribedObject-level properties (required) ---
   if (typeof json.label !== 'string') {
     throw new SensorMLParseError(
-      'PhysicalComponent must have a string "label" property'
+      'PhysicalComponent must have a string "label" property',
     );
   }
   if (typeof json.uniqueId !== 'string') {
     throw new SensorMLParseError(
-      'PhysicalComponent must have a string "uniqueId" property'
+      'PhysicalComponent must have a string "uniqueId" property',
     );
   }
 
@@ -488,11 +486,9 @@ export function parsePhysicalComponent(json: unknown): PhysicalComponent {
   const featuresOfInterest = parseFeatureList(json.featuresOfInterest);
   const inputs = parseIOList(json.inputs, 'inputs') as InputList | undefined;
   const outputs = parseIOList(json.outputs, 'outputs') as
-    | OutputList
-    | undefined;
+    OutputList | undefined;
   const parameters = parseIOList(json.parameters, 'parameters') as
-    | ParameterList
-    | undefined;
+    ParameterList | undefined;
   const modes = parseModes(json.modes);
 
   // --- AbstractPhysicalProcess-level properties ---

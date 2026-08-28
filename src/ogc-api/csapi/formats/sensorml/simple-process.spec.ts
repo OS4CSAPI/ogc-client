@@ -140,10 +140,10 @@ describe('parseSimpleProcess', () => {
       expect(result.label).toBe('Weighted Average Filter');
       expect(result.uniqueId).toBe('urn:example:process:weighted-avg');
       expect(result.description).toBe(
-        'Computes a weighted average of sensor readings'
+        'Computes a weighted average of sensor readings',
       );
       expect(result.definition).toBe(
-        'http://www.opengis.net/def/process/weighted-average'
+        'http://www.opengis.net/def/process/weighted-average',
       );
     });
 
@@ -151,7 +151,7 @@ describe('parseSimpleProcess', () => {
       const result = parseSimpleProcess(FULL_SIMPLE_PROCESS);
       expect(result.typeOf).toBeDefined();
       expect(result.typeOf!.href).toBe(
-        'http://example.org/processes/base-filter'
+        'http://example.org/processes/base-filter',
       );
       expect(result.typeOf!.title).toBe('Base Filter Process');
     });
@@ -161,7 +161,7 @@ describe('parseSimpleProcess', () => {
       expect(result.configuration).toBeDefined();
       expect(result.configuration!.setValues).toHaveLength(2);
       expect(result.configuration!.setValues![0].ref).toBe(
-        'parameters/windowSize'
+        'parameters/windowSize',
       );
     });
 
@@ -170,7 +170,7 @@ describe('parseSimpleProcess', () => {
       expect(result.featuresOfInterest).toBeDefined();
       expect(result.featuresOfInterest).toHaveLength(1);
       expect(result.featuresOfInterest![0].href).toBe(
-        'http://example.org/features/station-1'
+        'http://example.org/features/station-1',
       );
     });
 
@@ -241,7 +241,7 @@ describe('parseSimpleProcess', () => {
       });
       expect(result.method).toBeDefined();
       expect(result.method!.description).toBe(
-        'Linear regression on two variables'
+        'Linear regression on two variables',
       );
       expect(result.method!.algorithm).toBeUndefined();
     });
@@ -251,7 +251,7 @@ describe('parseSimpleProcess', () => {
       expect(result.method).toBeDefined();
       expect(result.method!.algorithm).toBeDefined();
       expect(result.method!.description).toBe(
-        'Weighted moving average with configurable window size'
+        'Weighted moving average with configurable window size',
       );
     });
 
@@ -269,13 +269,13 @@ describe('parseSimpleProcess', () => {
     it('throws for null input', () => {
       expect(() => parseSimpleProcess(null)).toThrow(SensorMLParseError);
       expect(() => parseSimpleProcess(null)).toThrow(
-        'SimpleProcess input must be a non-null object'
+        'SimpleProcess input must be a non-null object',
       );
     });
 
     it('throws for non-object input', () => {
       expect(() => parseSimpleProcess('not-an-object')).toThrow(
-        SensorMLParseError
+        SensorMLParseError,
       );
       expect(() => parseSimpleProcess(42)).toThrow(SensorMLParseError);
     });
@@ -286,7 +286,7 @@ describe('parseSimpleProcess', () => {
 
     it('throws for missing type', () => {
       expect(() =>
-        parseSimpleProcess({ label: 'Test', uniqueId: 'urn:x' })
+        parseSimpleProcess({ label: 'Test', uniqueId: 'urn:x' }),
       ).toThrow('Expected type "SimpleProcess"');
     });
 
@@ -296,19 +296,19 @@ describe('parseSimpleProcess', () => {
           type: 'PhysicalSystem',
           label: 'Test',
           uniqueId: 'urn:x',
-        })
+        }),
       ).toThrow('Expected type "SimpleProcess", got "PhysicalSystem"');
     });
 
     it('throws for missing label', () => {
       expect(() =>
-        parseSimpleProcess({ type: 'SimpleProcess', uniqueId: 'urn:x' })
+        parseSimpleProcess({ type: 'SimpleProcess', uniqueId: 'urn:x' }),
       ).toThrow('SimpleProcess must have a string "label" property');
     });
 
     it('throws for missing uniqueId', () => {
       expect(() =>
-        parseSimpleProcess({ type: 'SimpleProcess', label: 'Test' })
+        parseSimpleProcess({ type: 'SimpleProcess', label: 'Test' }),
       ).toThrow('SimpleProcess must have a string "uniqueId" property');
     });
 
@@ -318,7 +318,7 @@ describe('parseSimpleProcess', () => {
           type: 'SimpleProcess',
           label: 42,
           uniqueId: 'urn:x',
-        })
+        }),
       ).toThrow('SimpleProcess must have a string "label" property');
     });
 
@@ -328,7 +328,7 @@ describe('parseSimpleProcess', () => {
           type: 'SimpleProcess',
           label: 'Test',
           uniqueId: null,
-        })
+        }),
       ).toThrow('SimpleProcess must have a string "uniqueId" property');
     });
 
@@ -337,7 +337,7 @@ describe('parseSimpleProcess', () => {
         parseSimpleProcess({
           ...MINIMAL_SIMPLE_PROCESS,
           inputs: 'not-an-array',
-        })
+        }),
       ).toThrow('"inputs" must be an array');
     });
 
@@ -346,7 +346,7 @@ describe('parseSimpleProcess', () => {
         parseSimpleProcess({
           ...MINIMAL_SIMPLE_PROCESS,
           inputs: [{ type: 'Quantity', uom: { code: 'degC' } }],
-        })
+        }),
       ).toThrow('Invalid inputs[0]');
     });
 
@@ -355,7 +355,7 @@ describe('parseSimpleProcess', () => {
         parseSimpleProcess({
           ...MINIMAL_SIMPLE_PROCESS,
           inputs: ['not-an-object'],
-        })
+        }),
       ).toThrow('Invalid inputs[0]');
     });
 
@@ -420,7 +420,7 @@ describe('parseSimpleProcess', () => {
       });
       expect(result.type).toBe('SimpleProcess');
       expect((result as any).unknownProp).toBe(
-        'should be ignored by type but preserved in passthrough'
+        'should be ignored by type but preserved in passthrough',
       );
     });
 
@@ -501,13 +501,13 @@ describe('parseIOComponentChoice', () => {
 
   it('throws for non-object input', () => {
     expect(() => parseIOComponentChoice('string')).toThrow(
-      'IOComponentChoice entry must be an object'
+      'IOComponentChoice entry must be an object',
     );
   });
 
   it('throws for missing name', () => {
     expect(() =>
-      parseIOComponentChoice({ type: 'Quantity', uom: { code: 'm' } })
+      parseIOComponentChoice({ type: 'Quantity', uom: { code: 'm' } }),
     ).toThrow('IOComponentChoice entry must have a string "name" property');
   });
 });

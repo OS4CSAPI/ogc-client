@@ -72,12 +72,12 @@ export function isValidResourceType(value: string): value is CSAPIResourceType {
  * @see https://docs.ogc.org/is/23-001/23-001.html
  */
 export function assertValidResourceType(
-  value: string
+  value: string,
 ): asserts value is CSAPIResourceType {
   if (!isValidResourceType(value)) {
     throw new EndpointError(
       `Invalid CSAPI resource type: "${value}". ` +
-        `Valid types are: ${CSAPIResourceTypes.join(', ')}`
+        `Valid types are: ${CSAPIResourceTypes.join(', ')}`,
     );
   }
 }
@@ -152,7 +152,7 @@ function isSafeHref(href: string): boolean {
  * @see https://docs.ogc.org/is/23-001/23-001.html
  */
 export function scanCsapiLinks(
-  links: Array<{ rel?: string; href?: string }>
+  links: Array<{ rel?: string; href?: string }>,
 ): Map<string, string> {
   const result = new Map<string, string>();
 
@@ -215,7 +215,7 @@ export function scanCsapiLinks(
 export function validateLimit(limit: number): void {
   if (!Number.isInteger(limit) || limit < 1) {
     throw new EndpointError(
-      `Invalid limit: ${limit}. Must be a positive integer (≥ 1).`
+      `Invalid limit: ${limit}. Must be a positive integer (≥ 1).`,
     );
   }
 }
@@ -233,25 +233,25 @@ export function validateLimit(limit: number): void {
 export function validateBbox(bbox: BoundingBox): void {
   if (bbox.length !== 4) {
     throw new EndpointError(
-      `Invalid bbox: expected 4 coordinates [minx, miny, maxx, maxy], got ${bbox.length}.`
+      `Invalid bbox: expected 4 coordinates [minx, miny, maxx, maxy], got ${bbox.length}.`,
     );
   }
 
   if (!bbox.every((v) => Number.isFinite(v))) {
     throw new EndpointError(
-      'Invalid bbox: all coordinates must be finite numbers.'
+      'Invalid bbox: all coordinates must be finite numbers.',
     );
   }
 
   const [minx, miny, maxx, maxy] = bbox;
   if (minx > maxx) {
     throw new EndpointError(
-      `Invalid bbox: minx (${minx}) must be ≤ maxx (${maxx}).`
+      `Invalid bbox: minx (${minx}) must be ≤ maxx (${maxx}).`,
     );
   }
   if (miny > maxy) {
     throw new EndpointError(
-      `Invalid bbox: miny (${miny}) must be ≤ maxy (${maxy}).`
+      `Invalid bbox: miny (${miny}) must be ≤ maxy (${maxy}).`,
     );
   }
 }

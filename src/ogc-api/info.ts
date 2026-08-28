@@ -135,7 +135,7 @@ export function checkHasConnectedSystems([conformance]: [ConformanceClass[]]) {
   return conformance.some(
     (c) =>
       c.startsWith(CSAPI_PART1_CONFORMANCE_PREFIX) ||
-      c.startsWith(CSAPI_PART2_CONFORMANCE_PREFIX)
+      c.startsWith(CSAPI_PART2_CONFORMANCE_PREFIX),
   );
 }
 
@@ -313,7 +313,7 @@ export function parseCollections(doc: OgcApiDocument): Array<{
     if (
       Array.isArray(collection.links) &&
       collection.links.some(
-        (link) => typeof link.rel === 'string' && /^ogc-cs:.+$/.test(link.rel)
+        (link) => typeof link.rel === 'string' && /^ogc-cs:.+$/.test(link.rel),
       )
     ) {
       result.hasConnectedSystems = true;

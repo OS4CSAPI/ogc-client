@@ -6,7 +6,7 @@ import type { CSAPICollectionRef } from './model.js';
  * metadata and resource URLs.
  *
  * Pure factory: no I/O, no `await`, no error wrapping. Network-aware
- * composition lives in {@link OgcApiEndpoint.csapi} (the discoverable
+ * composition lives in `OgcApiEndpoint.csapi()` (the discoverable
  * entry point); this standalone factory is the value-shaped form for
  * tests and advanced consumers who already hold the inputs.
  *
@@ -14,8 +14,8 @@ import type { CSAPICollectionRef } from './model.js';
  * strings via its `get*()` methods — the consumer is responsible for the
  * `fetch()` call (auth headers, timeouts, retries, `AbortSignal`, error
  * handling) and for handing the parsed JSON body to the matching parser
- * function. See the {@link module:csapi | csapi module docblock} for the
- * full 5-step request pattern.
+ * function. See the CSAPI module documentation for the full 5-step request
+ * pattern.
  *
  * @param collection - Collection descriptor with `id`, optional `title`,
  *   and the `links` array discovered from the collection document.
@@ -46,7 +46,7 @@ import type { CSAPICollectionRef } from './model.js';
  * ```
  *
  * @see {@link CSAPIQueryBuilder} for all available query methods
- * @see {@link module:csapi | csapi module docblock} for the request pattern
+ * @see The CSAPI module documentation for the request pattern
  * @see https://docs.ogc.org/is/23-001/23-001.html
  * @see https://docs.ogc.org/is/23-002/23-002.html
  *
@@ -54,7 +54,7 @@ import type { CSAPICollectionRef } from './model.js';
  */
 export function createCSAPIBuilder(
   collection: CSAPICollectionRef,
-  resourceUrls: ReadonlyMap<string, string>
+  resourceUrls: ReadonlyMap<string, string>,
 ): CSAPIQueryBuilder {
   return new CSAPIQueryBuilder(collection, new Map(resourceUrls));
 }

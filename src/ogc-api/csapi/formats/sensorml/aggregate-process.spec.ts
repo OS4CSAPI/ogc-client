@@ -155,10 +155,10 @@ describe('parseAggregateProcess', () => {
       expect(result.label).toBe('Weather Processing Chain');
       expect(result.uniqueId).toBe('urn:example:process:weather-chain');
       expect(result.description).toBe(
-        'Processes raw weather sensor data through calibration and QC'
+        'Processes raw weather sensor data through calibration and QC',
       );
       expect(result.definition).toBe(
-        'http://www.opengis.net/def/process/weather-chain'
+        'http://www.opengis.net/def/process/weather-chain',
       );
     });
 
@@ -166,7 +166,7 @@ describe('parseAggregateProcess', () => {
       const result = parseAggregateProcess(FULL_AGGREGATE_PROCESS);
       expect(result.typeOf).toBeDefined();
       expect(result.typeOf!.href).toBe(
-        'http://example.org/processes/base-chain'
+        'http://example.org/processes/base-chain',
       );
       expect(result.typeOf!.title).toBe('Base Processing Chain');
     });
@@ -176,7 +176,7 @@ describe('parseAggregateProcess', () => {
       expect(result.configuration).toBeDefined();
       expect(result.configuration!.setValues).toHaveLength(1);
       expect(result.configuration!.setValues![0].ref).toBe(
-        'parameters/samplingRate'
+        'parameters/samplingRate',
       );
     });
 
@@ -185,7 +185,7 @@ describe('parseAggregateProcess', () => {
       expect(result.featuresOfInterest).toBeDefined();
       expect(result.featuresOfInterest).toHaveLength(1);
       expect(result.featuresOfInterest![0].href).toBe(
-        'http://example.org/features/station-1'
+        'http://example.org/features/station-1',
       );
     });
 
@@ -264,7 +264,7 @@ describe('parseAggregateProcess', () => {
       expect(result.components![0].name).toBe('externalSensor');
       expect(result.components![0].type).toBe('Link');
       expect((result.components![0] as any).href).toBe(
-        'http://example.org/sensors/external-1'
+        'http://example.org/sensors/external-1',
       );
     });
 
@@ -350,7 +350,7 @@ describe('parseAggregateProcess', () => {
       expect(result.connections).toHaveLength(3);
       expect(result.connections![0].source).toBe('inputs/rawTemperature');
       expect(result.connections![0].destination).toBe(
-        'components/calibrator/inputs/raw'
+        'components/calibrator/inputs/raw',
       );
     });
 
@@ -383,13 +383,13 @@ describe('parseAggregateProcess', () => {
     it('throws for null input', () => {
       expect(() => parseAggregateProcess(null)).toThrow(SensorMLParseError);
       expect(() => parseAggregateProcess(null)).toThrow(
-        'AggregateProcess input must be a non-null object'
+        'AggregateProcess input must be a non-null object',
       );
     });
 
     it('throws for non-object input', () => {
       expect(() => parseAggregateProcess('not-an-object')).toThrow(
-        SensorMLParseError
+        SensorMLParseError,
       );
       expect(() => parseAggregateProcess(42)).toThrow(SensorMLParseError);
     });
@@ -400,7 +400,7 @@ describe('parseAggregateProcess', () => {
 
     it('throws for missing type', () => {
       expect(() =>
-        parseAggregateProcess({ label: 'Test', uniqueId: 'urn:x' })
+        parseAggregateProcess({ label: 'Test', uniqueId: 'urn:x' }),
       ).toThrow('Expected type "AggregateProcess"');
     });
 
@@ -410,7 +410,7 @@ describe('parseAggregateProcess', () => {
           type: 'SimpleProcess',
           label: 'Test',
           uniqueId: 'urn:x',
-        })
+        }),
       ).toThrow('Expected type "AggregateProcess", got "SimpleProcess"');
     });
 
@@ -419,13 +419,13 @@ describe('parseAggregateProcess', () => {
         parseAggregateProcess({
           type: 'AggregateProcess',
           uniqueId: 'urn:x',
-        })
+        }),
       ).toThrow('AggregateProcess must have a string "label" property');
     });
 
     it('throws for missing uniqueId', () => {
       expect(() =>
-        parseAggregateProcess({ type: 'AggregateProcess', label: 'Test' })
+        parseAggregateProcess({ type: 'AggregateProcess', label: 'Test' }),
       ).toThrow('AggregateProcess must have a string "uniqueId" property');
     });
 
@@ -435,7 +435,7 @@ describe('parseAggregateProcess', () => {
           type: 'AggregateProcess',
           label: 42,
           uniqueId: 'urn:x',
-        })
+        }),
       ).toThrow('AggregateProcess must have a string "label" property');
     });
 
@@ -445,7 +445,7 @@ describe('parseAggregateProcess', () => {
           type: 'AggregateProcess',
           label: 'Test',
           uniqueId: null,
-        })
+        }),
       ).toThrow('AggregateProcess must have a string "uniqueId" property');
     });
 
@@ -454,7 +454,7 @@ describe('parseAggregateProcess', () => {
         parseAggregateProcess({
           ...MINIMAL_AGGREGATE_PROCESS,
           components: 'not-an-array',
-        })
+        }),
       ).toThrow('"components" must be an array');
     });
 
@@ -465,7 +465,7 @@ describe('parseAggregateProcess', () => {
           components: [
             { type: 'SimpleProcess', label: 'Test', uniqueId: 'urn:x' },
           ],
-        })
+        }),
       ).toThrow('components[0] must have a string "name" property');
     });
 
@@ -474,7 +474,7 @@ describe('parseAggregateProcess', () => {
         parseAggregateProcess({
           ...MINIMAL_AGGREGATE_PROCESS,
           components: ['not-an-object'],
-        })
+        }),
       ).toThrow('components[0] must be an object');
     });
 
@@ -483,7 +483,7 @@ describe('parseAggregateProcess', () => {
         parseAggregateProcess({
           ...MINIMAL_AGGREGATE_PROCESS,
           connections: 'not-an-array',
-        })
+        }),
       ).toThrow('"connections" must be an array');
     });
 
@@ -492,7 +492,7 @@ describe('parseAggregateProcess', () => {
         parseAggregateProcess({
           ...MINIMAL_AGGREGATE_PROCESS,
           connections: [{ destination: 'outputs/result' }],
-        })
+        }),
       ).toThrow('connections[0] must have a string "source" property');
     });
 
@@ -501,7 +501,7 @@ describe('parseAggregateProcess', () => {
         parseAggregateProcess({
           ...MINIMAL_AGGREGATE_PROCESS,
           connections: [{ source: 'inputs/value' }],
-        })
+        }),
       ).toThrow('connections[0] must have a string "destination" property');
     });
 
@@ -510,7 +510,7 @@ describe('parseAggregateProcess', () => {
         parseAggregateProcess({
           ...MINIMAL_AGGREGATE_PROCESS,
           connections: ['not-an-object'],
-        })
+        }),
       ).toThrow('connections[0] must be an object');
     });
 
@@ -519,7 +519,7 @@ describe('parseAggregateProcess', () => {
         parseAggregateProcess({
           ...MINIMAL_AGGREGATE_PROCESS,
           inputs: 'not-an-array',
-        })
+        }),
       ).toThrow('"inputs" must be an array');
     });
 
@@ -583,7 +583,7 @@ describe('parseAggregateProcess', () => {
       });
       expect(result.type).toBe('AggregateProcess');
       expect((result as any).unknownProp).toBe(
-        'should be preserved in passthrough'
+        'should be preserved in passthrough',
       );
     });
 
@@ -632,7 +632,7 @@ describe('parseComponentList', () => {
 
   it('throws for non-array input', () => {
     expect(() => parseComponentList('string')).toThrow(
-      '"components" must be an array'
+      '"components" must be an array',
     );
   });
 
@@ -665,7 +665,7 @@ describe('parseConnectionList', () => {
 
   it('throws for non-array input', () => {
     expect(() => parseConnectionList('string')).toThrow(
-      '"connections" must be an array'
+      '"connections" must be an array',
     );
   });
 
@@ -692,7 +692,7 @@ describe('parseComponentEntry', () => {
         label: 'Proc 1',
         uniqueId: 'urn:x',
       },
-      0
+      0,
     );
     expect(result.name).toBe('proc1');
     expect(result.type).toBe('SimpleProcess');
@@ -705,7 +705,7 @@ describe('parseComponentEntry', () => {
         type: 'Link',
         href: 'http://example.org/proc',
       },
-      0
+      0,
     );
     expect(result.name).toBe('ext1');
     expect(result.type).toBe('Link');
@@ -713,13 +713,13 @@ describe('parseComponentEntry', () => {
 
   it('throws for non-object input', () => {
     expect(() => parseComponentEntry('string', 0)).toThrow(
-      'components[0] must be an object'
+      'components[0] must be an object',
     );
   });
 
   it('throws for missing name', () => {
     expect(() => parseComponentEntry({ type: 'SimpleProcess' }, 2)).toThrow(
-      'components[2] must have a string "name" property'
+      'components[2] must have a string "name" property',
     );
   });
 
@@ -733,7 +733,7 @@ describe('parseComponentEntry', () => {
         uniqueId: 'urn:step1',
         label: 'Step 1',
       },
-      0
+      0,
     );
     expect(entry.name).toBe('step1');
     expect(entry.type).toBe('SimpleProcess');
@@ -749,7 +749,7 @@ describe('parseComponentEntry', () => {
         label: 'Sub Station',
         components: [],
       },
-      0
+      0,
     );
     expect(entry.name).toBe('subStation');
     expect(entry.type).toBe('PhysicalSystem');
@@ -765,7 +765,7 @@ describe('parseComponentEntry', () => {
         uniqueId: 'urn:sensor1',
         label: 'Sensor 1',
       },
-      0
+      0,
     );
     expect(entry.name).toBe('sensor1');
     expect(entry.type).toBe('PhysicalComponent');
@@ -781,7 +781,7 @@ describe('parseComponentEntry', () => {
         label: 'Sub Chain',
         components: [],
       },
-      0
+      0,
     );
     expect(entry.name).toBe('subChain');
     expect(entry.type).toBe('AggregateProcess');
@@ -796,7 +796,7 @@ describe('parseComponentEntry', () => {
         type: 'FutureProcessType',
         uniqueId: 'urn:future',
       },
-      0
+      0,
     );
     expect(entry.name).toBe('mystery');
     expect((entry as any).type).toBe('FutureProcessType');

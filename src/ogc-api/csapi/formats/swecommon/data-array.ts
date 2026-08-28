@@ -101,19 +101,19 @@ function isLinkReference(json: Record<string, unknown>): boolean {
  */
 function parseElementType(
   json: unknown,
-  componentParser?: ComponentParser
+  componentParser?: ComponentParser,
 ): DataField {
   if (!isRecord(json)) {
     throw new SweCommonParseError(
       'DataArray "elementType" must be a non-null object',
-      'elementType'
+      'elementType',
     );
   }
 
   if (typeof json.name !== 'string' || json.name.length === 0) {
     throw new SweCommonParseError(
       'DataArray "elementType" must have a non-empty "name" string',
-      'elementType.name'
+      'elementType.name',
     );
   }
 
@@ -134,7 +134,7 @@ function parseElementType(
   if (typeof type !== 'string') {
     throw new SweCommonParseError(
       'DataArray "elementType" must have a "type" property or be a link reference',
-      'elementType.type'
+      'elementType.type',
     );
   }
 
@@ -161,7 +161,7 @@ function parseElementType(
 
   throw new SweCommonParseError(
     `DataArray "elementType" has unsupported component type: "${type}"`,
-    'elementType.type'
+    'elementType.type',
   );
 }
 
@@ -179,7 +179,7 @@ function parseElementType(
  * @returns Parsed ElementCount or AssociationAttributeGroup, or undefined
  */
 function parseElementCount(
-  json: unknown
+  json: unknown,
 ): ElementCount | AssociationAttributeGroup | undefined {
   if (json === undefined || json === null) return undefined;
   if (!isRecord(json)) return undefined;
@@ -213,7 +213,7 @@ function parseBinaryMember(json: unknown, index: number): BinaryMember {
   if (!isRecord(json)) {
     throw new SweCommonParseError(
       `BinaryEncoding member at index ${index} must be a non-null object`,
-      `encoding.members[${index}]`
+      `encoding.members[${index}]`,
     );
   }
 
@@ -222,13 +222,13 @@ function parseBinaryMember(json: unknown, index: number): BinaryMember {
     if (typeof json.ref !== 'string') {
       throw new SweCommonParseError(
         `BinaryEncoding Component member at index ${index} must have a "ref" string`,
-        `encoding.members[${index}].ref`
+        `encoding.members[${index}].ref`,
       );
     }
     if (typeof json.dataType !== 'string') {
       throw new SweCommonParseError(
         `BinaryEncoding Component member at index ${index} must have a "dataType" string`,
-        `encoding.members[${index}].dataType`
+        `encoding.members[${index}].dataType`,
       );
     }
     // Required fields ref and dataType are validated above (Issue #74).
@@ -251,7 +251,7 @@ function parseBinaryMember(json: unknown, index: number): BinaryMember {
     if (typeof json.ref !== 'string') {
       throw new SweCommonParseError(
         `BinaryEncoding Block member at index ${index} must have a "ref" string`,
-        `encoding.members[${index}].ref`
+        `encoding.members[${index}].ref`,
       );
     }
     // Required field ref is validated above (Issue #74).
@@ -276,9 +276,9 @@ function parseBinaryMember(json: unknown, index: number): BinaryMember {
 
   throw new SweCommonParseError(
     `BinaryEncoding member at index ${index} has unrecognized type: "${String(
-      type
+      type,
     )}"`,
-    `encoding.members[${index}].type`
+    `encoding.members[${index}].type`,
   );
 }
 
@@ -307,7 +307,7 @@ export function parseEncoding(json: unknown): DataEncoding {
   if (!isRecord(json)) {
     throw new SweCommonParseError(
       'DataEncoding must be a non-null object',
-      'encoding'
+      'encoding',
     );
   }
 
@@ -315,7 +315,7 @@ export function parseEncoding(json: unknown): DataEncoding {
   if (typeof type !== 'string') {
     throw new SweCommonParseError(
       'DataEncoding must have a "type" string property',
-      'encoding.type'
+      'encoding.type',
     );
   }
 
@@ -335,13 +335,13 @@ export function parseEncoding(json: unknown): DataEncoding {
       if (typeof json.tokenSeparator !== 'string') {
         throw new SweCommonParseError(
           'TextEncoding requires a "tokenSeparator" string',
-          'encoding.tokenSeparator'
+          'encoding.tokenSeparator',
         );
       }
       if (typeof json.blockSeparator !== 'string') {
         throw new SweCommonParseError(
           'TextEncoding requires a "blockSeparator" string',
-          'encoding.blockSeparator'
+          'encoding.blockSeparator',
         );
       }
       // Required fields tokenSeparator and blockSeparator are validated above (Issue #74).
@@ -363,23 +363,23 @@ export function parseEncoding(json: unknown): DataEncoding {
       if (typeof json.byteOrder !== 'string') {
         throw new SweCommonParseError(
           'BinaryEncoding requires a "byteOrder" string',
-          'encoding.byteOrder'
+          'encoding.byteOrder',
         );
       }
       if (typeof json.byteEncoding !== 'string') {
         throw new SweCommonParseError(
           'BinaryEncoding requires a "byteEncoding" string',
-          'encoding.byteEncoding'
+          'encoding.byteEncoding',
         );
       }
       if (!Array.isArray(json.members) || json.members.length === 0) {
         throw new SweCommonParseError(
           'BinaryEncoding requires a non-empty "members" array',
-          'encoding.members'
+          'encoding.members',
         );
       }
       const members: BinaryMember[] = (json.members as unknown[]).map((m, i) =>
-        parseBinaryMember(m, i)
+        parseBinaryMember(m, i),
       );
       // Required fields byteOrder, byteEncoding, members are validated above (Issue #74).
       const result: BinaryEncoding = {
@@ -406,7 +406,7 @@ export function parseEncoding(json: unknown): DataEncoding {
     default:
       throw new SweCommonParseError(
         `Unrecognized encoding type: "${type}"`,
-        'encoding.type'
+        'encoding.type',
       );
   }
 }
@@ -445,7 +445,7 @@ export function parseEncoding(json: unknown): DataEncoding {
  */
 export function decodeValues(
   values: unknown,
-  encoding: DataEncoding
+  encoding: DataEncoding,
 ): EncodedValues {
   // Link reference passthrough
   if (isRecord(values) && typeof values.href === 'string') {
@@ -525,7 +525,7 @@ export function decodeValues(
  */
 export function parseDataArray(
   json: unknown,
-  componentParser?: ComponentParser
+  componentParser?: ComponentParser,
 ): DataArray {
   if (!isRecord(json)) {
     throw new SweCommonParseError('DataArray input must be a non-null object');
@@ -534,7 +534,7 @@ export function parseDataArray(
   if (json.type !== 'DataArray') {
     throw new SweCommonParseError(
       `Expected type "DataArray" but received "${String(json.type)}"`,
-      'type'
+      'type',
     );
   }
 
@@ -542,7 +542,7 @@ export function parseDataArray(
   if (json.elementType === undefined || json.elementType === null) {
     throw new SweCommonParseError(
       'DataArray requires an "elementType" property',
-      'elementType'
+      'elementType',
     );
   }
   const elementType = parseElementType(json.elementType, componentParser);

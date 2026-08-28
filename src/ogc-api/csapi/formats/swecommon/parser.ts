@@ -148,19 +148,19 @@ function isLinkReference(json: Record<string, unknown>): boolean {
 function parseField(
   json: unknown,
   index: number,
-  parentType: string
+  parentType: string,
 ): DataField | TypedDataField {
   if (!isRecord(json)) {
     throw new SweCommonParseError(
       `${parentType} field at index ${index} must be a non-null object`,
-      `fields[${index}]`
+      `fields[${index}]`,
     );
   }
 
   if (typeof json.name !== 'string' || json.name.length === 0) {
     throw new SweCommonParseError(
       `${parentType} field at index ${index} must have a non-empty "name" string`,
-      `fields[${index}].name`
+      `fields[${index}].name`,
     );
   }
 
@@ -181,7 +181,7 @@ function parseField(
   if (typeof type !== 'string') {
     throw new SweCommonParseError(
       `${parentType} field "${name}" must have a "type" property or be a link reference`,
-      `fields[${index}].type`
+      `fields[${index}].type`,
     );
   }
 
@@ -195,7 +195,7 @@ function parseField(
 
   throw new SweCommonParseError(
     `${parentType} field "${name}" has unsupported component type: "${type}"`,
-    `fields[${index}].type`
+    `fields[${index}].type`,
   );
 }
 
@@ -242,26 +242,26 @@ export function parseVector(json: unknown): Vector {
   if (json.type !== 'Vector') {
     throw new SweCommonParseError(
       `Expected type "Vector" but received "${String(json.type)}"`,
-      'type'
+      'type',
     );
   }
 
   if (typeof json.referenceFrame !== 'string') {
     throw new SweCommonParseError(
       'Vector requires a "referenceFrame" string property',
-      'referenceFrame'
+      'referenceFrame',
     );
   }
 
   if (!Array.isArray(json.coordinates) || json.coordinates.length === 0) {
     throw new SweCommonParseError(
       'Vector "coordinates" must be a non-empty array',
-      'coordinates'
+      'coordinates',
     );
   }
 
   const coordinates: DataField[] = (json.coordinates as unknown[]).map(
-    (coordJson, index) => parseField(coordJson, index, 'Vector')
+    (coordJson, index) => parseField(coordJson, index, 'Vector'),
   );
 
   const result: Vector = {
@@ -324,7 +324,7 @@ export function parseMatrix(json: unknown): Matrix {
   if (json.type !== 'Matrix') {
     throw new SweCommonParseError(
       `Expected type "Matrix" but received "${String(json.type)}"`,
-      'type'
+      'type',
     );
   }
 
@@ -332,7 +332,7 @@ export function parseMatrix(json: unknown): Matrix {
   if (json.elementType === undefined || json.elementType === null) {
     throw new SweCommonParseError(
       'Matrix requires an "elementType" property',
-      'elementType'
+      'elementType',
     );
   }
 
@@ -396,14 +396,14 @@ function parseElementType(json: unknown): DataField {
   if (!isRecord(json)) {
     throw new SweCommonParseError(
       '"elementType" must be a non-null object',
-      'elementType'
+      'elementType',
     );
   }
 
   if (typeof json.name !== 'string' || json.name.length === 0) {
     throw new SweCommonParseError(
       '"elementType" must have a non-empty "name" string',
-      'elementType.name'
+      'elementType.name',
     );
   }
 
@@ -424,7 +424,7 @@ function parseElementType(json: unknown): DataField {
   if (typeof type !== 'string') {
     throw new SweCommonParseError(
       '"elementType" must have a "type" property or be a link reference',
-      'elementType.type'
+      'elementType.type',
     );
   }
 
@@ -434,7 +434,7 @@ function parseElementType(json: unknown): DataField {
 
   throw new SweCommonParseError(
     `"elementType" has unsupported component type: "${type}"`,
-    'elementType.type'
+    'elementType.type',
   );
 }
 
@@ -442,7 +442,7 @@ function parseElementType(json: unknown): DataField {
  * Parse an `elementCount` property.
  */
 function parseElementCount(
-  json: unknown
+  json: unknown,
 ): ElementCount | AssociationAttributeGroup | undefined {
   if (json === undefined || json === null) return undefined;
   if (!isRecord(json)) return undefined;
@@ -500,19 +500,19 @@ export function parseDataChoice(json: unknown): DataChoice {
   if (json.type !== 'DataChoice') {
     throw new SweCommonParseError(
       `Expected type "DataChoice" but received "${String(json.type)}"`,
-      'type'
+      'type',
     );
   }
 
   if (!Array.isArray(json.items) || json.items.length === 0) {
     throw new SweCommonParseError(
       'DataChoice "items" must be a non-empty array',
-      'items'
+      'items',
     );
   }
 
   const items: DataField[] = (json.items as unknown[]).map((itemJson, index) =>
-    parseField(itemJson, index, 'DataChoice')
+    parseField(itemJson, index, 'DataChoice'),
   );
 
   // choiceValue — optional (SweCategory indicating active choice)
@@ -587,7 +587,7 @@ export function parseGeometry(json: unknown): SweGeometry {
   if (json.type !== 'Geometry') {
     throw new SweCommonParseError(
       `Expected type "Geometry" but received "${String(json.type)}"`,
-      'type'
+      'type',
     );
   }
 
@@ -608,7 +608,7 @@ export function parseGeometry(json: unknown): SweGeometry {
     const raw = json.constraint;
     if (Array.isArray(raw.geomTypes)) {
       constraint.geomTypes = (raw.geomTypes as string[]).filter(
-        (t) => typeof t === 'string'
+        (t) => typeof t === 'string',
       ) as GeometryType[];
     }
     result.constraint = constraint;
@@ -619,7 +619,7 @@ export function parseGeometry(json: unknown): SweGeometry {
     result.nilValues = json.nilValues
       .filter(
         (entry: unknown): entry is Record<string, unknown> =>
-          isRecord(entry) && typeof entry.reason === 'string'
+          isRecord(entry) && typeof entry.reason === 'string',
       )
       .map((entry: Record<string, unknown>) => ({
         reason: entry.reason as string,
@@ -716,7 +716,7 @@ export function parseGeometry(json: unknown): SweGeometry {
 export function parseSWEComponent(json: unknown): AnyComponent {
   if (!isRecord(json)) {
     throw new SweCommonParseError(
-      'SWE Component input must be a non-null object'
+      'SWE Component input must be a non-null object',
     );
   }
 
@@ -724,7 +724,7 @@ export function parseSWEComponent(json: unknown): AnyComponent {
     throw new SweCommonParseError(
       'SWE Component must have a string "type" property. ' +
         `Valid types: ${[...ALL_COMPONENT_TYPES].join(', ')}`,
-      'type'
+      'type',
     );
   }
 
@@ -766,7 +766,7 @@ export function parseSWEComponent(json: unknown): AnyComponent {
       throw new SweCommonParseError(
         `Unknown SWE Component type: "${json.type}". ` +
           `Valid types: ${[...ALL_COMPONENT_TYPES].join(', ')}`,
-        'type'
+        'type',
       );
   }
 }
@@ -865,7 +865,7 @@ export function detectEncoding(json: unknown): DataEncoding | undefined {
  */
 export function validateAgainstSchema(
   value: unknown,
-  schema: AnyComponent
+  schema: AnyComponent,
 ): ValidationResult {
   const errors: ValidationError[] = [];
   validateComponent(value, schema, '', errors);
@@ -884,7 +884,7 @@ function validateComponent(
   value: unknown,
   schema: AnyComponent,
   path: string,
-  errors: ValidationError[]
+  errors: ValidationError[],
 ): void {
   switch (schema.type) {
     case 'DataRecord':
@@ -954,7 +954,7 @@ function validateNumeric(
   value: unknown,
   schema: SweQuantity | SweQuantityRange,
   path: string,
-  errors: ValidationError[]
+  errors: ValidationError[],
 ): void {
   if (value === undefined || value === null) return; // optional values
 
@@ -1002,7 +1002,7 @@ function validateInteger(
   value: unknown,
   schema: SweCount | SweCountRange,
   path: string,
-  errors: ValidationError[]
+  errors: ValidationError[],
 ): void {
   if (value === undefined || value === null) return;
 
@@ -1057,7 +1057,7 @@ function validateInteger(
 function validateBoolean(
   value: unknown,
   path: string,
-  errors: ValidationError[]
+  errors: ValidationError[],
 ): void {
   if (value === undefined || value === null) return;
   if (typeof value !== 'boolean') {
@@ -1076,7 +1076,7 @@ function validateString(
   value: unknown,
   schema: SweText | SweCategory | SweCategoryRange,
   path: string,
-  errors: ValidationError[]
+  errors: ValidationError[],
 ): void {
   if (value === undefined || value === null) return;
 
@@ -1125,7 +1125,7 @@ function validateString(
 function validateTime(
   value: unknown,
   path: string,
-  errors: ValidationError[]
+  errors: ValidationError[],
 ): void {
   if (value === undefined || value === null) return;
   if (typeof value !== 'string' && typeof value !== 'number') {
@@ -1144,7 +1144,7 @@ function validateAllowedValues(
   value: number,
   constraint: Record<string, unknown>,
   path: string,
-  errors: ValidationError[]
+  errors: ValidationError[],
 ): void {
   // Check enumerated values
   if (Array.isArray(constraint.values) && constraint.values.length > 0) {
@@ -1167,7 +1167,7 @@ function validateAllowedValues(
         typeof interval[0] === 'number' &&
         typeof interval[1] === 'number' &&
         value >= interval[0] &&
-        value <= interval[1]
+        value <= interval[1],
     );
     if (!inRange) {
       errors.push({
@@ -1186,7 +1186,7 @@ function validateAllowedTokens(
   value: string,
   constraint: Record<string, unknown>,
   path: string,
-  errors: ValidationError[]
+  errors: ValidationError[],
 ): void {
   if (Array.isArray(constraint.values) && constraint.values.length > 0) {
     if (!constraint.values.includes(value)) {
@@ -1229,7 +1229,7 @@ function validateDataRecord(
   value: unknown,
   schema: DataRecord,
   path: string,
-  errors: ValidationError[]
+  errors: ValidationError[],
 ): void {
   if (!isRecord(value)) {
     errors.push({
@@ -1272,7 +1272,7 @@ function validateDataArray(
   value: unknown,
   schema: DataArray,
   path: string,
-  errors: ValidationError[]
+  errors: ValidationError[],
 ): void {
   if (!Array.isArray(value)) {
     errors.push({
@@ -1303,7 +1303,7 @@ function validateVector(
   value: unknown,
   schema: Vector,
   path: string,
-  errors: ValidationError[]
+  errors: ValidationError[],
 ): void {
   if (!isRecord(value) && !Array.isArray(value)) {
     errors.push({
@@ -1337,7 +1337,7 @@ function validateMatrix(
   value: unknown,
   schema: Matrix,
   path: string,
-  errors: ValidationError[]
+  errors: ValidationError[],
 ): void {
   if (!Array.isArray(value)) {
     errors.push({
@@ -1368,7 +1368,7 @@ function validateDataChoice(
   value: unknown,
   schema: DataChoice,
   path: string,
-  errors: ValidationError[]
+  errors: ValidationError[],
 ): void {
   if (!isRecord(value)) {
     errors.push({
@@ -1400,7 +1400,7 @@ function validateGeometry(
   value: unknown,
   schema: SweGeometry,
   path: string,
-  errors: ValidationError[]
+  errors: ValidationError[],
 ): void {
   if (!isRecord(value)) {
     errors.push({
@@ -1440,7 +1440,7 @@ function validateGeometry(
       message: `Geometry type "${
         value.type
       }" is not in the allowed types: ${schema.constraint.geomTypes.join(
-        ', '
+        ', ',
       )}`,
       code: 'CONSTRAINT_VIOLATION',
     });

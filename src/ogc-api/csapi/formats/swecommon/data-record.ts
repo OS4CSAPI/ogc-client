@@ -105,19 +105,19 @@ function isLinkReference(json: Record<string, unknown>): boolean {
 function parseField(
   json: unknown,
   index: number,
-  componentParser?: ComponentParser
+  componentParser?: ComponentParser,
 ): DataField | TypedDataField {
   if (!isRecord(json)) {
     throw new SweCommonParseError(
       `DataRecord field at index ${index} must be a non-null object`,
-      `fields[${index}]`
+      `fields[${index}]`,
     );
   }
 
   if (typeof json.name !== 'string' || json.name.length === 0) {
     throw new SweCommonParseError(
       `DataRecord field at index ${index} must have a non-empty "name" string`,
-      `fields[${index}].name`
+      `fields[${index}].name`,
     );
   }
 
@@ -138,7 +138,7 @@ function parseField(
   if (typeof type !== 'string') {
     throw new SweCommonParseError(
       `DataRecord field "${name}" must have a "type" property or be a link reference`,
-      `fields[${index}].type`
+      `fields[${index}].type`,
     );
   }
 
@@ -169,7 +169,7 @@ function parseField(
 
   throw new SweCommonParseError(
     `DataRecord field "${name}" has unsupported component type: "${type}"`,
-    `fields[${index}].type`
+    `fields[${index}].type`,
   );
 }
 
@@ -212,7 +212,7 @@ function parseField(
  */
 export function parseDataRecord(
   json: unknown,
-  componentParser?: ComponentParser
+  componentParser?: ComponentParser,
 ): DataRecord {
   if (!isRecord(json)) {
     throw new SweCommonParseError('DataRecord input must be a non-null object');
@@ -221,19 +221,19 @@ export function parseDataRecord(
   if (json.type !== 'DataRecord') {
     throw new SweCommonParseError(
       `Expected type "DataRecord" but received "${String(json.type)}"`,
-      'type'
+      'type',
     );
   }
 
   if (!Array.isArray(json.fields) || json.fields.length === 0) {
     throw new SweCommonParseError(
       'DataRecord "fields" must be a non-empty array',
-      'fields'
+      'fields',
     );
   }
 
   const fields: DataField[] = (json.fields as unknown[]).map(
-    (fieldJson, index) => parseField(fieldJson, index, componentParser)
+    (fieldJson, index) => parseField(fieldJson, index, componentParser),
   );
 
   const result: DataRecord = {

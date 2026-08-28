@@ -200,16 +200,16 @@ describe('parseDatastreamSchemaResponse', () => {
 
   it('throws on non-object input', () => {
     expect(() => parseDatastreamSchemaResponse(null)).toThrow(
-      'parseDatastreamSchemaResponse: input must be a non-null object'
+      'parseDatastreamSchemaResponse: input must be a non-null object',
     );
     expect(() => parseDatastreamSchemaResponse(undefined)).toThrow(
-      'parseDatastreamSchemaResponse: input must be a non-null object'
+      'parseDatastreamSchemaResponse: input must be a non-null object',
     );
     expect(() => parseDatastreamSchemaResponse('string')).toThrow(
-      'parseDatastreamSchemaResponse: input must be a non-null object'
+      'parseDatastreamSchemaResponse: input must be a non-null object',
     );
     expect(() => parseDatastreamSchemaResponse(42)).toThrow(
-      'parseDatastreamSchemaResponse: input must be a non-null object'
+      'parseDatastreamSchemaResponse: input must be a non-null object',
     );
   });
 });
@@ -403,16 +403,16 @@ describe('parseControlStreamSchemaResponse', () => {
 
   it('throws on non-object input', () => {
     expect(() => parseControlStreamSchemaResponse(null)).toThrow(
-      'parseControlStreamSchemaResponse: input must be a non-null object'
+      'parseControlStreamSchemaResponse: input must be a non-null object',
     );
     expect(() => parseControlStreamSchemaResponse(undefined)).toThrow(
-      'parseControlStreamSchemaResponse: input must be a non-null object'
+      'parseControlStreamSchemaResponse: input must be a non-null object',
     );
     expect(() => parseControlStreamSchemaResponse('string')).toThrow(
-      'parseControlStreamSchemaResponse: input must be a non-null object'
+      'parseControlStreamSchemaResponse: input must be a non-null object',
     );
     expect(() => parseControlStreamSchemaResponse(42)).toThrow(
-      'parseControlStreamSchemaResponse: input must be a non-null object'
+      'parseControlStreamSchemaResponse: input must be a non-null object',
     );
   });
 });

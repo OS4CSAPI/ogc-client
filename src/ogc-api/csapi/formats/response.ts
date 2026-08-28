@@ -89,7 +89,7 @@ export interface CollectionResponse<T> {
  */
 export function parseCollectionResponse<T>(
   body: unknown,
-  parseItem: (item: unknown, index: number) => T
+  parseItem: (item: unknown, index: number) => T,
 ): CollectionResponse<T> {
   if (typeof body !== 'object' || body === null) {
     throw new EndpointError('Invalid collection response: expected an object');
@@ -105,7 +105,7 @@ export function parseCollectionResponse<T>(
     rawItems = obj.items as unknown[];
   } else {
     throw new EndpointError(
-      'Invalid collection response: missing both "features" and "items" arrays'
+      'Invalid collection response: missing both "features" and "items" arrays',
     );
   }
 

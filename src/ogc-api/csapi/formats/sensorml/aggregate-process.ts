@@ -82,25 +82,25 @@ export {
 export function parseAggregateProcess(json: unknown): AggregateProcess {
   if (!isRecord(json)) {
     throw new SensorMLParseError(
-      'AggregateProcess input must be a non-null object'
+      'AggregateProcess input must be a non-null object',
     );
   }
 
   if (json.type !== 'AggregateProcess') {
     throw new SensorMLParseError(
-      `Expected type "AggregateProcess", got "${String(json.type)}"`
+      `Expected type "AggregateProcess", got "${String(json.type)}"`,
     );
   }
 
   // --- DescribedObject-level properties (required) ---
   if (typeof json.label !== 'string') {
     throw new SensorMLParseError(
-      'AggregateProcess must have a string "label" property'
+      'AggregateProcess must have a string "label" property',
     );
   }
   if (typeof json.uniqueId !== 'string') {
     throw new SensorMLParseError(
-      'AggregateProcess must have a string "uniqueId" property'
+      'AggregateProcess must have a string "uniqueId" property',
     );
   }
 
@@ -111,11 +111,9 @@ export function parseAggregateProcess(json: unknown): AggregateProcess {
   const featuresOfInterest = parseFeatureList(json.featuresOfInterest);
   const inputs = parseIOList(json.inputs, 'inputs') as InputList | undefined;
   const outputs = parseIOList(json.outputs, 'outputs') as
-    | OutputList
-    | undefined;
+    OutputList | undefined;
   const parameters = parseIOList(json.parameters, 'parameters') as
-    | ParameterList
-    | undefined;
+    ParameterList | undefined;
   const modes = parseModes(json.modes);
 
   // --- AggregateProcess-specific properties ---

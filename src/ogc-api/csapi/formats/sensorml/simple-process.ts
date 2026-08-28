@@ -62,25 +62,25 @@ export { parseProcessMethod, parseIOComponentChoice } from './_helpers.js';
 export function parseSimpleProcess(json: unknown): SimpleProcess {
   if (!isRecord(json)) {
     throw new SensorMLParseError(
-      'SimpleProcess input must be a non-null object'
+      'SimpleProcess input must be a non-null object',
     );
   }
 
   if (json.type !== 'SimpleProcess') {
     throw new SensorMLParseError(
-      `Expected type "SimpleProcess", got "${String(json.type)}"`
+      `Expected type "SimpleProcess", got "${String(json.type)}"`,
     );
   }
 
   // --- DescribedObject-level properties (required) ---
   if (typeof json.label !== 'string') {
     throw new SensorMLParseError(
-      'SimpleProcess must have a string "label" property'
+      'SimpleProcess must have a string "label" property',
     );
   }
   if (typeof json.uniqueId !== 'string') {
     throw new SensorMLParseError(
-      'SimpleProcess must have a string "uniqueId" property'
+      'SimpleProcess must have a string "uniqueId" property',
     );
   }
 
@@ -91,11 +91,9 @@ export function parseSimpleProcess(json: unknown): SimpleProcess {
   const featuresOfInterest = parseFeatureList(json.featuresOfInterest);
   const inputs = parseIOList(json.inputs, 'inputs') as InputList | undefined;
   const outputs = parseIOList(json.outputs, 'outputs') as
-    | OutputList
-    | undefined;
+    OutputList | undefined;
   const parameters = parseIOList(json.parameters, 'parameters') as
-    | ParameterList
-    | undefined;
+    ParameterList | undefined;
   const modes = parseModes(json.modes);
 
   // --- SimpleProcess-specific property ---

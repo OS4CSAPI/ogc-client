@@ -826,10 +826,7 @@ export interface PhysicalSystem extends AbstractPhysicalProcess {
  * @see {@link Procedure} for the GeoJSON representation
  */
 export type SensorMLProcess =
-  | SimpleProcess
-  | AggregateProcess
-  | PhysicalComponent
-  | PhysicalSystem;
+  SimpleProcess | AggregateProcess | PhysicalComponent | PhysicalSystem;
 
 // ----------------------------------------
 // Component & Connection Types

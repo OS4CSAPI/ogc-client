@@ -70,7 +70,7 @@ describe('parseDatastream', () => {
     expect(result.id).toBe('0ocb');
     expect(result.name).toBe('FCU Simulated Weather Station - Weather');
     expect(result.description).toBe(
-      'Weather observations from simulated station'
+      'Weather observations from simulated station',
     );
     expect(result.outputName).toBe('weather');
     expect(result.formats).toEqual([
@@ -154,21 +154,21 @@ describe('parseDatastream', () => {
 
     // validTime: "now" sentinel → end is undefined
     expect(result.validTime?.start).toEqual(
-      new Date('2026-01-26T18:32:01.56Z')
+      new Date('2026-01-26T18:32:01.56Z'),
     );
     expect(result.validTime?.end).toBeUndefined();
 
     // phenomenonTime: concrete start and end
     expect(result.phenomenonTime?.start).toEqual(
-      new Date('2026-01-26T18:32:01.56Z')
+      new Date('2026-01-26T18:32:01.56Z'),
     );
     expect(result.phenomenonTime?.end).toEqual(
-      new Date('2026-02-19T14:22:03.12Z')
+      new Date('2026-02-19T14:22:03.12Z'),
     );
 
     // resultTime: concrete start and end
     expect(result.resultTime?.start).toEqual(
-      new Date('2026-01-26T18:32:01.56Z')
+      new Date('2026-01-26T18:32:01.56Z'),
     );
     expect(result.resultTime?.end).toEqual(new Date('2026-02-19T14:22:03.12Z'));
   });
@@ -328,13 +328,13 @@ describe('parseDatastream', () => {
 
   it('throws on non-object input', () => {
     expect(() => parseDatastream(null)).toThrow(
-      'parseDatastream: input must be a non-null object'
+      'parseDatastream: input must be a non-null object',
     );
     expect(() => parseDatastream(42)).toThrow(
-      'parseDatastream: input must be a non-null object'
+      'parseDatastream: input must be a non-null object',
     );
     expect(() => parseDatastream('string')).toThrow(
-      'parseDatastream: input must be a non-null object'
+      'parseDatastream: input must be a non-null object',
     );
   });
 
@@ -499,13 +499,13 @@ describe('parseObservation', () => {
 
   it('throws on non-object input', () => {
     expect(() => parseObservation(null)).toThrow(
-      'parseObservation: input must be a non-null object'
+      'parseObservation: input must be a non-null object',
     );
     expect(() => parseObservation(42)).toThrow(
-      'parseObservation: input must be a non-null object'
+      'parseObservation: input must be a non-null object',
     );
     expect(() => parseObservation('string')).toThrow(
-      'parseObservation: input must be a non-null object'
+      'parseObservation: input must be a non-null object',
     );
   });
 
@@ -709,7 +709,7 @@ describe('parseControlStream', () => {
     expect(result.id).toBe('0o10');
     expect(result.name).toBe('FCU Field Drone CubePilot - Location Control');
     expect(result.description).toBe(
-      'Control stream for MAVLink navigation commands'
+      'Control stream for MAVLink navigation commands',
     );
     expect(result.inputName).toBe('mavControl');
     expect(result.formats).toEqual([
@@ -774,22 +774,22 @@ describe('parseControlStream', () => {
 
     // validTime: "now" sentinel → end is undefined
     expect(result.validTime?.start).toEqual(
-      new Date('2026-01-14T04:49:19.134Z')
+      new Date('2026-01-14T04:49:19.134Z'),
     );
     expect(result.validTime?.end).toBeUndefined();
 
     // issueTime: concrete start and end
     expect(result.issueTime?.start).toEqual(
-      new Date('2026-01-14T12:42:21.910Z')
+      new Date('2026-01-14T12:42:21.910Z'),
     );
     expect(result.issueTime?.end).toEqual(new Date('2026-01-14T13:11:31.196Z'));
 
     // executionTime: concrete start and end
     expect(result.executionTime?.start).toEqual(
-      new Date('2026-01-14T12:42:21.928Z')
+      new Date('2026-01-14T12:42:21.928Z'),
     );
     expect(result.executionTime?.end).toEqual(
-      new Date('2026-01-14T13:11:31.196Z')
+      new Date('2026-01-14T13:11:31.196Z'),
     );
   });
 
@@ -906,13 +906,13 @@ describe('parseControlStream', () => {
 
   it('throws on non-object input', () => {
     expect(() => parseControlStream(null)).toThrow(
-      'parseControlStream: input must be a non-null object'
+      'parseControlStream: input must be a non-null object',
     );
     expect(() => parseControlStream(42)).toThrow(
-      'parseControlStream: input must be a non-null object'
+      'parseControlStream: input must be a non-null object',
     );
     expect(() => parseControlStream('string')).toThrow(
-      'parseControlStream: input must be a non-null object'
+      'parseControlStream: input must be a non-null object',
     );
   });
 
@@ -1084,10 +1084,10 @@ describe('parseCommand', () => {
 
     // executionTime is a TimeInterval (not a string)
     expect(result.executionTime?.start).toEqual(
-      new Date('2026-01-14T12:42:21.928726Z')
+      new Date('2026-01-14T12:42:21.928726Z'),
     );
     expect(result.executionTime?.end).toEqual(
-      new Date('2026-01-14T12:42:25.000000Z')
+      new Date('2026-01-14T12:42:25.000000Z'),
     );
   });
 
@@ -1127,13 +1127,13 @@ describe('parseCommand', () => {
 
   it('throws on non-object input', () => {
     expect(() => parseCommand(null)).toThrow(
-      'parseCommand: input must be a non-null object'
+      'parseCommand: input must be a non-null object',
     );
     expect(() => parseCommand(42)).toThrow(
-      'parseCommand: input must be a non-null object'
+      'parseCommand: input must be a non-null object',
     );
     expect(() => parseCommand('string')).toThrow(
-      'parseCommand: input must be a non-null object'
+      'parseCommand: input must be a non-null object',
     );
   });
 
@@ -1261,10 +1261,10 @@ describe('parseCommandStatus', () => {
     expect(result.statusCode).toBe('COMPLETED');
     expect(result.percentCompletion).toBe(100);
     expect(result.executionTime?.start).toEqual(
-      new Date('2026-01-14T12:42:21.928726Z')
+      new Date('2026-01-14T12:42:21.928726Z'),
     );
     expect(result.executionTime?.end).toEqual(
-      new Date('2026-01-14T12:42:25.000000Z')
+      new Date('2026-01-14T12:42:25.000000Z'),
     );
     expect(result.message).toBe('Command executed successfully');
     expect(result.links).toEqual([
@@ -1359,22 +1359,22 @@ describe('parseCommandStatus', () => {
     const result: CommandStatus = parseCommandStatus(input);
 
     expect(result.executionTime?.start).toEqual(
-      new Date('2026-01-14T12:42:21.928726Z')
+      new Date('2026-01-14T12:42:21.928726Z'),
     );
     expect(result.executionTime?.end).toEqual(
-      new Date('2026-01-14T12:42:25.000000Z')
+      new Date('2026-01-14T12:42:25.000000Z'),
     );
   });
 
   it('throws on non-object input', () => {
     expect(() => parseCommandStatus(null)).toThrow(
-      'parseCommandStatus: input must be a non-null object'
+      'parseCommandStatus: input must be a non-null object',
     );
     expect(() => parseCommandStatus(42)).toThrow(
-      'parseCommandStatus: input must be a non-null object'
+      'parseCommandStatus: input must be a non-null object',
     );
     expect(() => parseCommandStatus('string')).toThrow(
-      'parseCommandStatus: input must be a non-null object'
+      'parseCommandStatus: input must be a non-null object',
     );
   });
 

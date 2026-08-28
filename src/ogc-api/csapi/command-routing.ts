@@ -65,7 +65,7 @@ const routingCache_ = new Map<string, CommandRoutingPreference>();
  * @param serverBaseUrl - The server's base URL (e.g., `https://osh.example.com/api`).
  */
 export function getCommandRoutingPreference(
-  serverBaseUrl: string
+  serverBaseUrl: string,
 ): CommandRoutingPreference | undefined {
   return routingCache_.get(serverBaseUrl);
 }
@@ -78,7 +78,7 @@ export function getCommandRoutingPreference(
  */
 export function setCommandRoutingPreference(
   serverBaseUrl: string,
-  preference: CommandRoutingPreference
+  preference: CommandRoutingPreference,
 ): void {
   routingCache_.set(serverBaseUrl, preference);
 }
@@ -105,7 +105,7 @@ export function clearCommandRoutingCache(): void {
  */
 export function isCommandRouteRejection(
   status: number,
-  bodyText?: string
+  bodyText?: string,
 ): boolean {
   return (
     status === 400 && (bodyText?.includes('Invalid resource name') ?? false)
@@ -153,12 +153,12 @@ export function buildNestedCommandUrl(
   controlStreamId: string,
   commandId?: string,
   subPath?: CommandSubPath,
-  options?: CommandQueryOptions
+  options?: CommandQueryOptions,
 ): string {
   // Delegate query-string serialization to the builder.
   const baseWithOptions = builder.getControlStreamCommands(
     controlStreamId,
-    options
+    options,
   );
 
   // When no extra path segments are needed, the base URL is the answer.

@@ -1,22 +1,23 @@
 /**
- * SensorML 3.0 — public entry point for SensorML parsing and types.
+ * SensorML 3.0 — internal barrel for SensorML parsing and types.
  *
- * This barrel file re-exports the public API surface of the `sensorml/`
- * directory. All runtime values and compile-time types needed by
- * consumers are available from a single import path:
+ * This barrel file collects the exports of the `sensorml/` directory. The
+ * package's public CSAPI entry point selectively exposes the supported
+ * consumer surface. Consumers import the parser and public types from that
+ * package sub-path:
  *
  * ```typescript
  * // Runtime values
- * import { parseSensorML30, SensorMLParseError } from '@camptocamp/ogc-client/csapi/formats/sensorml';
+ * import { parseSensorML30 } from '@camptocamp/ogc-client/csapi';
  *
  * // Type-only imports
- * import type { PhysicalSystem, SensorMLProcess } from '@camptocamp/ogc-client/csapi/formats/sensorml';
+ * import type { PhysicalSystem, SensorMLProcess } from '@camptocamp/ogc-client/csapi';
  * ```
  *
- * **Runtime exports:**
+ * **Internal barrel exports:**
  * - {@link parseSensorML30} — main parser entry point (type discriminates
  *   and delegates to sub-parsers)
- * - {@link SensorMLParseError} — error class thrown on parse failures
+ * - {@link SensorMLParseError} — internal error class thrown on parse failures
  * - {@link parseCapabilityList} — standalone CapabilityList parser
  * - {@link parseCharacteristicList} — standalone CharacteristicList parser
  * - {@link parseDescribedObjectProperties} — shared DescribedObject helper

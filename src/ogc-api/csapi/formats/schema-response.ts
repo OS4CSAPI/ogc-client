@@ -35,7 +35,7 @@ import { EndpointError } from '../../../shared/errors.js';
  *
  * Schema fields are delegated to the existing SWE Common parser layer:
  * - `resultSchema` and `recordSchema` → {@link parseSWEComponent}
- * - `encoding` → {@link parseEncoding}
+ * - `encoding` → `parseEncoding`
  *
  * Fields are only delegated when present and are non-null objects. If absent
  * or not an object, the field is omitted from the result (`undefined`).
@@ -65,11 +65,11 @@ import { EndpointError } from '../../../shared/errors.js';
  * @see https://github.com/OS4CSAPI/ogc-client-CSAPI_2/issues/17 — Demo app finding F-14
  */
 export function parseDatastreamSchemaResponse(
-  json: unknown
+  json: unknown,
 ): DatastreamSchemaResponse {
   if (typeof json !== 'object' || json === null) {
     throw new EndpointError(
-      'parseDatastreamSchemaResponse: input must be a non-null object'
+      'parseDatastreamSchemaResponse: input must be a non-null object',
     );
   }
 
@@ -115,7 +115,7 @@ export function parseDatastreamSchemaResponse(
  *
  * Schema fields are delegated to the existing SWE Common parser layer:
  * - `parametersSchema` → {@link parseSWEComponent}
- * - `encoding` → {@link parseEncoding}
+ * - `encoding` → `parseEncoding`
  *
  * Fields are only delegated when present and are non-null objects. If absent
  * or not an object, the field is omitted from the result (`undefined`).
@@ -145,11 +145,11 @@ export function parseDatastreamSchemaResponse(
  * @see https://github.com/OS4CSAPI/ogc-client-CSAPI_2/issues/87 — Task 7b
  */
 export function parseControlStreamSchemaResponse(
-  json: unknown
+  json: unknown,
 ): ControlStreamSchemaResponse {
   if (typeof json !== 'object' || json === null) {
     throw new EndpointError(
-      'parseControlStreamSchemaResponse: input must be a non-null object'
+      'parseControlStreamSchemaResponse: input must be a non-null object',
     );
   }
 

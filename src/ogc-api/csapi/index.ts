@@ -17,7 +17,7 @@
  *
  * ## Making a request — the 5-step pattern
  *
- * 1. Construct an {@link OgcApiEndpoint} for the API root.
+ * 1. Construct an `OgcApiEndpoint` for the API root.
  * 2. Build a {@link CSAPIQueryBuilder} for the target collection.
  * 3. Call a `get*()` method to obtain a URL string.
  * 4. Issue the request yourself (`fetch`, `axios`, your wrapper of choice).
@@ -26,14 +26,11 @@
  * @example
  * ```ts
  * import { OgcApiEndpoint } from '@camptocamp/ogc-client';
- * import {
- *   createCSAPIBuilder,
- *   parseDatastream,
- * } from '@camptocamp/ogc-client/csapi';
+ * import { parseDatastream } from '@camptocamp/ogc-client/csapi';
  *
  * // 1. Endpoint → 2. Builder → 3. URL → 4. fetch → 5. parse
  * const endpoint = new OgcApiEndpoint('https://api.example.com');
- * const builder = await createCSAPIBuilder(endpoint, 'weather-stations');
+ * const builder = await endpoint.csapi('weather-stations');
  * const url = builder.getDatastreams({ limit: 10 });
  * const response = await fetch(url, {
  *   headers: { Authorization: 'Bearer ...' },
@@ -41,6 +38,12 @@
  * const body = (await response.json()) as { items: unknown[] };
  * const datastreams = body.items.map(parseDatastream);
  * ```
+ *
+ * Advanced consumers who already hold a collection descriptor and a
+ * discovered resource-URL map can instead call
+ * `createCSAPIBuilder(collection, resourceUrls)`. That pure factory performs
+ * no discovery or network I/O; `endpoint.csapi(collectionId)` is the preferred
+ * entry point for normal consumers.
  *
  * ## Pagination
  *

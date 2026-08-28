@@ -127,7 +127,7 @@ describe('parseSWEComponent — complex component delegation', () => {
     });
     expect(result.type).toBe('Vector');
     expect((result as Vector).referenceFrame).toBe(
-      'http://www.opengis.net/def/crs/EPSG/0/4326'
+      'http://www.opengis.net/def/crs/EPSG/0/4326',
     );
   });
 
@@ -143,7 +143,7 @@ describe('parseSWEComponent — complex component delegation', () => {
     });
     expect(result.type).toBe('Matrix');
     expect((result as Matrix).referenceFrame).toBe(
-      'http://www.opengis.net/def/crs/EPSG/0/4326'
+      'http://www.opengis.net/def/crs/EPSG/0/4326',
     );
   });
 
@@ -167,7 +167,7 @@ describe('parseSWEComponent — complex component delegation', () => {
     });
     expect(result.type).toBe('Geometry');
     expect((result as SweGeometry).srs).toBe(
-      'http://www.opengis.net/def/crs/EPSG/0/4326'
+      'http://www.opengis.net/def/crs/EPSG/0/4326',
     );
   });
 });
@@ -195,7 +195,7 @@ describe('parseVector', () => {
     expect(result.id).toBe('vec-1');
     expect(result.label).toBe('Position');
     expect(result.referenceFrame).toBe(
-      'http://www.opengis.net/def/crs/EPSG/0/4326'
+      'http://www.opengis.net/def/crs/EPSG/0/4326',
     );
     expect(result.localFrame).toBe('#SENSOR_FRAME');
     expect(result.coordinates).toHaveLength(3);
@@ -213,7 +213,7 @@ describe('parseVector', () => {
       parseVector({
         type: 'Vector',
         coordinates: [{ name: 'x', type: 'Quantity', uom: { code: 'm' } }],
-      })
+      }),
     ).toThrow(SweCommonParseError);
   });
 
@@ -222,7 +222,7 @@ describe('parseVector', () => {
       parseVector({
         type: 'Vector',
         referenceFrame: 'http://www.opengis.net/def/crs/EPSG/0/4326',
-      })
+      }),
     ).toThrow(SweCommonParseError);
   });
 
@@ -232,7 +232,7 @@ describe('parseVector', () => {
         type: 'Vector',
         referenceFrame: 'http://www.opengis.net/def/crs/EPSG/0/4326',
         coordinates: [],
-      })
+      }),
     ).toThrow(SweCommonParseError);
   });
 });
@@ -258,7 +258,7 @@ describe('parseMatrix', () => {
     });
     expect(result.type).toBe('Matrix');
     expect(result.referenceFrame).toBe(
-      'http://www.opengis.net/def/crs/EPSG/0/4326'
+      'http://www.opengis.net/def/crs/EPSG/0/4326',
     );
     expect(result.elementType.name).toBe('row');
     expect(result.elementCount).toBeDefined();
@@ -314,13 +314,13 @@ describe('parseDataChoice', () => {
 
   it('throws when items are missing', () => {
     expect(() => parseDataChoice({ type: 'DataChoice' })).toThrow(
-      SweCommonParseError
+      SweCommonParseError,
     );
   });
 
   it('throws when items is empty', () => {
     expect(() => parseDataChoice({ type: 'DataChoice', items: [] })).toThrow(
-      SweCommonParseError
+      SweCommonParseError,
     );
   });
 });
@@ -695,11 +695,11 @@ describe('validateAgainstSchema — geometry constraints', () => {
           ],
         ],
       },
-      schema
+      schema,
     );
     expect(result.valid).toBe(false);
     expect(result.errors.some((e) => e.code === 'CONSTRAINT_VIOLATION')).toBe(
-      true
+      true,
     );
   });
 
@@ -711,7 +711,7 @@ describe('validateAgainstSchema — geometry constraints', () => {
     });
     const result = validateAgainstSchema(
       { type: 'Point', coordinates: [0, 0] },
-      schema
+      schema,
     );
     expect(result.valid).toBe(true);
   });

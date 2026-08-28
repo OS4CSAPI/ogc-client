@@ -28,7 +28,7 @@ import {
  * commands advertised, matching the url_builder.spec.ts pattern.
  */
 function makeCollection(
-  overrides: Partial<OgcApiCollectionInfo> = {}
+  overrides: Partial<OgcApiCollectionInfo> = {},
 ): OgcApiCollectionInfo {
   return {
     links: [],
@@ -68,7 +68,7 @@ function makeBuilder(): CSAPIQueryBuilder {
         },
         { rel: 'ogc-cs:commands', type: '', title: '', href: '/commands' },
       ],
-    })
+    }),
   );
 }
 
@@ -79,7 +79,7 @@ function makeBuilder(): CSAPIQueryBuilder {
 describe('isCommandRouteRejection', () => {
   it('returns true for 400 with "Invalid resource name" in body', () => {
     expect(
-      isCommandRouteRejection(400, "Invalid resource name: 'commands'")
+      isCommandRouteRejection(400, "Invalid resource name: 'commands'"),
     ).toBe(true);
   });
 
@@ -87,8 +87,8 @@ describe('isCommandRouteRejection', () => {
     expect(
       isCommandRouteRejection(
         400,
-        '{"error":"Bad Request","message":"Invalid resource name: \'commands\'"}'
-      )
+        '{"error":"Bad Request","message":"Invalid resource name: \'commands\'"}',
+      ),
     ).toBe(true);
   });
 
@@ -118,21 +118,21 @@ describe('command routing cache', () => {
 
   it('returns undefined for an uncached server', () => {
     expect(
-      getCommandRoutingPreference('https://osh.example.com')
+      getCommandRoutingPreference('https://osh.example.com'),
     ).toBeUndefined();
   });
 
   it('stores and retrieves "nested-only" preference', () => {
     setCommandRoutingPreference('https://osh.example.com', 'nested-only');
     expect(getCommandRoutingPreference('https://osh.example.com')).toBe(
-      'nested-only'
+      'nested-only',
     );
   });
 
   it('stores and retrieves "top-level" preference', () => {
     setCommandRoutingPreference('https://spec-server.example.com', 'top-level');
     expect(getCommandRoutingPreference('https://spec-server.example.com')).toBe(
-      'top-level'
+      'top-level',
     );
   });
 
@@ -140,10 +140,10 @@ describe('command routing cache', () => {
     setCommandRoutingPreference('https://a.example.com', 'nested-only');
     setCommandRoutingPreference('https://b.example.com', 'top-level');
     expect(getCommandRoutingPreference('https://a.example.com')).toBe(
-      'nested-only'
+      'nested-only',
     );
     expect(getCommandRoutingPreference('https://b.example.com')).toBe(
-      'top-level'
+      'top-level',
     );
   });
 
@@ -152,10 +152,10 @@ describe('command routing cache', () => {
     setCommandRoutingPreference('https://b.example.com', 'top-level');
     clearCommandRoutingCache();
     expect(
-      getCommandRoutingPreference('https://a.example.com')
+      getCommandRoutingPreference('https://a.example.com'),
     ).toBeUndefined();
     expect(
-      getCommandRoutingPreference('https://b.example.com')
+      getCommandRoutingPreference('https://b.example.com'),
     ).toBeUndefined();
   });
 });
@@ -170,35 +170,35 @@ describe('buildNestedCommandUrl', () => {
   it('builds a nested commands list URL (getCommands fallback)', () => {
     const url = buildNestedCommandUrl(builder, 'cs-001');
     expect(url).toBe(
-      'https://example.com/collections/iot/controlstreams/cs-001/commands'
+      'https://example.com/collections/iot/controlstreams/cs-001/commands',
     );
   });
 
   it('builds a nested single command URL (getCommand fallback)', () => {
     const url = buildNestedCommandUrl(builder, 'cs-001', 'cmd-001');
     expect(url).toBe(
-      'https://example.com/collections/iot/controlstreams/cs-001/commands/cmd-001'
+      'https://example.com/collections/iot/controlstreams/cs-001/commands/cmd-001',
     );
   });
 
   it('builds a nested command status URL (getCommandStatus fallback)', () => {
     const url = buildNestedCommandUrl(builder, 'cs-001', 'cmd-001', 'status');
     expect(url).toBe(
-      'https://example.com/collections/iot/controlstreams/cs-001/commands/cmd-001/status'
+      'https://example.com/collections/iot/controlstreams/cs-001/commands/cmd-001/status',
     );
   });
 
   it('builds a nested command result URL (getCommandResult fallback)', () => {
     const url = buildNestedCommandUrl(builder, 'cs-001', 'cmd-001', 'result');
     expect(url).toBe(
-      'https://example.com/collections/iot/controlstreams/cs-001/commands/cmd-001/result'
+      'https://example.com/collections/iot/controlstreams/cs-001/commands/cmd-001/result',
     );
   });
 
   it('builds a nested command cancel URL (cancelCommand fallback)', () => {
     const url = buildNestedCommandUrl(builder, 'cs-001', 'cmd-001', 'cancel');
     expect(url).toBe(
-      'https://example.com/collections/iot/controlstreams/cs-001/commands/cmd-001/cancel'
+      'https://example.com/collections/iot/controlstreams/cs-001/commands/cmd-001/cancel',
     );
   });
 
@@ -208,14 +208,14 @@ describe('buildNestedCommandUrl', () => {
       limit: 50,
     });
     expect(url).toBe(
-      'https://example.com/collections/iot/controlstreams/cs-001/commands?issueTime=2024-01-01T00%3A00%3A00.000Z%2F..&limit=50'
+      'https://example.com/collections/iot/controlstreams/cs-001/commands?issueTime=2024-01-01T00%3A00%3A00.000Z%2F..&limit=50',
     );
   });
 
   it('encodes special characters in command IDs', () => {
     const url = buildNestedCommandUrl(builder, 'cs-001', 'cmd/special id');
     expect(url).toBe(
-      'https://example.com/collections/iot/controlstreams/cs-001/commands/cmd%2Fspecial%20id'
+      'https://example.com/collections/iot/controlstreams/cs-001/commands/cmd%2Fspecial%20id',
     );
   });
 
@@ -235,8 +235,8 @@ describe('buildNestedCommandUrl', () => {
         builder,
         'cs-001',
         'cmd-001',
-        '../../../admin' as never
-      )
+        '../../../admin' as never,
+      ),
     ).toThrow('Invalid command subPath');
   });
 });
@@ -256,7 +256,7 @@ describe('end-to-end fallback flow', () => {
     // Caller uses builder.getCommand('cmd-001') directly — no fallback
     const topLevelUrl = builder.getCommand('cmd-001');
     expect(topLevelUrl).toBe(
-      'https://example.com/collections/iot/commands/cmd-001'
+      'https://example.com/collections/iot/commands/cmd-001',
     );
     expect(getCommandRoutingPreference(serverUrl)).toBe('top-level');
   });
@@ -268,7 +268,7 @@ describe('end-to-end fallback flow', () => {
     // Step 2: Server returns 400 for top-level /commands/cmd-001
     const rejected = isCommandRouteRejection(
       400,
-      "Invalid resource name: 'commands'"
+      "Invalid resource name: 'commands'",
     );
     expect(rejected).toBe(true);
 
@@ -278,7 +278,7 @@ describe('end-to-end fallback flow', () => {
     // Step 4: Build the nested fallback URL
     const nestedUrl = buildNestedCommandUrl(builder, 'cs-001', 'cmd-001');
     expect(nestedUrl).toBe(
-      'https://example.com/collections/iot/controlstreams/cs-001/commands/cmd-001'
+      'https://example.com/collections/iot/controlstreams/cs-001/commands/cmd-001',
     );
 
     // Step 5: Subsequent calls skip top-level attempt
@@ -291,7 +291,7 @@ describe('end-to-end fallback flow', () => {
     // Caller goes straight to nested URL — no top-level attempt
     const url = buildNestedCommandUrl(builder, 'cs-001', 'cmd-001', 'status');
     expect(url).toBe(
-      'https://example.com/collections/iot/controlstreams/cs-001/commands/cmd-001/status'
+      'https://example.com/collections/iot/controlstreams/cs-001/commands/cmd-001/status',
     );
   });
 });

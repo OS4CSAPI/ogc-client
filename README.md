@@ -129,7 +129,7 @@ node examples/stac-query.js
 
 The library includes support for the [OGC API — Connected Systems](https://ogcapi.ogc.org/connectedsystems/) standard ([Part 1: Feature Resources](https://docs.ogc.org/is/23-001/23-001.html), [Part 2: Dynamic Data](https://docs.ogc.org/is/23-002/23-002.html)). This standard extends the OGC API family into the IoT/sensor domain, providing a REST API for discovering and querying sensor systems, deployments, datastreams, observations, commands, and related resources.
 
-CSAPI is available as an **opt-in sub-path export**, meaning it is only included in your production bundle if you explicitly import it.
+CSAPI remains behind an **opt-in module boundary**. The preferred `endpoint.csapi(...)` facade loads it dynamically when needed; parsers and the advanced factory are also available from the `@camptocamp/ogc-client/csapi` sub-path.
 
 ### If you don't need Connected Systems
 
@@ -139,27 +139,44 @@ Nothing changes. Use the library exactly as before:
 import { OgcApiEndpoint, WmsEndpoint } from '@camptocamp/ogc-client';
 ```
 
-CSAPI code will not be included in your bundle.
+CSAPI code will not be loaded at runtime.
 
 ### If you need Connected Systems
 
-Add a second import from the CSAPI sub-path:
+Use the discoverable endpoint facade:
 
 ```ts
 import { OgcApiEndpoint } from '@camptocamp/ogc-client';
-import { createCSAPIBuilder } from '@camptocamp/ogc-client/csapi';
 
 const endpoint = new OgcApiEndpoint('https://api.example.org');
 
 if (await endpoint.hasConnectedSystems) {
-  const builder = await createCSAPIBuilder(endpoint, 'weather-stations');
+  const builder = await endpoint.csapi('weather-stations');
   const systemsUrl = builder.getSystems({ limit: 50 });
-  const dsUrl = builder.getDataStreams();
+  const datastreamsUrl = builder.getDatastreams();
 }
 ```
 
-The `createCSAPIBuilder()` factory function connects to the endpoint and discovers available CSAPI resources. The returned `CSAPIQueryBuilder` provides methods for all 9 resource types: systems, deployments, sampling features, procedures, properties, datastreams, observations, control streams, and commands.
+The returned `CSAPIQueryBuilder` provides methods for all 9 resource types: systems, deployments, sampling features, procedures, properties, datastreams, observations, control streams, and commands.
+
+Advanced consumers who already hold a collection descriptor and a discovered resource-URL map can use the pure factory directly:
+
+```ts
+import {
+  createCSAPIBuilder,
+  type CSAPICollectionRef,
+} from '@camptocamp/ogc-client/csapi';
+
+const collection: CSAPICollectionRef = {
+  id: 'weather-stations',
+  links: [],
+};
+const resourceUrls = new Map([['systems', 'https://api.example.org/systems']]);
+const builder = createCSAPIBuilder(collection, resourceUrls);
+```
+
+Unlike `endpoint.csapi(...)`, `createCSAPIBuilder(collection, resourceUrls)` performs no discovery or network I/O. The endpoint facade is the preferred entry point for normal consumers.
 
 ### Why a separate import path?
 
-The OGC Connected Systems standard is large — it spans 9 resource types across 2 specification parts with multiple response formats (GeoJSON, SWE Common, SensorML). By isolating CSAPI behind a sub-path export, users who only need WMS/WFS/WMTS/etc. don't pay the bundle-size cost for functionality they're not using. Modern bundlers (Webpack 5+, Vite, Rollup, esbuild) handle this automatically.
+The OGC Connected Systems standard is large — it spans 9 resource types across 2 specification parts with multiple response formats (GeoJSON, SWE Common, SensorML). By isolating CSAPI behind a dynamic boundary and sub-path export, users who only need WMS/WFS/WMTS/etc. don't pay the bundle-size cost for functionality they're not using. Modern bundlers (Webpack 5+, Vite, Rollup, esbuild) handle this automatically.

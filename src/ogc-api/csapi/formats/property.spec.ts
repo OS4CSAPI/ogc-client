@@ -36,13 +36,13 @@ describe('parseProperty', () => {
     expect(result.label).toBe('Air Temperature');
     expect(result.description).toBe('Temperature of the ambient air');
     expect(result.baseProperty).toBe(
-      'http://qudt.org/vocab/quantitykind/Temperature'
+      'http://qudt.org/vocab/quantitykind/Temperature',
     );
     expect(result.objectType).toBe(
-      'http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement'
+      'http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement',
     );
     expect(result.statistic).toBe(
-      'http://www.opengis.net/def/property/OGC/0/Mean'
+      'http://www.opengis.net/def/property/OGC/0/Mean',
     );
     expect(result.links).toEqual([
       { rel: 'self', href: '/properties/air-temp', type: 'application/json' },
@@ -61,7 +61,7 @@ describe('parseProperty', () => {
     expect(result.uniqueId).toBe('urn:x-ogc:def:property:noaa::WindSpeed');
     expect(result.label).toBe('Wind Speed');
     expect(result.baseProperty).toBe(
-      'http://qudt.org/vocab/quantitykind/Speed'
+      'http://qudt.org/vocab/quantitykind/Speed',
     );
     expect(result.id).toBeUndefined();
     expect(result.description).toBeUndefined();
@@ -100,13 +100,13 @@ describe('parseProperty', () => {
 
   it('throws on non-object input', () => {
     expect(() => parseProperty(null)).toThrow(
-      'parseProperty: input must be a non-null object'
+      'parseProperty: input must be a non-null object',
     );
     expect(() => parseProperty(42)).toThrow(
-      'parseProperty: input must be a non-null object'
+      'parseProperty: input must be a non-null object',
     );
     expect(() => parseProperty('string')).toThrow(
-      'parseProperty: input must be a non-null object'
+      'parseProperty: input must be a non-null object',
     );
   });
 
@@ -121,7 +121,7 @@ describe('parseProperty', () => {
 
     expect(result).not.toHaveProperty('id');
     expect(result.uniqueId).toBe(
-      'urn:x-ogc:def:property:example::SoilMoisture'
+      'urn:x-ogc:def:property:example::SoilMoisture',
     );
     expect(result.label).toBe('Soil Moisture');
   });
@@ -145,10 +145,10 @@ describe('parseProperty', () => {
       expect(result.uniqueId).toBe('urn:x-odas:property:sound-source-doa');
       expect(result.label).toBe('Sound Source Direction of Arrival');
       expect(result.description).toBe(
-        'The instantaneous direction from which a sound source is perceived by a microphone array.'
+        'The instantaneous direction from which a sound source is perceived by a microphone array.',
       );
       expect(result.baseProperty).toBe(
-        'http://qudt.org/vocab/quantitykind/Angle'
+        'http://qudt.org/vocab/quantitykind/Angle',
       );
     });
 

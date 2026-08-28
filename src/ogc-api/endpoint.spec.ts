@@ -2876,7 +2876,7 @@ describe('OgcApiEndpoint with CSAPI', () => {
         const builder = await endpoint.csapi('iot-sensors');
         expect(builder).toBeInstanceOf(CSAPIQueryBuilder);
         expect(builder.availableResources).toEqual(
-          new Set(['systems', 'deployments', 'datastreams'])
+          new Set(['systems', 'deployments', 'datastreams']),
         );
       });
 
@@ -2891,7 +2891,7 @@ describe('OgcApiEndpoint with CSAPI', () => {
       it('throws EndpointError when the endpoint does not support Connected Systems', async () => {
         endpoint = new OgcApiEndpoint('http://local/sample-data/');
         await expect(endpoint.csapi('any-collection')).rejects.toThrow(
-          EndpointError
+          EndpointError,
         );
       });
 
@@ -2902,10 +2902,10 @@ describe('OgcApiEndpoint with CSAPI', () => {
           .mockRejectedValue(new TypeError('fetch failed'));
 
         await expect(endpoint.csapi('iot-sensors')).rejects.toThrow(
-          EndpointError
+          EndpointError,
         );
         await expect(endpoint.csapi('iot-sensors')).rejects.toThrow(
-          /fetch failed/
+          /fetch failed/,
         );
       });
 

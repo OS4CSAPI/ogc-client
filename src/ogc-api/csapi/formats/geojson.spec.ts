@@ -17,7 +17,7 @@ import { EndpointError } from '../../../shared/errors.js';
 /** Builds a minimal GeoJSON Feature for testing. */
 function makeFeature(
   featureType: string,
-  overrides: Record<string, unknown> = {}
+  overrides: Record<string, unknown> = {},
 ): Record<string, unknown> {
   const {
     uid = 'urn:x-test:feature:1',
@@ -97,9 +97,9 @@ describe('isCSAPIFeature', () => {
     expect(
       isCSAPIFeature(
         makeFeature(
-          'http://www.opengis.net/def/samplingFeatureType/OGC-OM/2.0/SF_SamplingPoint'
-        )
-      )
+          'http://www.opengis.net/def/samplingFeatureType/OGC-OM/2.0/SF_SamplingPoint',
+        ),
+      ),
     ).toBe(false);
   });
 
@@ -108,7 +108,7 @@ describe('isCSAPIFeature', () => {
       isCSAPIFeature({
         type: 'Feature',
         properties: { uid: 'urn:x:1', name: 'Test' },
-      })
+      }),
     ).toBe(false);
   });
 
@@ -152,7 +152,7 @@ describe('isCSAPIFeature', () => {
 
   it('returns false for unrecognized SensorML local name', () => {
     expect(isCSAPIFeature(makeFeature(`${SENSORML_NS}UnknownThing`))).toBe(
-      false
+      false,
     );
   });
 });
@@ -172,49 +172,49 @@ describe('getCSAPIResourceType', () => {
 
   it('classifies System subtypes with full URI', () => {
     expect(getCSAPIResourceType(makeFeature(`${SOSA_NS}Sensor`))).toBe(
-      'System'
+      'System',
     );
     expect(getCSAPIResourceType(makeFeature(`${SOSA_NS}Platform`))).toBe(
-      'System'
+      'System',
     );
   });
 
   it('classifies Deployment', () => {
     expect(getCSAPIResourceType(makeFeature('sosa:Deployment'))).toBe(
-      'Deployment'
+      'Deployment',
     );
     expect(getCSAPIResourceType(makeFeature(`${SOSA_NS}Deployment`))).toBe(
-      'Deployment'
+      'Deployment',
     );
   });
 
   it('classifies Procedure subtypes', () => {
     expect(getCSAPIResourceType(makeFeature('sosa:Procedure'))).toBe(
-      'Procedure'
+      'Procedure',
     );
     expect(getCSAPIResourceType(makeFeature('sosa:ObservingProcedure'))).toBe(
-      'Procedure'
+      'Procedure',
     );
     expect(getCSAPIResourceType(makeFeature('sosa:SamplingProcedure'))).toBe(
-      'Procedure'
+      'Procedure',
     );
     expect(getCSAPIResourceType(makeFeature('sosa:ActuatingProcedure'))).toBe(
-      'Procedure'
+      'Procedure',
     );
   });
 
   it('classifies SamplingFeature', () => {
     expect(getCSAPIResourceType(makeFeature('sosa:SamplingFeature'))).toBe(
-      'SamplingFeature'
+      'SamplingFeature',
     );
     expect(getCSAPIResourceType(makeFeature(`${SOSA_NS}Sample`))).toBe(
-      'SamplingFeature'
+      'SamplingFeature',
     );
   });
 
   it('returns null for non-SOSA featureType', () => {
     expect(getCSAPIResourceType(makeFeature('http://example.com/Type'))).toBe(
-      null
+      null,
     );
   });
 
@@ -223,7 +223,7 @@ describe('getCSAPIResourceType', () => {
       getCSAPIResourceType({
         type: 'Feature',
         properties: { featureType: 42, uid: 'urn:x:1', name: 'Test' },
-      })
+      }),
     ).toBe(null);
   });
 
@@ -240,19 +240,19 @@ describe('getCSAPIResourceType', () => {
 
   it('classifies SensorML Feature as SamplingFeature', () => {
     expect(getCSAPIResourceType(makeFeature(`${SENSORML_NS}Feature`))).toBe(
-      'SamplingFeature'
+      'SamplingFeature',
     );
   });
 
   it('returns null for unrecognized SensorML local name', () => {
     expect(
-      getCSAPIResourceType(makeFeature(`${SENSORML_NS}UnknownThing`))
+      getCSAPIResourceType(makeFeature(`${SENSORML_NS}UnknownThing`)),
     ).toBe(null);
   });
 
   it('classifies SSN Deployment (full URI)', () => {
     expect(getCSAPIResourceType(makeFeature(`${SSN_NS}Deployment`))).toBe(
-      'Deployment'
+      'Deployment',
     );
   });
 
@@ -262,7 +262,7 @@ describe('getCSAPIResourceType', () => {
 
   it('classifies SSN types with compact CURIE prefix', () => {
     expect(getCSAPIResourceType(makeFeature('ssn:Deployment'))).toBe(
-      'Deployment'
+      'Deployment',
     );
     expect(getCSAPIResourceType(makeFeature('ssn:System'))).toBe('System');
     expect(getCSAPIResourceType(makeFeature('ssn:Sensor'))).toBe('System');
@@ -271,7 +271,7 @@ describe('getCSAPIResourceType', () => {
   it('returns null for unrecognized SSN local name', () => {
     expect(getCSAPIResourceType(makeFeature('ssn:UnknownType'))).toBe(null);
     expect(getCSAPIResourceType(makeFeature(`${SSN_NS}UnknownType`))).toBe(
-      null
+      null,
     );
   });
 });
@@ -754,13 +754,13 @@ describe('extractCSAPIFeature', () => {
   it('throws for unrecognized featureType', () => {
     const raw = makeFeature('http://example.com/Unknown');
     expect(() => extractCSAPIFeature(raw)).toThrow(
-      'unrecognized or missing featureType'
+      'unrecognized or missing featureType',
     );
   });
 
   it('throws for null input', () => {
     expect(() => extractCSAPIFeature(null)).toThrow(
-      'unrecognized or missing featureType'
+      'unrecognized or missing featureType',
     );
   });
 
@@ -770,7 +770,7 @@ describe('extractCSAPIFeature', () => {
       properties: { uid: 'urn:x:1', name: 'Test' },
     };
     expect(() => extractCSAPIFeature(raw)).toThrow(
-      'unrecognized or missing featureType'
+      'unrecognized or missing featureType',
     );
   });
 

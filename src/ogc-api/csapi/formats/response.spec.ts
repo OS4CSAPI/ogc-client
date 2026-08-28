@@ -107,7 +107,7 @@ describe('parseCollectionResponse — FeatureCollection envelope', () => {
   it('extracts features as the items array', () => {
     const result = parseCollectionResponse(
       FEATURE_COLLECTION_RESPONSE,
-      identity
+      identity,
     );
     expect(result.items).toHaveLength(2);
     expect(result.items[0]).toEqual(FEATURE_COLLECTION_RESPONSE.features[0]);
@@ -117,7 +117,7 @@ describe('parseCollectionResponse — FeatureCollection envelope', () => {
   it('extracts links', () => {
     const result = parseCollectionResponse(
       FEATURE_COLLECTION_RESPONSE,
-      identity
+      identity,
     );
     expect(result.links).toHaveLength(1);
     expect(result.links[0].rel).toBe('next');
@@ -126,7 +126,7 @@ describe('parseCollectionResponse — FeatureCollection envelope', () => {
   it('extracts numberMatched and numberReturned', () => {
     const result = parseCollectionResponse(
       FEATURE_COLLECTION_RESPONSE,
-      identity
+      identity,
     );
     expect(result.numberMatched).toBe(5);
     expect(result.numberReturned).toBe(2);
@@ -135,7 +135,7 @@ describe('parseCollectionResponse — FeatureCollection envelope', () => {
   it('extracts timeStamp', () => {
     const result = parseCollectionResponse(
       FEATURE_COLLECTION_RESPONSE,
-      identity
+      identity,
     );
     expect(result.timeStamp).toBe('2026-01-15T12:00:00Z');
   });
@@ -185,11 +185,11 @@ describe('parseCollectionResponse — format equivalence', () => {
   it('produces the same items from both envelope formats', () => {
     const fromFeatures = parseCollectionResponse(
       FEATURE_COLLECTION_RESPONSE,
-      identity
+      identity,
     );
     const fromItems = parseCollectionResponse(
       ITEMS_ENVELOPE_RESPONSE,
-      identity
+      identity,
     );
 
     // Same items in the same order
@@ -222,7 +222,7 @@ describe('parseCollectionResponse — edge cases', () => {
         numberMatched: 0,
         numberReturned: 0,
       },
-      identity
+      identity,
     );
     expect(result.items).toEqual([]);
     expect(result.numberMatched).toBe(0);
@@ -241,19 +241,19 @@ describe('parseCollectionResponse — edge cases', () => {
 
   it('throws on null input', () => {
     expect(() => parseCollectionResponse(null, identity)).toThrow(
-      'Invalid collection response: expected an object'
+      'Invalid collection response: expected an object',
     );
   });
 
   it('throws on non-object input', () => {
     expect(() => parseCollectionResponse('not an object', identity)).toThrow(
-      'Invalid collection response: expected an object'
+      'Invalid collection response: expected an object',
     );
   });
 
   it('throws when neither features nor items is present', () => {
     expect(() => parseCollectionResponse({ links: [] }, identity)).toThrow(
-      'missing both "features" and "items"'
+      'missing both "features" and "items"',
     );
   });
 
@@ -264,7 +264,7 @@ describe('parseCollectionResponse — edge cases', () => {
         numberMatched: 'many',
         numberReturned: null,
       },
-      identity
+      identity,
     );
     expect(result.numberMatched).toBeUndefined();
     expect(result.numberReturned).toBeUndefined();

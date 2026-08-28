@@ -17,16 +17,16 @@ describe('createCSAPIBuilder (value-shaped)', () => {
     links: [
       csapiLink(
         'self',
-        'http://local/csapi/sample-data-hub/collections/iot-sensors'
+        'http://local/csapi/sample-data-hub/collections/iot-sensors',
       ),
       csapiLink('ogc-cs:systems', 'http://local/csapi/sample-data-hub/systems'),
       csapiLink(
         'ogc-cs:deployments',
-        'http://local/csapi/sample-data-hub/deployments'
+        'http://local/csapi/sample-data-hub/deployments',
       ),
       csapiLink(
         'ogc-cs:datastreams',
-        'http://local/csapi/sample-data-hub/datastreams'
+        'http://local/csapi/sample-data-hub/datastreams',
       ),
     ],
   };
@@ -41,19 +41,19 @@ describe('createCSAPIBuilder (value-shaped)', () => {
   it('returns a CSAPIQueryBuilder whose availableResources reflects collection links', () => {
     const builder = createCSAPIBuilder(
       collectionWithCsapiLinks,
-      new Map<string, string>()
+      new Map<string, string>(),
     );
 
     expect(builder).toBeInstanceOf(CSAPIQueryBuilder);
     expect(builder.availableResources).toEqual(
-      new Set(['systems', 'deployments', 'datastreams'])
+      new Set(['systems', 'deployments', 'datastreams']),
     );
   });
 
   it('returns a builder with empty availableResources when the collection has no CSAPI links', () => {
     const builder = createCSAPIBuilder(
       collectionWithoutCsapiLinks,
-      new Map<string, string>()
+      new Map<string, string>(),
     );
 
     expect(builder).toBeInstanceOf(CSAPIQueryBuilder);
@@ -87,7 +87,7 @@ describe('createCSAPIBuilder (value-shaped)', () => {
         csapiLink('self', 'http://local/csapi/multi-hub/alpha'),
         csapiLink(
           'ogc-cs:systems',
-          'http://local/csapi/multi-hub/alpha/systems'
+          'http://local/csapi/multi-hub/alpha/systems',
         ),
       ],
     };
@@ -97,11 +97,11 @@ describe('createCSAPIBuilder (value-shaped)', () => {
         csapiLink('self', 'http://local/csapi/multi-hub/beta'),
         csapiLink(
           'ogc-cs:systems',
-          'http://local/csapi/multi-hub/beta/systems'
+          'http://local/csapi/multi-hub/beta/systems',
         ),
         csapiLink(
           'ogc-cs:datastreams',
-          'http://local/csapi/multi-hub/beta/datastreams'
+          'http://local/csapi/multi-hub/beta/datastreams',
         ),
       ],
     };
@@ -111,7 +111,7 @@ describe('createCSAPIBuilder (value-shaped)', () => {
 
     expect(builderA.availableResources).toEqual(new Set(['systems']));
     expect(builderB.availableResources).toEqual(
-      new Set(['systems', 'datastreams'])
+      new Set(['systems', 'datastreams']),
     );
   });
 

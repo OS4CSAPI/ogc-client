@@ -36,7 +36,7 @@ import {
 // ========================================
 
 function makeCollection(
-  overrides: Partial<OgcApiCollectionInfo> = {}
+  overrides: Partial<OgcApiCollectionInfo> = {},
 ): OgcApiCollectionInfo {
   return makeTestCollection({
     links: [
@@ -160,7 +160,7 @@ describe('Command workflow — control stream discovery', () => {
   it('builds system control streams URL', () => {
     const url = builder.getSystemControlStreams('sys-001');
     expect(url).toBe(
-      'https://api.example.com/collections/actuators/systems/sys-001/controlstreams'
+      'https://api.example.com/collections/actuators/systems/sys-001/controlstreams',
     );
   });
 
@@ -185,7 +185,7 @@ describe('Command workflow — feasibility check', () => {
   it('builds feasibility check URL for a control stream', () => {
     const url = builder.checkCommandFeasibility('cs-valve');
     expect(url).toBe(
-      'https://api.example.com/collections/actuators/controlstreams/cs-valve/feasibility'
+      'https://api.example.com/collections/actuators/controlstreams/cs-valve/feasibility',
     );
   });
 });
@@ -200,14 +200,14 @@ describe('Command workflow — command submission', () => {
   it('builds command creation URL using nested path', () => {
     const url = builder.createCommand('cs-valve');
     expect(url).toBe(
-      'https://api.example.com/collections/actuators/controlstreams/cs-valve/commands'
+      'https://api.example.com/collections/actuators/controlstreams/cs-valve/commands',
     );
   });
 
   it('builds bulk command creation URL', () => {
     const url = builder.createCommands('cs-valve');
     expect(url).toBe(
-      'https://api.example.com/collections/actuators/controlstreams/cs-valve/commands'
+      'https://api.example.com/collections/actuators/controlstreams/cs-valve/commands',
     );
   });
 
@@ -238,7 +238,7 @@ describe('Command workflow — status tracking', () => {
   it('builds command status URL', () => {
     const url = builder.getCommandStatus('cmd-001');
     expect(url).toBe(
-      'https://api.example.com/collections/actuators/commands/cmd-001/status'
+      'https://api.example.com/collections/actuators/commands/cmd-001/status',
     );
   });
 
@@ -268,7 +268,7 @@ describe('Command workflow — result retrieval', () => {
   it('builds command result URL', () => {
     const url = builder.getCommandResult('cmd-001');
     expect(url).toBe(
-      'https://api.example.com/collections/actuators/commands/cmd-001/result'
+      'https://api.example.com/collections/actuators/commands/cmd-001/result',
     );
   });
 });
@@ -283,7 +283,7 @@ describe('Command workflow — cancellation', () => {
   it('builds cancel URL', () => {
     const url = builder.cancelCommand('cmd-001');
     expect(url).toBe(
-      'https://api.example.com/collections/actuators/commands/cmd-001/cancel'
+      'https://api.example.com/collections/actuators/commands/cmd-001/cancel',
     );
   });
 });
@@ -306,7 +306,7 @@ describe('Command workflow — fallback routing (F34)', () => {
     // Step 2: Server rejects with 400
     const rejected = isCommandRouteRejection(
       400,
-      "Invalid resource name: 'commands'"
+      "Invalid resource name: 'commands'",
     );
     expect(rejected).toBe(true);
 
@@ -325,10 +325,10 @@ describe('Command workflow — fallback routing (F34)', () => {
       builder,
       'cs-valve',
       'cmd-001',
-      'status'
+      'status',
     );
     expect(nestedUrl).toContain(
-      '/controlstreams/cs-valve/commands/cmd-001/status'
+      '/controlstreams/cs-valve/commands/cmd-001/status',
     );
   });
 
@@ -343,7 +343,7 @@ describe('Command workflow — fallback routing (F34)', () => {
       {
         issueTime: { start: new Date('2024-01-01T00:00:00Z') },
         limit: 50,
-      }
+      },
     );
     expect(nestedUrl).toContain('/controlstreams/cs-valve/commands');
     expect(nestedUrl).toContain('issueTime=');
@@ -365,10 +365,10 @@ describe('Command workflow — fallback routing (F34)', () => {
     setCommandRoutingPreference('https://spec.server.com', 'top-level');
 
     expect(getCommandRoutingPreference('https://osh.server.com')).toBe(
-      'nested-only'
+      'nested-only',
     );
     expect(getCommandRoutingPreference('https://spec.server.com')).toBe(
-      'top-level'
+      'top-level',
     );
   });
 });
@@ -416,19 +416,19 @@ describe('Command workflow — error scenarios', () => {
     // Per-ID methods skip assertResourceAvailable (Phase 7 #156/#157)
     expect(builder.createCommand('cs-001')).toEqual(expect.any(String));
     expect(builder.checkCommandFeasibility('cs-001')).toEqual(
-      expect.any(String)
+      expect.any(String),
     );
   });
 
   it('handles rejected response that is not a route rejection', () => {
     // 400 but different error message — NOT a route rejection
     expect(isCommandRouteRejection(400, 'Missing required parameter')).toBe(
-      false
+      false,
     );
 
     // 404 is not a route rejection
     expect(
-      isCommandRouteRejection(404, "Invalid resource name: 'commands'")
+      isCommandRouteRejection(404, "Invalid resource name: 'commands'"),
     ).toBe(false);
   });
 });

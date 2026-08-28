@@ -159,19 +159,19 @@ describe('parseSensorML30 – type discrimination', () => {
 
   it('throws SensorMLParseError for unknown type', () => {
     expect(() =>
-      parseSensorML30({ type: 'SomethingElse', label: 'x', uniqueId: 'y' })
+      parseSensorML30({ type: 'SomethingElse', label: 'x', uniqueId: 'y' }),
     ).toThrow(SensorMLParseError);
     expect(() =>
-      parseSensorML30({ type: 'SomethingElse', label: 'x', uniqueId: 'y' })
+      parseSensorML30({ type: 'SomethingElse', label: 'x', uniqueId: 'y' }),
     ).toThrow(/Unknown SensorML process type/);
   });
 
   it('throws SensorMLParseError when type is missing', () => {
     expect(() => parseSensorML30({ label: 'x', uniqueId: 'y' })).toThrow(
-      SensorMLParseError
+      SensorMLParseError,
     );
     expect(() => parseSensorML30({ label: 'x', uniqueId: 'y' })).toThrow(
-      /string "type" property/
+      /string "type" property/,
     );
   });
 
@@ -229,7 +229,7 @@ describe('parseCapabilityList', () => {
     expect(result.label).toBe('Measurement Capabilities');
     expect(result.description).toBe('Range and accuracy of the sensor');
     expect(result.definition).toBe(
-      'http://www.opengis.net/def/property/OGC/0/MeasurementCapabilities'
+      'http://www.opengis.net/def/property/OGC/0/MeasurementCapabilities',
     );
     expect(result.conditions).toHaveLength(1);
     expect(result.capabilities).toHaveLength(2);
@@ -254,7 +254,7 @@ describe('parseCapabilityList', () => {
     expect(() =>
       parseCapabilityList({
         capabilities: [{ type: 'Quantity' }],
-      })
+      }),
     ).toThrow(SensorMLParseError);
   });
 });
@@ -265,7 +265,7 @@ describe('parseCharacteristicList', () => {
     expect(result.id).toBe('char-phys');
     expect(result.label).toBe('Physical Characteristics');
     expect(result.definition).toBe(
-      'http://www.opengis.net/def/property/OGC/0/PhysicalCharacteristics'
+      'http://www.opengis.net/def/property/OGC/0/PhysicalCharacteristics',
     );
     expect(result.characteristics).toHaveLength(2);
     expect(result.characteristics[0].name).toBe('weight');

@@ -27,7 +27,7 @@ import { getCSAPIResourceType } from '../formats/geojson.js';
 // ========================================
 
 function makeCollection(
-  overrides: Partial<OgcApiCollectionInfo> = {}
+  overrides: Partial<OgcApiCollectionInfo> = {},
 ): OgcApiCollectionInfo {
   return makeTestCollection({
     links: [
@@ -190,7 +190,7 @@ describe('Observation workflow — system to datastream discovery', () => {
   it('builds nested datastream URL for a discovered system', () => {
     const url = builder.getSystemDatastreams('sys-001');
     expect(url).toBe(
-      'https://api.example.com/collections/iot/systems/sys-001/datastreams'
+      'https://api.example.com/collections/iot/systems/sys-001/datastreams',
     );
   });
 
@@ -251,7 +251,7 @@ describe('Observation workflow — pagination', () => {
     expect(page1.items).toHaveLength(2);
 
     const nextLink = page1.links.find(
-      (l: { rel?: string }) => l.rel === 'next'
+      (l: { rel?: string }) => l.rel === 'next',
     );
     expect(nextLink).toBeDefined();
     expect(nextLink!.href).toContain('offset=2');
@@ -262,7 +262,7 @@ describe('Observation workflow — pagination', () => {
     expect(page2.items).toHaveLength(1);
 
     const nextLink = page2.links.find(
-      (l: { rel?: string }) => l.rel === 'next'
+      (l: { rel?: string }) => l.rel === 'next',
     );
     expect(nextLink).toBeUndefined();
   });
@@ -338,7 +338,7 @@ describe('Observation workflow — observation creation', () => {
   it('builds observation creation URL for a datastream', () => {
     const url = builder.createObservation('ds-temp');
     expect(url).toBe(
-      'https://api.example.com/collections/iot/datastreams/ds-temp/observations'
+      'https://api.example.com/collections/iot/datastreams/ds-temp/observations',
     );
   });
 });
@@ -357,7 +357,7 @@ describe('Observation workflow — error handling', () => {
 
   it('throws on malformed observation response (not an object)', () => {
     expect(() => parseCollectionResponse(42, identity)).toThrow(
-      /expected an object/
+      /expected an object/,
     );
   });
 
@@ -377,11 +377,11 @@ describe('Observation workflow — error handling', () => {
     const builder = new CSAPIQueryBuilder(noDs);
 
     expect(() => builder.getDatastreams()).toThrow(
-      /does not support 'datastreams'/
+      /does not support 'datastreams'/,
     );
     // Per-ID methods skip assertResourceAvailable (Phase 7 #156/#157)
     expect(builder.getDatastreamObservations('ds-001')).toEqual(
-      expect.any(String)
+      expect.any(String),
     );
   });
 });

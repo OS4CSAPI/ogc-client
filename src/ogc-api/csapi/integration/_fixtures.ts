@@ -77,7 +77,7 @@ export const ALL_CSAPI_LINKS = [
  * @returns A complete `OgcApiCollectionInfo` suitable for `CSAPIQueryBuilder`.
  */
 export function makeTestCollection(
-  overrides: Partial<OgcApiCollectionInfo> = {}
+  overrides: Partial<OgcApiCollectionInfo> = {},
 ): OgcApiCollectionInfo {
   return {
     ...PADDING,

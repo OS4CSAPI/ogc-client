@@ -110,7 +110,7 @@ export function parseIOComponentChoice(value: unknown): IOComponentChoice {
   }
   if (typeof value.name !== 'string') {
     throw new SensorMLParseError(
-      'IOComponentChoice entry must have a string "name" property'
+      'IOComponentChoice entry must have a string "name" property',
     );
   }
   return value as unknown as IOComponentChoice;
@@ -126,7 +126,7 @@ export function parseIOComponentChoice(value: unknown): IOComponentChoice {
  */
 export function parseIOList(
   value: unknown,
-  listName: string
+  listName: string,
 ): IOComponentChoice[] | undefined {
   if (value === undefined || value === null) return undefined;
   if (!Array.isArray(value)) {
@@ -138,7 +138,7 @@ export function parseIOList(
     } catch (err) {
       throw new SensorMLParseError(
         `Invalid ${listName}[${i}]: ${(err as Error).message}`,
-        `${listName}[${i}]`
+        `${listName}[${i}]`,
       );
     }
   });
@@ -247,14 +247,14 @@ export function parseProcessMethod(value: unknown): ProcessMethod | undefined {
  */
 export function parseComponentEntry(
   value: unknown,
-  index: number
+  index: number,
 ): ComponentEntry {
   if (!isRecord(value)) {
     throw new SensorMLParseError(`components[${index}] must be an object`);
   }
   if (typeof value.name !== 'string') {
     throw new SensorMLParseError(
-      `components[${index}] must have a string "name" property`
+      `components[${index}] must have a string "name" property`,
     );
   }
 
@@ -298,7 +298,7 @@ export function parseComponentList(value: unknown): ComponentList | undefined {
     } catch (err) {
       if (err instanceof SensorMLParseError) throw err;
       throw new SensorMLParseError(
-        `Invalid components[${i}]: ${(err as Error).message}`
+        `Invalid components[${i}]: ${(err as Error).message}`,
       );
     }
   });
@@ -323,12 +323,12 @@ export function parseConnection(value: unknown, index: number): Connection {
   }
   if (typeof value.source !== 'string') {
     throw new SensorMLParseError(
-      `connections[${index}] must have a string "source" property`
+      `connections[${index}] must have a string "source" property`,
     );
   }
   if (typeof value.destination !== 'string') {
     throw new SensorMLParseError(
-      `connections[${index}] must have a string "destination" property`
+      `connections[${index}] must have a string "destination" property`,
     );
   }
   return {
@@ -347,7 +347,7 @@ export function parseConnection(value: unknown, index: number): Connection {
  * @see OAS: ConnectionList (L4127)
  */
 export function parseConnectionList(
-  value: unknown
+  value: unknown,
 ): ConnectionList | undefined {
   if (value === undefined || value === null) return undefined;
   if (!Array.isArray(value)) {

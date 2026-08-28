@@ -196,7 +196,7 @@ describe('parseDataRecord — link references', () => {
     expect(result.fields).toHaveLength(1);
     expect(result.fields[0].name).toBe('externalDef');
     expect(result.fields[0].href).toBe(
-      'http://example.com/definitions/temperature'
+      'http://example.com/definitions/temperature',
     );
     expect(result.fields[0].role).toBe('definition');
     expect(result.fields[0].title).toBe('Temperature Definition');
@@ -239,25 +239,25 @@ describe('parseDataRecord — error handling', () => {
 
   it('throws for wrong type', () => {
     expect(() =>
-      parseDataRecord({ type: 'DataArray', fields: [{ name: 'x' }] })
+      parseDataRecord({ type: 'DataArray', fields: [{ name: 'x' }] }),
     ).toThrow('Expected type "DataRecord"');
   });
 
   it('throws for missing type', () => {
     expect(() =>
-      parseDataRecord({ fields: [{ name: 'x', type: 'Count' }] })
+      parseDataRecord({ fields: [{ name: 'x', type: 'Count' }] }),
     ).toThrow('Expected type "DataRecord"');
   });
 
   it('throws for missing fields', () => {
     expect(() => parseDataRecord({ type: 'DataRecord' })).toThrow(
-      'non-empty array'
+      'non-empty array',
     );
   });
 
   it('throws for empty fields array', () => {
     expect(() => parseDataRecord({ type: 'DataRecord', fields: [] })).toThrow(
-      'non-empty array'
+      'non-empty array',
     );
   });
 
@@ -266,7 +266,7 @@ describe('parseDataRecord — error handling', () => {
       parseDataRecord({
         type: 'DataRecord',
         fields: [{ type: 'Count', value: 1 }],
-      })
+      }),
     ).toThrow('non-empty "name"');
   });
 
@@ -275,7 +275,7 @@ describe('parseDataRecord — error handling', () => {
       parseDataRecord({
         type: 'DataRecord',
         fields: [{ name: '', type: 'Count', value: 1 }],
-      })
+      }),
     ).toThrow('non-empty "name"');
   });
 
@@ -284,7 +284,7 @@ describe('parseDataRecord — error handling', () => {
       parseDataRecord({
         type: 'DataRecord',
         fields: [{ name: 'bad', type: 'UnknownType' }],
-      })
+      }),
     ).toThrow('unsupported component type');
   });
 
@@ -293,7 +293,7 @@ describe('parseDataRecord — error handling', () => {
       parseDataRecord({
         type: 'DataRecord',
         fields: ['not-an-object'],
-      })
+      }),
     ).toThrow('non-null object');
   });
 
@@ -302,7 +302,7 @@ describe('parseDataRecord — error handling', () => {
       parseDataRecord({
         type: 'DataRecord',
         fields: [{ name: 'orphan' }],
-      })
+      }),
     ).toThrow('must have a "type" property or be a link reference');
   });
 });
@@ -344,7 +344,7 @@ describe('parseDataRecord — complex types via componentParser callback', () =>
           { name: 'active', type: 'Boolean', value: true },
         ],
       },
-      mockParser
+      mockParser,
     );
 
     expect(result.fields).toHaveLength(2);
@@ -381,7 +381,7 @@ describe('parseDataRecord — complex types via componentParser callback', () =>
         type: 'DataRecord',
         fields: [dataArrayFixture],
       },
-      mockParser
+      mockParser,
     );
 
     expect(result.fields).toHaveLength(1);
@@ -398,7 +398,7 @@ describe('parseDataRecord — complex types via componentParser callback', () =>
       parseDataRecord({
         type: 'DataRecord',
         fields: [{ name: 'vec', type: 'Vector' }],
-      })
+      }),
     ).toThrow('unsupported component type');
   });
 
@@ -427,7 +427,7 @@ describe('parseDataRecord — complex types via componentParser callback', () =>
           },
         ],
       },
-      mockParser
+      mockParser,
     );
 
     // The callback should have been passed through to the nested DataRecord

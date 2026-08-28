@@ -51,7 +51,7 @@ import { EndpointError } from '../../../shared/errors.js';
 
 /** Full-featured collection that advertises all CSAPI resources. */
 function makeFullCollection(
-  overrides: Partial<OgcApiCollectionInfo> = {}
+  overrides: Partial<OgcApiCollectionInfo> = {},
 ): OgcApiCollectionInfo {
   return makeTestCollection({
     links: [
@@ -141,42 +141,42 @@ describe('Navigation — system → nested resources', () => {
   it('navigates system → datastreams', () => {
     const url = builder.getSystemDatastreams('sys-001');
     expect(url).toBe(
-      'https://api.example.com/collections/iot/systems/sys-001/datastreams'
+      'https://api.example.com/collections/iot/systems/sys-001/datastreams',
     );
   });
 
   it('navigates system → controlStreams', () => {
     const url = builder.getSystemControlStreams('sys-001');
     expect(url).toBe(
-      'https://api.example.com/collections/iot/systems/sys-001/controlstreams'
+      'https://api.example.com/collections/iot/systems/sys-001/controlstreams',
     );
   });
 
   it('navigates system → samplingFeatures', () => {
     const url = builder.getSystemSamplingFeatures('sys-001');
     expect(url).toBe(
-      'https://api.example.com/collections/iot/systems/sys-001/samplingFeatures'
+      'https://api.example.com/collections/iot/systems/sys-001/samplingFeatures',
     );
   });
 
   it('navigates system → deployments', () => {
     const url = builder.getSystemDeployments('sys-001');
     expect(url).toBe(
-      'https://api.example.com/collections/iot/systems/sys-001/deployments'
+      'https://api.example.com/collections/iot/systems/sys-001/deployments',
     );
   });
 
   it('navigates system → procedures', () => {
     const url = builder.getSystemProcedures('sys-001');
     expect(url).toBe(
-      'https://api.example.com/collections/iot/systems/sys-001/procedures'
+      'https://api.example.com/collections/iot/systems/sys-001/procedures',
     );
   });
 
   it('navigates system → subsystems (flat)', () => {
     const url = builder.getSystemSubsystems('sys-001');
     expect(url).toBe(
-      'https://api.example.com/collections/iot/systems/sys-001/subsystems'
+      'https://api.example.com/collections/iot/systems/sys-001/subsystems',
     );
   });
 
@@ -290,7 +290,7 @@ describe('Navigation — path-based resource classification', () => {
     (path, expectedType) => {
       const inferred = inferResourceTypeFromPath(path);
       expect(inferred).toBe(expectedType);
-    }
+    },
   );
 
   it('returns null for unknown paths', () => {
@@ -300,7 +300,7 @@ describe('Navigation — path-based resource classification', () => {
   it('returns null for Part 2 resource paths (not in PATH_SEGMENT_TO_TYPE)', () => {
     // observations, commands, properties are Part 2, not in path classifier
     expect(
-      inferResourceTypeFromPath('/collections/iot/observations')
+      inferResourceTypeFromPath('/collections/iot/observations'),
     ).toBeNull();
     expect(inferResourceTypeFromPath('/collections/iot/commands')).toBeNull();
     expect(inferResourceTypeFromPath('/collections/iot/properties')).toBeNull();
@@ -488,19 +488,19 @@ describe('Navigation — partial collection support', () => {
 describe('Navigation — error handling across workflows', () => {
   it('parseCollectionResponse rejects non-object input', () => {
     expect(() => parseCollectionResponse(null, identity)).toThrow(
-      /Invalid collection response/
+      /Invalid collection response/,
     );
     expect(() => parseCollectionResponse('string', identity)).toThrow(
-      /Invalid collection response/
+      /Invalid collection response/,
     );
     expect(() => parseCollectionResponse(42, identity)).toThrow(
-      /Invalid collection response/
+      /Invalid collection response/,
     );
   });
 
   it('parseCollectionResponse rejects object with neither features nor items', () => {
     expect(() =>
-      parseCollectionResponse({ links: [], other: 'data' }, identity)
+      parseCollectionResponse({ links: [], other: 'data' }, identity),
     ).toThrow();
   });
 

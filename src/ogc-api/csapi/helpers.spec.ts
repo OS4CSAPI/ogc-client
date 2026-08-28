@@ -51,7 +51,7 @@ describe('formatDateTimeParameter', () => {
 
   it('throws for an invalid parameter', () => {
     expect(() => formatDateTimeParameter({} as CsapiDateTimeParameter)).toThrow(
-      'Invalid CsapiDateTimeParameter'
+      'Invalid CsapiDateTimeParameter',
     );
   });
 });
@@ -94,10 +94,10 @@ describe('assertValidResourceType', () => {
 
   it('throws with descriptive message for invalid types', () => {
     expect(() => assertValidResourceType('invalid')).toThrow(
-      'Invalid CSAPI resource type: "invalid"'
+      'Invalid CSAPI resource type: "invalid"',
     );
     expect(() => assertValidResourceType('invalid')).toThrow(
-      'Valid types are:'
+      'Valid types are:',
     );
   });
 });
@@ -121,7 +121,7 @@ describe('encodeResourceId', () => {
 
   it('encodes colons and special characters', () => {
     expect(encodeResourceId('urn:example:sensor:001')).toBe(
-      'urn%3Aexample%3Asensor%3A001'
+      'urn%3Aexample%3Asensor%3A001',
     );
   });
 
@@ -152,7 +152,7 @@ describe('scanCsapiLinks', () => {
     expect(result.size).toBe(2);
     expect(result.get('systems')).toBe('http://example.com/api/systems');
     expect(result.get('deployments')).toBe(
-      'http://example.com/api/deployments'
+      'http://example.com/api/deployments',
     );
   });
 
@@ -165,7 +165,7 @@ describe('scanCsapiLinks', () => {
     expect(result.size).toBe(2);
     expect(result.get('systems')).toBe('http://example.com/api/systems');
     expect(result.get('datastreams')).toBe(
-      'http://example.com/api/datastreams'
+      'http://example.com/api/datastreams',
     );
   });
 
@@ -178,7 +178,7 @@ describe('scanCsapiLinks', () => {
     expect(result.size).toBe(2);
     expect(result.get('systems')).toBe('http://example.com/api/systems');
     expect(result.get('observations')).toBe(
-      'http://example.com/api/observations/'
+      'http://example.com/api/observations/',
     );
   });
 
@@ -241,7 +241,7 @@ describe('scanCsapiLinks', () => {
     const result = scanCsapiLinks(links);
     expect(result.size).toBe(1);
     expect(result.get('samplingFeatures')).toBe(
-      '/featuresOfInterest?f=application/json'
+      '/featuresOfInterest?f=application/json',
     );
   });
 });
@@ -289,25 +289,25 @@ describe('validateBbox', () => {
 
   it('rejects when minx > maxx', () => {
     expect(() => validateBbox([10, 0, 5, 10] as BoundingBox)).toThrow(
-      'minx (10) must be ≤ maxx (5)'
+      'minx (10) must be ≤ maxx (5)',
     );
   });
 
   it('rejects when miny > maxy', () => {
     expect(() => validateBbox([0, 10, 10, 5] as BoundingBox)).toThrow(
-      'miny (10) must be ≤ maxy (5)'
+      'miny (10) must be ≤ maxy (5)',
     );
   });
 
   it('rejects non-finite coordinates', () => {
     expect(() => validateBbox([0, 0, Infinity, 10] as BoundingBox)).toThrow(
-      'finite numbers'
+      'finite numbers',
     );
   });
 
   it('rejects NaN coordinates', () => {
     expect(() => validateBbox([NaN, 0, 10, 10] as BoundingBox)).toThrow(
-      'finite numbers'
+      'finite numbers',
     );
   });
 });
@@ -328,21 +328,21 @@ describe('formatDateTimeParameter edge cases', () => {
 
   it('serializes far-future date', () => {
     const result = formatDateTimeParameter(
-      new Date('2099-12-31T23:59:59.999Z')
+      new Date('2099-12-31T23:59:59.999Z'),
     );
     expect(result).toBe('2099-12-31T23:59:59.999Z');
   });
 
   it('serializes date with millisecond precision', () => {
     const result = formatDateTimeParameter(
-      new Date('2024-06-15T10:30:45.123Z')
+      new Date('2024-06-15T10:30:45.123Z'),
     );
     expect(result).toBe('2024-06-15T10:30:45.123Z');
   });
 
   it('throws for invalid parameter type (plain object with no start/end)', () => {
     expect(() => formatDateTimeParameter({} as CsapiDateTimeParameter)).toThrow(
-      'Invalid CsapiDateTimeParameter'
+      'Invalid CsapiDateTimeParameter',
     );
   });
 
@@ -398,7 +398,7 @@ describe('assertValidResourceType edge cases', () => {
 
   it('rejects empty string with descriptive error', () => {
     expect(() => assertValidResourceType('')).toThrow(
-      'Invalid CSAPI resource type'
+      'Invalid CSAPI resource type',
     );
   });
 });
@@ -590,31 +590,31 @@ describe('validateLimit edge cases', () => {
 describe('validateBbox edge cases', () => {
   it('rejects 3-element array', () => {
     expect(() => validateBbox([0, 0, 10] as unknown as BoundingBox)).toThrow(
-      '4 coordinates'
+      '4 coordinates',
     );
   });
 
   it('rejects 5-element array', () => {
     expect(() =>
-      validateBbox([0, 0, 10, 10, 0] as unknown as BoundingBox)
+      validateBbox([0, 0, 10, 10, 0] as unknown as BoundingBox),
     ).toThrow('4 coordinates');
   });
 
   it('rejects 6-element array', () => {
     expect(() =>
-      validateBbox([0, 0, 0, 10, 10, 10] as unknown as BoundingBox)
+      validateBbox([0, 0, 0, 10, 10, 10] as unknown as BoundingBox),
     ).toThrow('4 coordinates');
   });
 
   it('rejects empty array', () => {
     expect(() => validateBbox([] as unknown as BoundingBox)).toThrow(
-      '4 coordinates'
+      '4 coordinates',
     );
   });
 
   it('rejects negative Infinity coordinates', () => {
     expect(() => validateBbox([-Infinity, 0, 10, 10] as BoundingBox)).toThrow(
-      'finite numbers'
+      'finite numbers',
     );
   });
 

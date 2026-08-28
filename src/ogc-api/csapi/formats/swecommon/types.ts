@@ -201,11 +201,7 @@ export type NilValuesTime = NilValue<DateTimeNumberOrSpecial>[];
  * @see NumberOrSpecial in basicTypes.json
  */
 export type NumberOrSpecial =
-  | number
-  | 'NaN'
-  | 'Infinity'
-  | '+Infinity'
-  | '-Infinity';
+  number | 'NaN' | 'Infinity' | '+Infinity' | '-Infinity';
 
 /**
  * An ISO 8601 date-time string, a number (epoch offset), or a special value.
@@ -679,10 +675,7 @@ export type BinaryMember = BinaryComponent | BinaryBlock;
  * Discriminated on the `type` property.
  */
 export type DataEncoding =
-  | TextEncoding
-  | JSONEncoding
-  | BinaryEncoding
-  | XMLEncoding;
+  TextEncoding | JSONEncoding | BinaryEncoding | XMLEncoding;
 
 /**
  * The 6 scalar component types.
@@ -690,12 +683,7 @@ export type DataEncoding =
  * Discriminated on the `type` property.
  */
 export type AnyScalarComponent =
-  | SweBoolean
-  | SweCount
-  | SweQuantity
-  | SweText
-  | SweCategory
-  | SweTime;
+  SweBoolean | SweCount | SweQuantity | SweText | SweCategory | SweTime;
 
 /**
  * All simple (scalar + range) component types.

@@ -67,7 +67,7 @@ const PATH_SEGMENT_TO_TYPE: Readonly<Record<string, CSAPIResourceTypeName>> = {
  * @see https://github.com/OS4CSAPI/ogc-client-CSAPI_2/issues/50
  */
 export function inferResourceTypeFromPath(
-  endpointUrl: string
+  endpointUrl: string,
 ): CSAPIResourceTypeName | null {
   // Strip query string and fragment
   const pathOnly = endpointUrl.split(/[?#]/)[0];
@@ -117,7 +117,7 @@ export function inferResourceTypeFromPath(
  */
 export function classifyFeature(
   feature: unknown,
-  hint?: CSAPIResourceTypeName | null
+  hint?: CSAPIResourceTypeName | null,
 ): CSAPIResourceTypeName | null {
   const fromFeatureType = getCSAPIResourceType(feature);
   if (fromFeatureType !== null) return fromFeatureType;

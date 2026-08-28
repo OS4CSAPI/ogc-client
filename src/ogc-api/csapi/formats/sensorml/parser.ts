@@ -6,10 +6,10 @@
  * union value. Type discrimination reads the `type` property and delegates
  * to the appropriate sub-parser:
  *
- * - `'SimpleProcess'` → {@link parseSimpleProcess} (`simple-process.ts`)
- * - `'AggregateProcess'` → {@link parseAggregateProcess} (`aggregate-process.ts`)
- * - `'PhysicalComponent'` → {@link parsePhysicalComponent} (`physical-system.ts`)
- * - `'PhysicalSystem'` → {@link parsePhysicalSystem} (`physical-system.ts`)
+ * - `'SimpleProcess'` → `parseSimpleProcess` (`simple-process.ts`)
+ * - `'AggregateProcess'` → `parseAggregateProcess` (`aggregate-process.ts`)
+ * - `'PhysicalComponent'` → `parsePhysicalComponent` (`physical-system.ts`)
+ * - `'PhysicalSystem'` → `parsePhysicalSystem` (`physical-system.ts`)
  *
  * Also exports shared parsing helpers for DescribedObject, AbstractProcess,
  * and AbstractPhysicalProcess property groups, plus CapabilityList and
@@ -87,18 +87,18 @@ export { parsePosition };
 function parseAnyProperty(
   value: unknown,
   index: number,
-  context: string
+  context: string,
 ): AnyProperty {
   if (!isRecord(value)) {
     throw new SensorMLParseError(
       `${context}[${index}] must be an object`,
-      `${context}[${index}]`
+      `${context}[${index}]`,
     );
   }
   if (typeof value.name !== 'string') {
     throw new SensorMLParseError(
       `${context}[${index}] must have a string "name" property`,
-      `${context}[${index}].name`
+      `${context}[${index}].name`,
     );
   }
   // SWE Common deep validation not wired in; raw JSON passed through.
@@ -140,7 +140,7 @@ export function parseCapabilityList(json: unknown): CapabilityList {
 
   if (Array.isArray(json.capabilities)) {
     result.capabilities = json.capabilities.map((item, i) =>
-      parseAnyProperty(item, i, 'capabilities')
+      parseAnyProperty(item, i, 'capabilities'),
     );
   }
 
@@ -163,7 +163,7 @@ export function parseCapabilityList(json: unknown): CapabilityList {
 export function parseCharacteristicList(json: unknown): CharacteristicList {
   if (!isRecord(json)) {
     throw new SensorMLParseError(
-      'CharacteristicList must be a non-null object'
+      'CharacteristicList must be a non-null object',
     );
   }
 
@@ -184,7 +184,7 @@ export function parseCharacteristicList(json: unknown): CharacteristicList {
 
   if (Array.isArray(json.characteristics)) {
     result.characteristics = json.characteristics.map((item, i) =>
-      parseAnyProperty(item, i, 'characteristics')
+      parseAnyProperty(item, i, 'characteristics'),
     );
   }
 
@@ -210,7 +210,7 @@ export function parseCharacteristicList(json: unknown): CharacteristicList {
  * @see SensorML 3.0 §7.2 — DescribedObject
  */
 export function parseDescribedObjectProperties(
-  json: Record<string, unknown>
+  json: Record<string, unknown>,
 ): Partial<DescribedObject> {
   const result: Partial<DescribedObject> = {};
 
@@ -228,7 +228,7 @@ export function parseDescribedObjectProperties(
   // Keywords
   if (Array.isArray(json.keywords)) {
     result.keywords = json.keywords.filter(
-      (k): k is string => typeof k === 'string'
+      (k): k is string => typeof k === 'string',
     );
   }
 
@@ -261,14 +261,14 @@ export function parseDescribedObjectProperties(
   // Capabilities (CapabilityList[])
   if (Array.isArray(json.capabilities)) {
     result.capabilities = json.capabilities.map((item) =>
-      parseCapabilityList(item)
+      parseCapabilityList(item),
     );
   }
 
   // Characteristics (CharacteristicList[])
   if (Array.isArray(json.characteristics)) {
     result.characteristics = json.characteristics.map((item) =>
-      parseCharacteristicList(item)
+      parseCharacteristicList(item),
     );
   }
 
@@ -305,7 +305,7 @@ export function parseDescribedObjectProperties(
  * @see SensorML 3.0 §7.3 — AbstractProcess
  */
 export function parseAbstractProcessProperties(
-  json: Record<string, unknown>
+  json: Record<string, unknown>,
 ): Partial<AbstractProcess> {
   const result: Partial<AbstractProcess> = {};
 
@@ -326,13 +326,11 @@ export function parseAbstractProcessProperties(
   if (inputs !== undefined) result.inputs = inputs;
 
   const outputs = parseIOList(json.outputs, 'outputs') as
-    | OutputList
-    | undefined;
+    OutputList | undefined;
   if (outputs !== undefined) result.outputs = outputs;
 
   const parameters = parseIOList(json.parameters, 'parameters') as
-    | ParameterList
-    | undefined;
+    ParameterList | undefined;
   if (parameters !== undefined) result.parameters = parameters;
 
   const modes = parseModes(json.modes);
@@ -358,7 +356,7 @@ export function parseAbstractProcessProperties(
  * @see SensorML 3.0 §7.6 — AbstractPhysicalProcess
  */
 export function parseAbstractPhysicalProcessProperties(
-  json: Record<string, unknown>
+  json: Record<string, unknown>,
 ): Partial<AbstractPhysicalProcess> {
   const result: Partial<AbstractPhysicalProcess> = {};
 
@@ -397,14 +395,14 @@ export function parseAbstractPhysicalProcessProperties(
  *
  * | `type` value          | Sub-parser                |
  * |-----------------------|---------------------------|
- * | `'SimpleProcess'`     | {@link parseSimpleProcess}     |
- * | `'AggregateProcess'`  | {@link parseAggregateProcess}  |
- * | `'PhysicalComponent'` | {@link parsePhysicalComponent} |
- * | `'PhysicalSystem'`    | {@link parsePhysicalSystem}    |
+ * | `'SimpleProcess'`     | `parseSimpleProcess`     |
+ * | `'AggregateProcess'`  | `parseAggregateProcess`  |
+ * | `'PhysicalComponent'` | `parsePhysicalComponent` |
+ * | `'PhysicalSystem'`    | `parsePhysicalSystem`    |
  *
  * @example
  * ```typescript
- * import { parseSensorML30 } from '@camptocamp/ogc-client/csapi/formats/sensorml';
+ * import { parseSensorML30 } from '@camptocamp/ogc-client/csapi';
  *
  * const result = parseSensorML30(jsonFromServer);
  * switch (result.type) {
@@ -433,7 +431,7 @@ export function parseSensorML30(json: unknown): SensorMLProcess {
   if (typeof json.type !== 'string') {
     throw new SensorMLParseError(
       'SensorML input must have a string "type" property',
-      'type'
+      'type',
     );
   }
 
@@ -449,7 +447,7 @@ export function parseSensorML30(json: unknown): SensorMLProcess {
     default:
       throw new SensorMLParseError(
         `Unknown SensorML process type: "${json.type}"`,
-        'type'
+        'type',
       );
   }
 }

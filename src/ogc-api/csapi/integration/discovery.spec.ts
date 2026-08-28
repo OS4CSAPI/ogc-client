@@ -40,7 +40,7 @@ import {
 
 /** Minimal collection with Part 1 + Part 2 resources advertised. */
 function makeCSAPICollection(
-  overrides: Partial<OgcApiCollectionInfo> = {}
+  overrides: Partial<OgcApiCollectionInfo> = {},
 ): OgcApiCollectionInfo {
   return makeTestCollection({
     links: [
@@ -173,13 +173,13 @@ describe('Discovery workflow — full lifecycle', () => {
 
     // Builder constructs correct URLs for each resource type
     expect(builder.getSystems()).toBe(
-      'https://api.example.com/collections/weather/systems'
+      'https://api.example.com/collections/weather/systems',
     );
     expect(builder.getDatastreams()).toBe(
-      'https://api.example.com/collections/weather/datastreams'
+      'https://api.example.com/collections/weather/datastreams',
     );
     expect(builder.getCommands()).toBe(
-      'https://api.example.com/collections/weather/commands'
+      'https://api.example.com/collections/weather/commands',
     );
   });
 
@@ -202,7 +202,7 @@ describe('Discovery workflow — full lifecycle', () => {
     expect(builder.availableResources.size).toBe(0);
     expect(() => builder.getSystems()).toThrow(EndpointError);
     expect(() => builder.getSystems()).toThrow(
-      /does not support 'systems' resource/
+      /does not support 'systems' resource/,
     );
   });
 });
@@ -233,7 +233,7 @@ describe('Discovery workflow — GeoJSON response parsing', () => {
   it('extracts typed System from response features', () => {
     const result = parseCollectionResponse(SYSTEMS_GEOJSON, identity);
     const system = extractCSAPIFeature(
-      result.items[0] as Record<string, unknown>
+      result.items[0] as Record<string, unknown>,
     );
 
     expect(system).not.toBeNull();
@@ -272,7 +272,7 @@ describe('Discovery workflow — classification fallback', () => {
 
     // Path-based inference provides the hint
     const hint = inferResourceTypeFromPath(
-      'https://api.example.com/collections/weather/systems'
+      'https://api.example.com/collections/weather/systems',
     );
     expect(hint).toBe('System');
 
@@ -283,7 +283,7 @@ describe('Discovery workflow — classification fallback', () => {
   it('does not override valid featureType with hint', () => {
     const validFeature = SYSTEMS_GEOJSON.features[0];
     const hint = inferResourceTypeFromPath(
-      'https://api.example.com/collections/weather/deployments'
+      'https://api.example.com/collections/weather/deployments',
     );
     expect(hint).toBe('Deployment');
 
@@ -389,16 +389,16 @@ describe('Discovery workflow — partial collection support', () => {
 describe('Discovery workflow — error scenarios', () => {
   it('throws on invalid collection response body', () => {
     expect(() => parseCollectionResponse(null, identity)).toThrow(
-      /expected an object/
+      /expected an object/,
     );
     expect(() => parseCollectionResponse('string', identity)).toThrow(
-      /expected an object/
+      /expected an object/,
     );
   });
 
   it('throws on response missing both features and items arrays', () => {
     expect(() => parseCollectionResponse({ data: [] }, identity)).toThrow(
-      /missing both "features" and "items"/
+      /missing both "features" and "items"/,
     );
   });
 
@@ -415,7 +415,7 @@ describe('Discovery workflow — error scenarios', () => {
           { rel: 'ogc-cs:systems', type: '', title: '', href: '/systems' },
         ],
         id: 'test',
-      })
+      }),
     );
 
     try {
@@ -425,7 +425,7 @@ describe('Discovery workflow — error scenarios', () => {
       expect(e).toBeInstanceOf(EndpointError);
       expect((e as EndpointError).message).toContain('systems');
       expect((e as EndpointError).message).toContain(
-        "does not support 'deployments'"
+        "does not support 'deployments'",
       );
     }
   });

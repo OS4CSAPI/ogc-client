@@ -44,7 +44,7 @@ export { isRecord } from '../_parse-utils.js';
 // Partial<AbstractDataComponent> to enable type-safe construction
 // in consumer parsers (Issue #72, #74).
 export function parseBaseProperties(
-  json: Record<string, unknown>
+  json: Record<string, unknown>,
 ): Partial<AbstractDataComponent> {
   const result: Partial<AbstractDataComponent> = {};
   if (typeof json.id === 'string') result.id = json.id;
@@ -70,11 +70,11 @@ export function parseBaseProperties(
  * @see https://docs.ogc.org/is/24-014/24-014.html — OGC SWE Common 3.0 (xlink attributes)
  */
 export function parseAssociationAttributeGroup(
-  json: Record<string, unknown>
+  json: Record<string, unknown>,
 ): AssociationAttributeGroup {
   if (typeof json.href !== 'string') {
     throw new EndpointError(
-      'AssociationAttributeGroup requires a string "href"'
+      'AssociationAttributeGroup requires a string "href"',
     );
   }
   const result: AssociationAttributeGroup = { href: json.href };

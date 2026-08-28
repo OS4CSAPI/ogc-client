@@ -128,7 +128,7 @@ describe('Type compatibility - Part 1 GeoJSON resources', () => {
     };
     expect(system.type).toBe('Feature');
     expect(system.properties.featureType).toBe(
-      'http://www.w3.org/ns/sosa/Sensor'
+      'http://www.w3.org/ns/sosa/Sensor',
     );
     expect(system.properties.uid).toBe('urn:example:sensor:001');
     expect(system.properties.name).toBe('Temperature Sensor');

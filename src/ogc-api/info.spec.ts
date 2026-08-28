@@ -80,10 +80,10 @@ describe('info parsing utilities', () => {
   describe('checkHasConnectedSystems', () => {
     it('exports the canonical Part 1 and Part 2 URI prefixes', () => {
       expect(CSAPI_PART1_CONFORMANCE_PREFIX).toBe(
-        'http://www.opengis.net/spec/ogcapi-connectedsystems-1/'
+        'http://www.opengis.net/spec/ogcapi-connectedsystems-1/',
       );
       expect(CSAPI_PART2_CONFORMANCE_PREFIX).toBe(
-        'http://www.opengis.net/spec/ogcapi-connectedsystems-2/'
+        'http://www.opengis.net/spec/ogcapi-connectedsystems-2/',
       );
     });
 
@@ -156,7 +156,7 @@ describe('info parsing utilities', () => {
             'http://www.opengis.net/spec/ogcapi-features-1/1.0/conf/core',
             'http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/datastream',
           ],
-        ])
+        ]),
       ).toBe(true);
     });
 
@@ -166,7 +166,7 @@ describe('info parsing utilities', () => {
           [
             'http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/core',
           ],
-        ])
+        ]),
       ).toBe(true);
     });
 

@@ -122,7 +122,7 @@ describe('Format Index — Constants', () => {
   it('exports resource type URI arrays with both compact and full URI forms', () => {
     expect(SYSTEM_TYPE_RECOGNITION_VALUES).toContain('sosa:Sensor');
     expect(SYSTEM_TYPE_RECOGNITION_VALUES).toContain(
-      'http://www.w3.org/ns/sosa/Sensor'
+      'http://www.w3.org/ns/sosa/Sensor',
     );
     expect(DeploymentTypeUris).toContain('sosa:Deployment');
     expect(ProcedureTypeUris).toContain('sosa:Procedure');

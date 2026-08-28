@@ -72,7 +72,7 @@ function requireObject(json: unknown, fn: string): Record<string, unknown> {
  */
 function extractCrossReferenceId(
   obj: Record<string, unknown>,
-  fieldName: string
+  fieldName: string,
 ): string | undefined {
   // Form 1: scalar @id (authoritative; wins if both forms present)
   const idValue = obj[`${fieldName}@id`];
@@ -123,7 +123,7 @@ interface BaseStream {
  */
 function parseBaseStream(
   fn: string,
-  json: unknown
+  json: unknown,
 ): { base: BaseStream; obj: Record<string, unknown> } {
   const obj = requireObject(json, fn);
   const validTime: TimeInterval | undefined = parseValidTime(obj.validTime);
@@ -293,7 +293,7 @@ export function parseDatastream(json: unknown): Datastream {
   // objects here (original finding was a testing artifact), but it's retained
   // as a Postel's Law safeguard.
   const observedProperties: string[] = normalizeObservedProperties(
-    toArray(obj.observedProperties)
+    toArray(obj.observedProperties),
   );
 
   return {
@@ -370,7 +370,7 @@ export function parseControlStream(json: unknown): ControlStream {
   // objects here (original finding was a testing artifact), but it's retained
   // as a Postel's Law safeguard.
   const controlledProperties: string[] = normalizeObservedProperties(
-    toArray(obj.controlledProperties)
+    toArray(obj.controlledProperties),
   );
 
   return {
@@ -402,7 +402,7 @@ export function parseControlStream(json: unknown): ControlStream {
  * @see https://docs.ogc.org/is/23-002/23-002.html — status codes
  */
 export function normalizeStatusCode(
-  value: unknown
+  value: unknown,
 ): CommandStatusCode | undefined {
   if (
     typeof value === 'string' &&
@@ -459,7 +459,7 @@ export function parseCommand(json: unknown): Command {
 
   // executionTime: time interval parsed via parseValidTime() (only present after execution)
   const executionTime: TimeInterval | undefined = parseValidTime(
-    obj.executionTime
+    obj.executionTime,
   );
 
   // currentStatus: validate against known status codes
@@ -620,7 +620,7 @@ export function parseCommandStatus(json: unknown): CommandStatus {
 
   // executionTime: time interval parsed via parseValidTime()
   const executionTime: TimeInterval | undefined = parseValidTime(
-    obj.executionTime
+    obj.executionTime,
   );
 
   return {

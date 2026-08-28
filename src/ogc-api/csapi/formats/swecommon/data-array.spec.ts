@@ -110,7 +110,7 @@ describe('parseDataArray — Text encoding', () => {
       ['d', 'e', 'f'],
     ]);
     expect(
-      (result.encoding as { decimalSeparator?: string }).decimalSeparator
+      (result.encoding as { decimalSeparator?: string }).decimalSeparator,
     ).toBe(',');
   });
 
@@ -175,7 +175,7 @@ describe('parseDataArray — Binary encoding', () => {
     expect(enc.members[0].type).toBe('Component');
     expect(enc.members[0].ref).toBe('temperature');
     expect(enc.members[0].dataType).toBe(
-      'http://www.opengis.net/def/dataType/OGC/0/float64'
+      'http://www.opengis.net/def/dataType/OGC/0/float64',
     );
   });
 
@@ -206,7 +206,7 @@ describe('parseDataArray — Binary encoding', () => {
     expect(bin.members[0].type).toBe('Block');
     expect(bin.members[0].ref).toBe('imageData');
     expect(bin.members[0].compression).toBe(
-      'http://www.opengis.net/def/encoding/OGC/0/gzip'
+      'http://www.opengis.net/def/encoding/OGC/0/gzip',
     );
   });
 
@@ -263,7 +263,7 @@ describe('parseDataArray — Binary encoding', () => {
       byteOrder: 'bigEndian',
       byteEncoding: 'base64',
       members: [] as unknown as [
-        { type: 'Component'; ref: string; dataType: string }
+        { type: 'Component'; ref: string; dataType: string },
       ],
     });
     expect(decoded).toEqual(['AQIDBAUG']);
@@ -282,7 +282,7 @@ describe('parseEncoding — XMLEncoding', () => {
     });
     expect(enc.type).toBe('XMLEncoding');
     expect((enc as { namespace?: string }).namespace).toBe(
-      'http://example.com/ns'
+      'http://example.com/ns',
     );
   });
 
@@ -382,10 +382,10 @@ describe('parseDataArray — element type', () => {
     });
     expect(result.elementType.name).toBe('externalDef');
     expect((result.elementType as Record<string, unknown>).href).toBe(
-      'http://example.com/schema/measurement'
+      'http://example.com/schema/measurement',
     );
     expect((result.elementType as Record<string, unknown>).role).toBe(
-      'definition'
+      'definition',
     );
   });
 
@@ -479,25 +479,25 @@ describe('parseDataArray — error handling', () => {
 
   it('throws for wrong type', () => {
     expect(() =>
-      parseDataArray({ type: 'DataRecord', elementType: { name: 'x' } })
+      parseDataArray({ type: 'DataRecord', elementType: { name: 'x' } }),
     ).toThrow('Expected type "DataArray"');
   });
 
   it('throws for missing type', () => {
     expect(() =>
-      parseDataArray({ elementType: { name: 'x', type: 'Count' } })
+      parseDataArray({ elementType: { name: 'x', type: 'Count' } }),
     ).toThrow('Expected type "DataArray"');
   });
 
   it('throws for missing elementType', () => {
     expect(() => parseDataArray({ type: 'DataArray' })).toThrow(
-      'requires an "elementType"'
+      'requires an "elementType"',
     );
   });
 
   it('throws for elementType missing name', () => {
     expect(() =>
-      parseDataArray({ type: 'DataArray', elementType: { type: 'Count' } })
+      parseDataArray({ type: 'DataArray', elementType: { type: 'Count' } }),
     ).toThrow('non-empty "name"');
   });
 
@@ -506,13 +506,13 @@ describe('parseDataArray — error handling', () => {
       parseDataArray({
         type: 'DataArray',
         elementType: { name: '', type: 'Count' },
-      })
+      }),
     ).toThrow('non-empty "name"');
   });
 
   it('throws for elementType with no type and no href', () => {
     expect(() =>
-      parseDataArray({ type: 'DataArray', elementType: { name: 'orphan' } })
+      parseDataArray({ type: 'DataArray', elementType: { name: 'orphan' } }),
     ).toThrow('must have a "type" property or be a link reference');
   });
 
@@ -522,19 +522,19 @@ describe('parseDataArray — error handling', () => {
         type: 'DataArray',
         elementType: { name: 'x', type: 'Count' },
         encoding: { type: 'CustomEncoding' },
-      })
+      }),
     ).toThrow('Unrecognized encoding type');
   });
 
   it('throws for TextEncoding missing tokenSeparator', () => {
     expect(() =>
-      parseEncoding({ type: 'TextEncoding', blockSeparator: '\n' })
+      parseEncoding({ type: 'TextEncoding', blockSeparator: '\n' }),
     ).toThrow('tokenSeparator');
   });
 
   it('throws for TextEncoding missing blockSeparator', () => {
     expect(() =>
-      parseEncoding({ type: 'TextEncoding', tokenSeparator: ',' })
+      parseEncoding({ type: 'TextEncoding', tokenSeparator: ',' }),
     ).toThrow('blockSeparator');
   });
 
@@ -544,7 +544,7 @@ describe('parseDataArray — error handling', () => {
         type: 'BinaryEncoding',
         byteEncoding: 'base64',
         members: [{ type: 'Component', ref: 'x', dataType: 'y' }],
-      })
+      }),
     ).toThrow('byteOrder');
   });
 
@@ -554,7 +554,7 @@ describe('parseDataArray — error handling', () => {
         type: 'BinaryEncoding',
         byteOrder: 'bigEndian',
         members: [{ type: 'Component', ref: 'x', dataType: 'y' }],
-      })
+      }),
     ).toThrow('byteEncoding');
   });
 
@@ -564,7 +564,7 @@ describe('parseDataArray — error handling', () => {
         type: 'BinaryEncoding',
         byteOrder: 'bigEndian',
         byteEncoding: 'base64',
-      })
+      }),
     ).toThrow('non-empty "members"');
   });
 
@@ -575,7 +575,7 @@ describe('parseDataArray — error handling', () => {
         byteOrder: 'bigEndian',
         byteEncoding: 'base64',
         members: [],
-      })
+      }),
     ).toThrow('non-empty "members"');
   });
 
@@ -586,7 +586,7 @@ describe('parseDataArray — error handling', () => {
         byteOrder: 'bigEndian',
         byteEncoding: 'base64',
         members: [{ type: 'Component', dataType: 'y' }],
-      })
+      }),
     ).toThrow('"ref"');
   });
 
@@ -597,7 +597,7 @@ describe('parseDataArray — error handling', () => {
         byteOrder: 'bigEndian',
         byteEncoding: 'base64',
         members: [{ type: 'Component', ref: 'x' }],
-      })
+      }),
     ).toThrow('"dataType"');
   });
 
@@ -608,7 +608,7 @@ describe('parseDataArray — error handling', () => {
         byteOrder: 'bigEndian',
         byteEncoding: 'base64',
         members: [{ type: 'Block' }],
-      })
+      }),
     ).toThrow('"ref"');
   });
 
@@ -618,7 +618,7 @@ describe('parseDataArray — error handling', () => {
 
   it('throws for encoding missing type', () => {
     expect(() => parseEncoding({ tokenSeparator: ',' })).toThrow(
-      '"type" string'
+      '"type" string',
     );
   });
 
@@ -629,7 +629,7 @@ describe('parseDataArray — error handling', () => {
         byteOrder: 'bigEndian',
         byteEncoding: 'base64',
         members: [{ type: 'Unknown', ref: 'x' }],
-      })
+      }),
     ).toThrow('unrecognized type');
   });
 
@@ -640,7 +640,7 @@ describe('parseDataArray — error handling', () => {
         byteOrder: 'bigEndian',
         byteEncoding: 'base64',
         members: ['not-an-object'],
-      })
+      }),
     ).toThrow('non-null object');
   });
 
@@ -649,7 +649,7 @@ describe('parseDataArray — error handling', () => {
       parseDataArray({
         type: 'DataArray',
         elementType: { name: 'bad', type: 'UnknownComponent' },
-      })
+      }),
     ).toThrow('unsupported component type');
   });
 });
@@ -686,7 +686,7 @@ describe('parseDataArray — complex types via componentParser callback', () => 
         encoding: { type: 'JSONEncoding' },
         values: [],
       },
-      mockParser
+      mockParser,
     );
 
     expect(result.type).toBe('DataArray');
@@ -704,7 +704,7 @@ describe('parseDataArray — complex types via componentParser callback', () => 
       parseDataArray({
         type: 'DataArray',
         elementType: { name: 'geo', type: 'Geometry' },
-      })
+      }),
     ).toThrow('unsupported component type');
   });
 
@@ -731,7 +731,7 @@ describe('parseDataArray — complex types via componentParser callback', () => 
           fields: [vectorField],
         },
       },
-      mockParser
+      mockParser,
     );
 
     expect(result.elementType.name).toBe('record');

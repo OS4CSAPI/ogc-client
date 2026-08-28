@@ -100,7 +100,7 @@ describe('Resource Type URI Arrays', () => {
     expect(SYSTEM_TYPE_RECOGNITION_VALUES).toHaveLength(10);
     expect(SYSTEM_TYPE_RECOGNITION_VALUES).toContain('sosa:Sensor');
     expect(SYSTEM_TYPE_RECOGNITION_VALUES).toContain(
-      'http://www.w3.org/ns/sosa/Sensor'
+      'http://www.w3.org/ns/sosa/Sensor',
     );
     expect(SYSTEM_TYPE_RECOGNITION_VALUES).toContain('sosa:Platform');
     expect(SYSTEM_TYPE_RECOGNITION_VALUES).toContain('sosa:Actuator');
@@ -112,7 +112,7 @@ describe('Resource Type URI Arrays', () => {
     expect(DeploymentTypeUris).toHaveLength(2);
     expect(DeploymentTypeUris).toContain('sosa:Deployment');
     expect(DeploymentTypeUris).toContain(
-      'http://www.w3.org/ns/sosa/Deployment'
+      'http://www.w3.org/ns/sosa/Deployment',
     );
   });
 
@@ -128,7 +128,7 @@ describe('Resource Type URI Arrays', () => {
     expect(SamplingFeatureTypeUris).toHaveLength(2);
     expect(SamplingFeatureTypeUris).toContain('sosa:SamplingFeature');
     expect(SamplingFeatureTypeUris).toContain(
-      'http://www.w3.org/ns/sosa/SamplingFeature'
+      'http://www.w3.org/ns/sosa/SamplingFeature',
     );
   });
 
@@ -136,11 +136,11 @@ describe('Resource Type URI Arrays', () => {
     expect(PropertyTypeUris).toHaveLength(4);
     expect(PropertyTypeUris).toContain('sosa:ObservableProperty');
     expect(PropertyTypeUris).toContain(
-      'http://www.w3.org/ns/sosa/ObservableProperty'
+      'http://www.w3.org/ns/sosa/ObservableProperty',
     );
     expect(PropertyTypeUris).toContain('sosa:ActuatableProperty');
     expect(PropertyTypeUris).toContain(
-      'http://www.w3.org/ns/sosa/ActuatableProperty'
+      'http://www.w3.org/ns/sosa/ActuatableProperty',
     );
   });
 
@@ -148,11 +148,11 @@ describe('Resource Type URI Arrays', () => {
     expect(ObservationTypeUris).toHaveLength(4);
     expect(ObservationTypeUris).toContain('sosa:Observation');
     expect(ObservationTypeUris).toContain(
-      'http://www.w3.org/ns/sosa/Observation'
+      'http://www.w3.org/ns/sosa/Observation',
     );
     expect(ObservationTypeUris).toContain('sosa:ObservationCollection');
     expect(ObservationTypeUris).toContain(
-      'http://www.w3.org/ns/sosa/ObservationCollection'
+      'http://www.w3.org/ns/sosa/ObservationCollection',
     );
   });
 });

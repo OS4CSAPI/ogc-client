@@ -55,10 +55,7 @@ export const SENSORML_NS = 'http://www.opengis.net/sensorml/2.0#';
 
 /** CSAPI resource type discriminator names. */
 export type CSAPIResourceTypeName =
-  | 'System'
-  | 'Deployment'
-  | 'Procedure'
-  | 'SamplingFeature';
+  'System' | 'Deployment' | 'Procedure' | 'SamplingFeature';
 
 /**
  * SOSA local names that map to the System resource type.
@@ -216,7 +213,7 @@ export function isCSAPIFeature(feature: unknown): boolean {
  * @see {@link https://www.w3.org/TR/vocab-ssn/ | SOSA/SSN Ontology} for featureType URIs
  */
 export function getCSAPIResourceType(
-  feature: unknown
+  feature: unknown,
 ): CSAPIResourceTypeName | null {
   const ft = getFeatureType(feature);
   if (ft === undefined) return null;
@@ -438,25 +435,25 @@ function parseResourceRef(raw: Record<string, unknown>): CSAPIResourceRef {
     ...(typeof raw.rt === 'string'
       ? { rt: raw.rt }
       : typeof raw.type === 'string'
-      ? { rt: raw.type }
-      : {}),
+        ? { rt: raw.type }
+        : {}),
   };
 }
 
 export function extractCSAPIFeature(
-  feature: unknown
+  feature: unknown,
 ): System | Deployment | Procedure | SamplingFeature {
   const resourceType = getCSAPIResourceType(feature);
   if (resourceType === null) {
     throw new EndpointError(
-      'Cannot extract CSAPI feature: unrecognized or missing featureType'
+      'Cannot extract CSAPI feature: unrecognized or missing featureType',
     );
   }
 
   const f = feature as Record<string, unknown>;
   if (!isRecord(f.properties)) {
     throw new EndpointError(
-      'Cannot extract CSAPI feature: "properties" must be a non-null object'
+      'Cannot extract CSAPI feature: "properties" must be a non-null object',
     );
   }
   const p = f.properties;

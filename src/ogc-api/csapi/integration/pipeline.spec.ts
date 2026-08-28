@@ -80,7 +80,7 @@ describe('end-to-end: Datastream collection pipeline', () => {
     // Extract items and parse each through parseDatastream in one step
     const collection = parseCollectionResponse(
       DATASTREAMS_COLLECTION,
-      parseDatastream
+      parseDatastream,
     );
     expect(collection.items).toHaveLength(1);
     expect(collection.numberMatched).toBe(1);
@@ -109,7 +109,7 @@ describe('end-to-end: Datastream collection pipeline', () => {
     // phenomenonTime and resultTime parsed as TimeInterval
     expect(ds.phenomenonTime).not.toBeNull();
     expect(ds.phenomenonTime!.start).toEqual(
-      new Date('2026-01-26T18:32:01.56Z')
+      new Date('2026-01-26T18:32:01.56Z'),
     );
     expect(ds.phenomenonTime!.end).toEqual(new Date('2026-02-19T14:22:03.12Z'));
 
@@ -120,10 +120,10 @@ describe('end-to-end: Datastream collection pipeline', () => {
 
     // Cross-reference fields stripped (not in Datastream interface)
     expect(
-      (ds as unknown as Record<string, unknown>)['system@id']
+      (ds as unknown as Record<string, unknown>)['system@id'],
     ).toBeUndefined();
     expect(
-      (ds as unknown as Record<string, unknown>)['system@link']
+      (ds as unknown as Record<string, unknown>)['system@link'],
     ).toBeUndefined();
   });
 
@@ -137,7 +137,7 @@ describe('end-to-end: Datastream collection pipeline', () => {
 
     const collection = parseCollectionResponse(
       emptyCollection,
-      parseDatastream
+      parseDatastream,
     );
     expect(collection.items).toHaveLength(0);
   });
@@ -177,7 +177,7 @@ describe('end-to-end: Property collection pipeline', () => {
     // Extract features and parse each through parseProperty in one step
     const collection = parseCollectionResponse(
       PROPERTIES_COLLECTION,
-      parseProperty
+      parseProperty,
     );
     expect(collection.items).toHaveLength(1);
 
@@ -188,10 +188,10 @@ describe('end-to-end: Property collection pipeline', () => {
     expect(prop.label).toBe('Air Temperature');
     expect(prop.description).toBe('Temperature of the ambient air');
     expect(prop.baseProperty).toBe(
-      'http://qudt.org/vocab/quantitykind/Temperature'
+      'http://qudt.org/vocab/quantitykind/Temperature',
     );
     expect(prop.objectType).toBe(
-      'http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement'
+      'http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement',
     );
   });
 });

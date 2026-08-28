@@ -290,10 +290,10 @@ describe('parsePhysicalSystem', () => {
       expect(result.label).toBe('Autonomous Weather Station');
       expect(result.uniqueId).toBe('urn:example:system:auto-weather');
       expect(result.description).toBe(
-        'Multi-sensor autonomous weather monitoring platform'
+        'Multi-sensor autonomous weather monitoring platform',
       );
       expect(result.definition).toBe(
-        'http://www.opengis.net/def/system/weather-station'
+        'http://www.opengis.net/def/system/weather-station',
       );
     });
 
@@ -301,7 +301,7 @@ describe('parsePhysicalSystem', () => {
       const result = parsePhysicalSystem(FULL_PHYSICAL_SYSTEM);
       expect(result.typeOf).toBeDefined();
       expect(result.typeOf!.href).toBe(
-        'http://example.org/systems/base-weather'
+        'http://example.org/systems/base-weather',
       );
       expect(result.typeOf!.title).toBe('Base Weather Platform');
     });
@@ -311,7 +311,7 @@ describe('parsePhysicalSystem', () => {
       expect(result.configuration).toBeDefined();
       expect(result.configuration!.setValues).toHaveLength(1);
       expect(result.configuration!.setValues![0].ref).toBe(
-        'parameters/pollingInterval'
+        'parameters/pollingInterval',
       );
     });
 
@@ -320,7 +320,7 @@ describe('parsePhysicalSystem', () => {
       expect(result.featuresOfInterest).toBeDefined();
       expect(result.featuresOfInterest).toHaveLength(1);
       expect(result.featuresOfInterest![0].href).toBe(
-        'http://example.org/features/site-A'
+        'http://example.org/features/site-A',
       );
     });
 
@@ -365,7 +365,7 @@ describe('parsePhysicalSystem', () => {
       const result = parsePhysicalSystem(FULL_PHYSICAL_SYSTEM);
       expect(result.attachedTo).toBeDefined();
       expect(result.attachedTo!.href).toBe(
-        'http://example.org/platforms/tower-1'
+        'http://example.org/platforms/tower-1',
       );
       expect(result.attachedTo!.title).toBe('Tower 1');
     });
@@ -424,10 +424,10 @@ describe('parsePhysicalSystem', () => {
       expect(result.connections).toBeDefined();
       expect(result.connections).toHaveLength(2);
       expect(result.connections![0].source).toBe(
-        'components/tempSensor/outputs/temperature'
+        'components/tempSensor/outputs/temperature',
       );
       expect(result.connections![0].destination).toBe(
-        'outputs/weatherReport/fields/temperature'
+        'outputs/weatherReport/fields/temperature',
       );
     });
 
@@ -465,7 +465,7 @@ describe('parsePhysicalSystem', () => {
       expect(result.components![0].name).toBe('subSystem');
       expect(result.components![0].type).toBe('PhysicalSystem');
       expect((result.components![0] as any).position).toBe(
-        'Inside main enclosure'
+        'Inside main enclosure',
       );
     });
 
@@ -484,13 +484,13 @@ describe('parsePhysicalSystem', () => {
     it('throws for null input', () => {
       expect(() => parsePhysicalSystem(null)).toThrow(SensorMLParseError);
       expect(() => parsePhysicalSystem(null)).toThrow(
-        'PhysicalSystem input must be a non-null object'
+        'PhysicalSystem input must be a non-null object',
       );
     });
 
     it('throws for non-object input', () => {
       expect(() => parsePhysicalSystem('not-an-object')).toThrow(
-        SensorMLParseError
+        SensorMLParseError,
       );
       expect(() => parsePhysicalSystem(42)).toThrow(SensorMLParseError);
     });
@@ -501,7 +501,7 @@ describe('parsePhysicalSystem', () => {
 
     it('throws for missing type', () => {
       expect(() =>
-        parsePhysicalSystem({ label: 'Test', uniqueId: 'urn:x' })
+        parsePhysicalSystem({ label: 'Test', uniqueId: 'urn:x' }),
       ).toThrow('Expected type "PhysicalSystem"');
     });
 
@@ -511,19 +511,19 @@ describe('parsePhysicalSystem', () => {
           type: 'SimpleProcess',
           label: 'Test',
           uniqueId: 'urn:x',
-        })
+        }),
       ).toThrow('Expected type "PhysicalSystem", got "SimpleProcess"');
     });
 
     it('throws for missing label', () => {
       expect(() =>
-        parsePhysicalSystem({ type: 'PhysicalSystem', uniqueId: 'urn:x' })
+        parsePhysicalSystem({ type: 'PhysicalSystem', uniqueId: 'urn:x' }),
       ).toThrow('PhysicalSystem must have a string "label" property');
     });
 
     it('throws for missing uniqueId', () => {
       expect(() =>
-        parsePhysicalSystem({ type: 'PhysicalSystem', label: 'Test' })
+        parsePhysicalSystem({ type: 'PhysicalSystem', label: 'Test' }),
       ).toThrow('PhysicalSystem must have a string "uniqueId" property');
     });
 
@@ -533,7 +533,7 @@ describe('parsePhysicalSystem', () => {
           type: 'PhysicalSystem',
           label: 42,
           uniqueId: 'urn:x',
-        })
+        }),
       ).toThrow('PhysicalSystem must have a string "label" property');
     });
 
@@ -543,7 +543,7 @@ describe('parsePhysicalSystem', () => {
           type: 'PhysicalSystem',
           label: 'Test',
           uniqueId: null,
-        })
+        }),
       ).toThrow('PhysicalSystem must have a string "uniqueId" property');
     });
 
@@ -552,7 +552,7 @@ describe('parsePhysicalSystem', () => {
         parsePhysicalSystem({
           ...MINIMAL_PHYSICAL_SYSTEM,
           inputs: 'not-an-array',
-        })
+        }),
       ).toThrow('"inputs" must be an array');
     });
 
@@ -561,7 +561,7 @@ describe('parsePhysicalSystem', () => {
         parsePhysicalSystem({
           ...MINIMAL_PHYSICAL_SYSTEM,
           localReferenceFrames: 'not-an-array',
-        })
+        }),
       ).toThrow('"localReferenceFrames" must be an array');
     });
 
@@ -572,7 +572,7 @@ describe('parsePhysicalSystem', () => {
           localReferenceFrames: [
             { axes: [{ name: 'X', description: 'Forward' }] },
           ],
-        })
+        }),
       ).toThrow('localReferenceFrames[0] must have a string "origin" property');
     });
 
@@ -581,7 +581,7 @@ describe('parsePhysicalSystem', () => {
         parsePhysicalSystem({
           ...MINIMAL_PHYSICAL_SYSTEM,
           localReferenceFrames: [{ origin: 'Center' }],
-        })
+        }),
       ).toThrow('localReferenceFrames[0] must have a non-empty "axes" array');
     });
 
@@ -590,7 +590,7 @@ describe('parsePhysicalSystem', () => {
         parsePhysicalSystem({
           ...MINIMAL_PHYSICAL_SYSTEM,
           localReferenceFrames: [{ origin: 'Center', axes: [] }],
-        })
+        }),
       ).toThrow('localReferenceFrames[0] must have a non-empty "axes" array');
     });
 
@@ -601,7 +601,7 @@ describe('parsePhysicalSystem', () => {
           localReferenceFrames: [
             { origin: 'Center', axes: [{ description: 'Up' }] },
           ],
-        })
+        }),
       ).toThrow('axes[0] must have a string "name" property');
     });
 
@@ -610,7 +610,7 @@ describe('parsePhysicalSystem', () => {
         parsePhysicalSystem({
           ...MINIMAL_PHYSICAL_SYSTEM,
           localReferenceFrames: [{ origin: 'Center', axes: [{ name: 'Z' }] }],
-        })
+        }),
       ).toThrow('axes[0] must have a string "description" property');
     });
 
@@ -619,7 +619,7 @@ describe('parsePhysicalSystem', () => {
         parsePhysicalSystem({
           ...MINIMAL_PHYSICAL_SYSTEM,
           localTimeFrames: 'not-an-array',
-        })
+        }),
       ).toThrow('"localTimeFrames" must be an array');
     });
 
@@ -628,7 +628,7 @@ describe('parsePhysicalSystem', () => {
         parsePhysicalSystem({
           ...MINIMAL_PHYSICAL_SYSTEM,
           localTimeFrames: [{ id: 'tf-1' }],
-        })
+        }),
       ).toThrow('localTimeFrames[0] must have a string "origin" property');
     });
 
@@ -733,10 +733,10 @@ describe('parsePhysicalComponent', () => {
       expect(result.label).toBe('Thermistor Probe');
       expect(result.uniqueId).toBe('urn:example:component:thermistor');
       expect(result.description).toBe(
-        'High-precision thermistor temperature probe'
+        'High-precision thermistor temperature probe',
       );
       expect(result.definition).toBe(
-        'http://www.opengis.net/def/sensor/thermistor'
+        'http://www.opengis.net/def/sensor/thermistor',
       );
     });
 
@@ -744,7 +744,7 @@ describe('parsePhysicalComponent', () => {
       const result = parsePhysicalComponent(FULL_PHYSICAL_COMPONENT);
       expect(result.typeOf).toBeDefined();
       expect(result.typeOf!.href).toBe(
-        'http://example.org/sensors/base-thermistor'
+        'http://example.org/sensors/base-thermistor',
       );
     });
 
@@ -766,7 +766,7 @@ describe('parsePhysicalComponent', () => {
       const result = parsePhysicalComponent(FULL_PHYSICAL_COMPONENT);
       expect(result.attachedTo).toBeDefined();
       expect(result.attachedTo!.href).toBe(
-        'http://example.org/systems/weather-alpha'
+        'http://example.org/systems/weather-alpha',
       );
     });
 
@@ -781,14 +781,14 @@ describe('parsePhysicalComponent', () => {
       const result = parsePhysicalComponent(FULL_PHYSICAL_COMPONENT);
       expect(result.localTimeFrames).toHaveLength(1);
       expect(result.localTimeFrames![0].origin).toBe(
-        'Calibration epoch (2024-06-15T00:00:00Z)'
+        'Calibration epoch (2024-06-15T00:00:00Z)',
       );
     });
 
     it('parses position as a text string', () => {
       const result = parsePhysicalComponent(FULL_PHYSICAL_COMPONENT);
       expect(result.position).toBe(
-        'Mounted 2m above ground on north side of enclosure'
+        'Mounted 2m above ground on north side of enclosure',
       );
     });
   });
@@ -802,7 +802,7 @@ describe('parsePhysicalComponent', () => {
       const result = parsePhysicalComponent(FULL_PHYSICAL_COMPONENT);
       expect(result.method).toBeDefined();
       expect(result.method!.description).toBe(
-        'Steinhart-Hart thermistor equation'
+        'Steinhart-Hart thermistor equation',
       );
       expect(result.method!.algorithm).toBeDefined();
     });
@@ -831,7 +831,7 @@ describe('parsePhysicalComponent', () => {
     it('throws for null input', () => {
       expect(() => parsePhysicalComponent(null)).toThrow(SensorMLParseError);
       expect(() => parsePhysicalComponent(null)).toThrow(
-        'PhysicalComponent input must be a non-null object'
+        'PhysicalComponent input must be a non-null object',
       );
     });
 
@@ -841,7 +841,7 @@ describe('parsePhysicalComponent', () => {
           type: 'PhysicalSystem',
           label: 'Test',
           uniqueId: 'urn:x',
-        })
+        }),
       ).toThrow('Expected type "PhysicalComponent", got "PhysicalSystem"');
     });
 
@@ -850,7 +850,7 @@ describe('parsePhysicalComponent', () => {
         parsePhysicalComponent({
           type: 'PhysicalComponent',
           uniqueId: 'urn:x',
-        })
+        }),
       ).toThrow('PhysicalComponent must have a string "label" property');
     });
 
@@ -859,7 +859,7 @@ describe('parsePhysicalComponent', () => {
         parsePhysicalComponent({
           type: 'PhysicalComponent',
           label: 'Test',
-        })
+        }),
       ).toThrow('PhysicalComponent must have a string "uniqueId" property');
     });
 
@@ -869,7 +869,7 @@ describe('parsePhysicalComponent', () => {
           type: 'PhysicalComponent',
           label: 42,
           uniqueId: 'urn:x',
-        })
+        }),
       ).toThrow('PhysicalComponent must have a string "label" property');
     });
 
@@ -879,7 +879,7 @@ describe('parsePhysicalComponent', () => {
           type: 'PhysicalComponent',
           label: 'Test',
           uniqueId: null,
-        })
+        }),
       ).toThrow('PhysicalComponent must have a string "uniqueId" property');
     });
 
@@ -1062,7 +1062,7 @@ describe('parseComponentList', () => {
 
   it('throws for non-array input', () => {
     expect(() => parseComponentList('not-an-array')).toThrow(
-      '"components" must be an array'
+      '"components" must be an array',
     );
   });
 
@@ -1105,7 +1105,7 @@ describe('parseConnectionList', () => {
 
   it('throws for non-array input', () => {
     expect(() => parseConnectionList('not-an-array')).toThrow(
-      '"connections" must be an array'
+      '"connections" must be an array',
     );
   });
 
@@ -1120,13 +1120,13 @@ describe('parseConnectionList', () => {
 
   it('throws for connection missing source', () => {
     expect(() => parseConnectionList([{ destination: 'outputs/y' }])).toThrow(
-      'connections[0] must have a string "source" property'
+      'connections[0] must have a string "source" property',
     );
   });
 
   it('throws for connection missing destination', () => {
     expect(() =>
-      parseConnectionList([{ source: 'components/a/outputs/x' }])
+      parseConnectionList([{ source: 'components/a/outputs/x' }]),
     ).toThrow('connections[0] must have a string "destination" property');
   });
 });
@@ -1138,13 +1138,13 @@ describe('parseConnectionList', () => {
 describe('parseComponentEntry', () => {
   it('throws for non-object entry', () => {
     expect(() => parseComponentEntry('string', 0)).toThrow(
-      'components[0] must be an object'
+      'components[0] must be an object',
     );
   });
 
   it('throws for entry without name', () => {
     expect(() =>
-      parseComponentEntry({ type: 'Link', href: 'http://x' }, 0)
+      parseComponentEntry({ type: 'Link', href: 'http://x' }, 0),
     ).toThrow('components[0] must have a string "name" property');
   });
 
@@ -1156,7 +1156,7 @@ describe('parseComponentEntry', () => {
         label: 'Sub System',
         uniqueId: 'urn:sub',
       },
-      0
+      0,
     );
     expect(entry.name).toBe('subSys');
     expect(entry.type).toBe('PhysicalSystem');
@@ -1170,7 +1170,7 @@ describe('parseComponentEntry', () => {
         label: 'Proc',
         uniqueId: 'urn:proc',
       },
-      0
+      0,
     );
     expect(entry.name).toBe('proc1');
     expect(entry.type).toBe('SimpleProcess');
@@ -1187,7 +1187,7 @@ describe('parseComponentEntry', () => {
         label: 'Temperature Sensor',
         method: { algorithm: ['kalman-filter'] },
       },
-      0
+      0,
     );
     expect(entry.name).toBe('tempSensor');
     expect(entry.type).toBe('SimpleProcess');
@@ -1203,7 +1203,7 @@ describe('parseComponentEntry', () => {
         uniqueId: 'urn:phycomp',
         label: 'Wind Vane',
       },
-      0
+      0,
     );
     expect(entry.name).toBe('windVane');
     expect(entry.type).toBe('PhysicalComponent');
@@ -1219,7 +1219,7 @@ describe('parseComponentEntry', () => {
         label: 'Processing Chain',
         components: [],
       },
-      0
+      0,
     );
     expect(entry.name).toBe('procChain');
     expect(entry.type).toBe('AggregateProcess');
@@ -1235,7 +1235,7 @@ describe('parseComponentEntry', () => {
         uniqueId: 'urn:subsys',
         label: 'Sub Platform',
       },
-      0
+      0,
     );
     expect(entry.name).toBe('subPlatform');
     expect(entry.type).toBe('PhysicalSystem');
@@ -1250,7 +1250,7 @@ describe('parseComponentEntry', () => {
         type: 'Link',
         href: 'http://example.org/sensor',
       },
-      0
+      0,
     );
     expect(entry.name).toBe('extSensor');
     expect((entry as any).type).toBe('Link');

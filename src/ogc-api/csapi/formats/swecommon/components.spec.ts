@@ -52,7 +52,7 @@ describe('parseQuantity', () => {
     expect(result.label).toBe('Temperature');
     expect(result.description).toBe('Air temperature');
     expect(result.definition).toBe(
-      'http://qudt.org/vocab/quantitykind/Temperature'
+      'http://qudt.org/vocab/quantitykind/Temperature',
     );
     expect(result.uom.code).toBe('Cel');
     expect(result.value).toBe(23.5);
@@ -61,7 +61,7 @@ describe('parseQuantity', () => {
     expect(result.constraint!.intervals).toEqual([[-40, 85]]);
     expect(result.nilValues).toHaveLength(1);
     expect(result.nilValues![0].reason).toBe(
-      'http://www.opengis.net/def/nil/OGC/0/BelowDetectionRange'
+      'http://www.opengis.net/def/nil/OGC/0/BelowDetectionRange',
     );
   });
 
@@ -173,10 +173,10 @@ describe('parseTime', () => {
     });
     expect(result.type).toBe('Time');
     expect(result.referenceFrame).toBe(
-      'http://www.opengis.net/def/trs/BIPM/0/UTC'
+      'http://www.opengis.net/def/trs/BIPM/0/UTC',
     );
     expect(result.uom.href).toBe(
-      'http://www.opengis.net/def/uom/ISO-8601/0/Gregorian'
+      'http://www.opengis.net/def/uom/ISO-8601/0/Gregorian',
     );
     expect(result.value).toBe('2024-06-15T12:00:00Z');
   });
@@ -457,7 +457,7 @@ describe('parseUnitOfMeasure', () => {
       href: 'http://www.opengis.net/def/uom/ISO-8601/0/Gregorian',
     });
     expect(result.href).toBe(
-      'http://www.opengis.net/def/uom/ISO-8601/0/Gregorian'
+      'http://www.opengis.net/def/uom/ISO-8601/0/Gregorian',
     );
     expect(result.code).toBeUndefined();
   });
@@ -492,7 +492,7 @@ describe('parseNilValues', () => {
     ]);
     expect(result).toHaveLength(1);
     expect(result[0].reason).toBe(
-      'http://www.opengis.net/def/nil/OGC/0/BelowDetectionRange'
+      'http://www.opengis.net/def/nil/OGC/0/BelowDetectionRange',
     );
     expect(result[0].value).toBe(-999);
   });
@@ -632,10 +632,10 @@ describe('parseSimpleComponent', () => {
 
   it('throws for unknown type', () => {
     expect(() => parseSimpleComponent({ type: 'Unknown' })).toThrow(
-      SweCommonParseError
+      SweCommonParseError,
     );
     expect(() => parseSimpleComponent({ type: 'Unknown' })).toThrow(
-      /Unknown simple component type/
+      /Unknown simple component type/,
     );
   });
 
@@ -674,12 +674,12 @@ describe('base property extraction', () => {
     expect(result.label).toBe('Temperature');
     expect(result.description).toBe('Ambient temperature');
     expect(result.definition).toBe(
-      'http://qudt.org/vocab/quantitykind/Temperature'
+      'http://qudt.org/vocab/quantitykind/Temperature',
     );
     expect(result.updatable).toBe(true);
     expect(result.optional).toBe(false);
     expect(result.referenceFrame).toBe(
-      'http://www.opengis.net/def/crs/EPSG/0/4326'
+      'http://www.opengis.net/def/crs/EPSG/0/4326',
     );
     expect(result.axisID).toBe('z');
   });
