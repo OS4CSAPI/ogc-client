@@ -8,6 +8,7 @@ import {
   type Provider,
   type OperationName,
   type OperationUrl,
+  TimeInterval,
 } from '../shared/models.js';
 import {
   findChildElement,
@@ -22,9 +23,13 @@ import {
 import {
   WmsLayerAttribution,
   WmsLayerDimension,
+  WmsLayerDimensionInterval,
+  WmsLayerDimensionValue,
   WmsLayerFull,
+  WmsLayerTimeDimension,
   WmsVersion,
 } from './model.js';
+import { parseIso8601Duration } from '../shared/time.js';
 
 /**
  * Will read all operation URLs from the capabilities doc
@@ -175,6 +180,171 @@ function parseOperation(operation: XmlElement): OperationUrl {
   return urls;
 }
 
+function parseNonTemporalValue(value: string | null): string | number | null {
+  const asNumber = Number.parseFloat(value);
+  return isNaN(asNumber) ? value : asNumber;
+}
+
+function parseDimensionValues(
+  values: string,
+):
+  | WmsLayerDimensionValue[]
+  | WmsLayerDimensionInterval
+  | WmsLayerDimensionInterval[] {
+  const isInterval = (val: string) => val.split('/').length === 3;
+  const separatedByCommas = values.split(',').map((s) => s.trim());
+  const parseInterval = (val: string) => {
+    const parts = val.split('/');
+    return {
+      begin: parseNonTemporalValue(parts[0]),
+      end: parseNonTemporalValue(parts[1]),
+      resolution: Number.parseFloat(parts[2]),
+    };
+  };
+  // single interval
+  if (separatedByCommas.length === 1 && isInterval(values)) {
+    return parseInterval(values);
+  }
+  return separatedByCommas.map((part) =>
+    isInterval(part) ? parseInterval(part) : parseNonTemporalValue(part),
+  ) as WmsLayerDimensionValue[] | WmsLayerDimensionInterval[];
+}
+
+function parseNonTemporalDimension(
+  dimensionEl: XmlElement,
+  extentEl?: XmlElement,
+): WmsLayerDimension {
+  const name = getElementAttribute(dimensionEl, 'name');
+  const units = getElementAttribute(dimensionEl, 'units');
+  const unitSymbol = getElementAttribute(dimensionEl, 'unitSymbol');
+  const defaultValue = parseNonTemporalValue(
+    getElementAttribute(extentEl, 'default'),
+  );
+  const values = extentEl
+    ? parseDimensionValues(getElementText(extentEl).trim())
+    : null;
+  const nearestValue = getElementAttribute(extentEl, 'nearestValue');
+  const multipleValues = getElementAttribute(extentEl, 'multipleValues');
+
+  return {
+    name,
+    units,
+    ...(unitSymbol && { unitSymbol }),
+    ...(defaultValue && { defaultValue }),
+    values, // will be null if we could not parse values
+    nearestValue: nearestValue === '1' || nearestValue === 'true',
+    multipleValues: multipleValues === '1' || multipleValues === 'true',
+  };
+}
+
+function parseTemporalValue(value: string | null): Date | null {
+  if (value === null) return null;
+  const asDate = new Date(value);
+  return isNaN(asDate.getTime()) ? null : asDate;
+}
+
+function parseTemporalDimensionValues(
+  values: string,
+): Date[] | TimeInterval | TimeInterval[] {
+  if (!values) {
+    return null;
+  }
+  const isInterval = (val: string) => val.split('/').length === 3;
+  const separatedByCommas = values.split(',').map((s) => s.trim());
+  const parseInterval = (val: string) => {
+    const parts = val.split('/');
+    return {
+      begin: parseTemporalValue(parts[0]),
+      end: parseTemporalValue(parts[1]),
+      period: parseIso8601Duration(parts[2]),
+    };
+  };
+  // single interval
+  if (separatedByCommas.length === 1 && isInterval(values)) {
+    return parseInterval(values);
+  }
+  return separatedByCommas.map((part) =>
+    isInterval(part) ? parseInterval(part) : parseTemporalValue(part),
+  ) as Date[] | TimeInterval[];
+}
+
+function parseTemporalDimension(
+  dimensionEl: XmlElement,
+  extentEl?: XmlElement,
+): WmsLayerTimeDimension {
+  const name = getElementAttribute(dimensionEl, 'name');
+  const defaultValue = parseTemporalValue(
+    getElementAttribute(extentEl, 'default'),
+  );
+  const values = extentEl
+    ? parseTemporalDimensionValues(getElementText(extentEl).trim())
+    : null;
+  const nearestValue = getElementAttribute(extentEl, 'nearestValue');
+  const multipleValues = getElementAttribute(extentEl, 'multipleValues');
+  const current = getElementAttribute(extentEl, 'current');
+
+  return {
+    name,
+    isTime: true,
+    ...(defaultValue && { defaultValue }),
+    values, // will be null if we could not parse values
+    nearestValue: nearestValue === '1' || nearestValue === 'true',
+    multipleValues: multipleValues === '1' || multipleValues === 'true',
+    current: current === '1' || current === 'true',
+  };
+}
+
+function parseDimensions(
+  layerEl: XmlElement,
+  version: WmsVersion,
+): (WmsLayerDimension | WmsLayerTimeDimension)[] {
+  return (
+    findChildrenElement(layerEl, 'Dimension')
+      .map((dimEl) => {
+        const name = getElementAttribute(dimEl, 'name');
+        const units = getElementAttribute(dimEl, 'units');
+        const extentEl =
+          version === '1.3.0'
+            ? dimEl
+            : findChildrenElement(layerEl, 'Extent').find(
+                (extentEl) => getElementAttribute(extentEl, 'name') === name,
+              );
+        const isTemporal = units === 'ISO8601' || name === 'time';
+        return isTemporal
+          ? parseTemporalDimension(dimEl, extentEl)
+          : parseNonTemporalDimension(dimEl, extentEl);
+      })
+      // filter out dimensions with no values specified (they are not usable)
+      .filter((dimension) => dimension.values !== null)
+  );
+}
+
+function getDimensionsWithNewExtent(
+  layerEl: XmlElement,
+  inheritedDimensions: (WmsLayerDimension | WmsLayerTimeDimension)[],
+): (WmsLayerDimension | WmsLayerTimeDimension)[] {
+  return findChildrenElement(layerEl, 'Extent')
+    .map((extentEl) => {
+      const name = getElementAttribute(extentEl, 'name');
+      const foundDim = inheritedDimensions.find((dim) => dim.name === name);
+      if (!foundDim) {
+        return null;
+      }
+      const valuesStr = getElementText(extentEl).trim();
+      const values =
+        'isTime' in foundDim
+          ? parseTemporalDimensionValues(valuesStr)
+          : parseDimensionValues(valuesStr);
+      return {
+        ...foundDim,
+        values,
+      };
+    })
+    .filter(
+      (dim): dim is WmsLayerTimeDimension | WmsLayerDimension => dim !== null,
+    );
+}
+
 /**
  * Parse a layer in a capabilities doc
  */
@@ -187,7 +357,7 @@ function parseLayer(
   inheritedBoundingBoxes: Record<CrsCode, BoundingBox> = null,
   inheritedMaxScaleDenom: number = null,
   inheritedMinScaleDenom: number = null,
-  inheritedDimensions: WmsLayerDimension[] = [],
+  inheritedDimensions: (WmsLayerDimension | WmsLayerTimeDimension)[] = [],
 ): WmsLayerFull {
   const srsTag = version === '1.3.0' ? 'CRS' : 'SRS';
   const srsList = findChildrenElement(layerEl, srsTag).map(getElementText);
@@ -240,52 +410,6 @@ function parseLayer(
   function parseScaleDenominator(name, inheritedValue) {
     const textValue = getElementText(findChildElement(layerEl, name));
     return textValue === '' ? inheritedValue : parseFloat(textValue);
-  }
-  function parseDimensionValues(el: XmlElement): string[] {
-    return getElementText(el)
-      .split(',')
-      .map((value) => value.trim())
-      .filter((value) => value !== '');
-  }
-  // In WMS 1.3.0 the dimension values and their attributes are held directly
-  // by the Dimension element. In WMS 1.1.1 the Dimension element only holds
-  // the metadata (name, units, unitSymbol) while the values and their
-  // attributes (default, nearestValue, multipleValues, current) live in a
-  // sibling Extent element sharing the same name.
-  function parseDimensions(): WmsLayerDimension[] {
-    return (
-      findChildrenElement(layerEl, 'Dimension')
-        .map((dimEl) => {
-          const name = getElementAttribute(dimEl, 'name');
-          const units = getElementAttribute(dimEl, 'units');
-          const unitSymbol = getElementAttribute(dimEl, 'unitSymbol');
-          const valueSource =
-            version === '1.3.0'
-              ? dimEl
-              : (findChildrenElement(layerEl, 'Extent').find(
-                  (extentEl) => getElementAttribute(extentEl, 'name') === name,
-                ) ?? null);
-          const dimension: WmsLayerDimension = {
-            name,
-            units,
-            defaultValue: getElementAttribute(valueSource, 'default'),
-            values: valueSource ? parseDimensionValues(valueSource) : [],
-            nearestValue:
-              getElementAttribute(valueSource, 'nearestValue') === '1',
-            multipleValues:
-              getElementAttribute(valueSource, 'multipleValues') === '1',
-            current: getElementAttribute(valueSource, 'current') === '1',
-          };
-          if (unitSymbol) {
-            dimension.unitSymbol = unitSymbol;
-          }
-          return dimension;
-        })
-        // A dimension with no resolvable values is not actionable (e.g. a WMS
-        // 1.1.1 Dimension with no matching Extent, or an empty Extent); drop it
-        // so every entry exposed is usable.
-        .filter((dimension) => dimension.values.length > 0)
-    );
   }
   const attributionEl = findChildElement(layerEl, 'Attribution');
   const attribution =
@@ -360,13 +484,19 @@ function parseLayer(
   // Dimensions are inheritable per the WMS spec: a child layer inherits its
   // ancestors' dimensions, and a dimension it redefines with the same name
   // replaces the inherited one.
-  const ownDimensions = parseDimensions();
-  const dimensions = [
-    ...inheritedDimensions.filter(
+  const ownDimensions = parseDimensions(layerEl, version);
+  let notMyOwnDimensions = inheritedDimensions.filter(
+    (inherited) => !ownDimensions.some((own) => own.name === inherited.name),
+  );
+  if (version !== '1.3.0') {
+    ownDimensions.push(
+      ...getDimensionsWithNewExtent(layerEl, notMyOwnDimensions),
+    );
+    notMyOwnDimensions = inheritedDimensions.filter(
       (inherited) => !ownDimensions.some((own) => own.name === inherited.name),
-    ),
-    ...ownDimensions,
-  ];
+    );
+  }
+  const dimensions = [...notMyOwnDimensions, ...ownDimensions];
 
   const children = findChildrenElement(layerEl, 'Layer').map((layer) =>
     parseLayer(
@@ -381,6 +511,17 @@ function parseLayer(
       dimensions,
     ),
   );
+
+  const timeDimension = dimensions.find(
+    (d) => d.name === 'time',
+  ) as WmsLayerTimeDimension;
+  const elevationDimension = dimensions.find(
+    (d) => d.name === 'elevation',
+  ) as WmsLayerDimension;
+  const otherDimensions = dimensions.filter(
+    (d) => d.name !== 'time' && d.name !== 'elevation',
+  );
+
   return {
     name: getElementText(findChildElement(layerEl, 'Name')),
     title: getElementText(findChildElement(layerEl, 'Title')),
@@ -395,8 +536,10 @@ function parseLayer(
     ...(minScaleDenominator !== null ? { minScaleDenominator } : {}),
     ...(maxScaleDenominator !== null ? { maxScaleDenominator } : {}),
     ...(metadata.length && { metadata }),
-    ...(dimensions.length && { dimensions }),
     ...(children.length && { children }),
+    ...(timeDimension && { timeDimension }),
+    ...(elevationDimension && { elevationDimension }),
+    ...(otherDimensions.length && { otherDimensions }),
   };
 }
 

@@ -32,13 +32,27 @@ function processClass(apiElement) {
   );
   const properties = apiElement.children.filter(
     (item) =>
-      item.kind & 262144 /* ReflectionKind.Accessor */ &&
+      (item.kind & 262144 /* ReflectionKind.Accessor */ ||
+        item.kind & 1024) /* ReflectionKind.Property */ &&
       !item.flags?.isInherited,
   );
   const methods = apiElement.children.filter(
     (item) =>
-      item.kind & 2048 /* ReflectionKind.Method */ && !item.flags?.isInherited,
+      item.kind & 2048 /* ReflectionKind.Method */ &&
+      !item.flags?.isInherited &&
+      !item.flags?.isStatic,
   );
+  const staticMethods = apiElement.children
+    .filter(
+      (item) =>
+        item.kind & 2048 /* ReflectionKind.Method */ &&
+        !item.flags?.isInherited &&
+        item.flags?.isStatic,
+    )
+    .map((methodElement) => ({
+      ...methodElement,
+      name: `${apiElement.name}.${methodElement.name}`,
+    }));
 
   return {
     name: apiElement.name,
@@ -46,17 +60,26 @@ function processClass(apiElement) {
     importHtml: markdown(`\`\`\`js
 import { ${apiElement.name} } from '@camptocamp/ogc-client'
 \`\`\``),
-    constructorSignature: markdownInline(
-      formatConstructorToString(apiElement, constructorElement),
-    ),
-    constructor: processFunction(constructorElement),
-    constructorDescriptionHtml: markdown(getDescription(constructorElement)),
+    constructorSignature: constructorElement
+      ? markdownInline(
+          formatConstructorToString(apiElement, constructorElement),
+        )
+      : null,
+    constructor: constructorElement
+      ? processFunction(constructorElement)
+      : null,
+    constructorDescriptionHtml: constructorElement
+      ? markdown(getDescription(constructorElement))
+      : null,
     properties: properties.map((property) => ({
       name: property.name,
-      signature: markdownInline(formatTypeToString(property.getSignature.type)),
+      signature: markdownInline(
+        formatTypeToString(property.getSignature?.type ?? property.type),
+      ),
       descriptionHtml: markdown(getDescription(property)),
     })),
     methods: methods.map(processFunction),
+    staticMethods: staticMethods.map(processFunction),
     extends: apiElement.extendedTypes?.map((extended) => ({
       signature: markdownInline(formatTypeToString(extended)),
     })),
@@ -64,7 +87,7 @@ import { ${apiElement.name} } from '@camptocamp/ogc-client'
 }
 
 function processFunction(apiElement) {
-  const signature = apiElement?.signatures?.[0];
+  const signature = apiElement.signatures?.[0];
 
   return {
     name: apiElement.name,

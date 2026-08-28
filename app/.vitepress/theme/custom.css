@@ -83,3 +83,15 @@ a.VPSocialLink.no-icon svg {
 .pico select:focus {
   border-color: var(--vp-c-brand-1);
 }
+
+.vp-doc table {
+  display: table;
+  table-layout: auto;
+  width: 100%;
+}
+
+.vp-doc table th,
+.vp-doc table td {
+  min-width: 140px;
+  max-width: 300px;
+}

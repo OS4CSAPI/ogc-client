@@ -41,7 +41,7 @@
     <table v-if="!!apiElement.returns">
       <thead>
         <tr>
-          <th>Return type</th>
+          <th>Return&nbsp;type</th>
           <th>Description</th>
         </tr>
       </thead>

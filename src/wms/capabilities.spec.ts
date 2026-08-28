@@ -9,9 +9,11 @@ import capabilities130 from '../../fixtures/wms/capabilities-brgm-1-3-0.xml';
 // @ts-expect-error ts-migrate(7016)
 import capabilities111 from '../../fixtures/wms/capabilities-brgm-1-1-1.xml';
 // @ts-expect-error ts-migrate(7016)
-import dimensions130 from '../../fixtures/wms/capabilities-dimensions-1-3-0.xml';
+import capabilitiesIfremer130 from '../../fixtures/wms/capabilities-ifremer-1-3-0.xml';
 // @ts-expect-error ts-migrate(7016)
-import dimensions111 from '../../fixtures/wms/capabilities-dimensions-1-1-1.xml';
+import capabilitiesIfremer111 from '../../fixtures/wms/capabilities-ifremer-1-1-1.xml';
+// @ts-expect-error ts-migrate(7016)
+import capabilitiesIfremer110 from '../../fixtures/wms/capabilities-ifremer-1-1-0.xml';
 import { parseXmlString } from '../shared/xml-utils.js';
 import type { WmsLayerFull } from './model.js';
 
@@ -304,42 +306,211 @@ describe('WMS capabilities', () => {
   });
 
   describe('layer dimensions', () => {
-    // Same expected output for both versions: the parser normalizes the
-    // WMS 1.1.1 Dimension/Extent split into the 1.3.0 inline representation.
-    const expectedDimensions = [
-      {
-        name: 'time',
-        units: 'ISO8601',
-        defaultValue: '2024-01-02T00:00:00Z',
-        values: [
-          '2024-01-01T00:00:00Z',
-          '2024-01-02T00:00:00Z',
-          '2024-01-03T00:00:00Z',
+    const expectedLayers = [
+      expect.objectContaining({
+        timeDimension: {
+          defaultValue: new Date('2012-12-01T00:00:00.000Z'),
+          multipleValues: true,
+          name: 'time',
+          nearestValue: false,
+          values: [
+            new Date('2012-01-01T00:00:00.000Z'),
+            new Date('2012-02-01T00:00:00.000Z'),
+            new Date('2012-03-01T00:00:00.000Z'),
+            new Date('2012-04-01T00:00:00.000Z'),
+            new Date('2012-05-01T00:00:00.000Z'),
+            new Date('2012-06-01T00:00:00.000Z'),
+            new Date('2012-07-01T00:00:00.000Z'),
+            new Date('2012-08-01T00:00:00.000Z'),
+            new Date('2012-09-01T00:00:00.000Z'),
+            new Date('2012-10-01T00:00:00.000Z'),
+            new Date('2012-11-01T00:00:00.000Z'),
+            new Date('2012-12-01T00:00:00.000Z'),
+          ],
+          current: true,
+          isTime: true,
+        },
+        elevationDimension: {
+          defaultValue: -1,
+          multipleValues: false,
+          name: 'elevation',
+          nearestValue: false,
+          units: 'm',
+          values: [
+            -1, -3, -5, -10, -15, -20, -25, -30, -35, -40, -45, -50, -55, -60,
+            -65, -70, -75, -80, -85, -90, -95, -100, -110, -120, -130, -140,
+            -150, -160, -170, -180, -190, -200, -210, -220, -230, -240, -250,
+            -260, -270, -280, -290, -300, -310, -320, -330, -340, -350, -360,
+            -370, -380, -390, -400, -410, -420, -430, -440, -450, -460, -470,
+            -480, -490, -500, -510, -520, -530, -540, -550, -560, -570, -580,
+            -590, -600, -610, -620, -630, -640, -650, -660, -670, -680, -690,
+            -700, -710, -720, -730, -740, -750, -760, -770, -780, -790, -800,
+            -820, -840, -860, -880, -900, -920, -940, -960, -980, -1000, -1020,
+            -1040, -1060, -1080, -1100, -1120, -1140, -1160, -1180, -1200,
+            -1220, -1240, -1260, -1280, -1300, -1320, -1340, -1360, -1380,
+            -1400, -1420, -1440, -1460, -1480, -1500, -1520, -1540, -1560,
+            -1580, -1600, -1620, -1640, -1660, -1680, -1700, -1720, -1740,
+            -1760, -1780, -1800, -1820, -1840, -1860, -1880, -1900, -1920,
+            -1940, -1960, -1980, -2000, -2500, -3000, -3500, -4000, -4500,
+            -5000, -5500,
+          ],
+        },
+        otherDimensions: [
+          {
+            multipleValues: true,
+            name: 'text_dimension',
+            nearestValue: false,
+            units: 'my_units',
+            values: ['first', 'second', 'third'],
+          },
         ],
-        nearestValue: true,
-        multipleValues: true,
-        current: true,
-      },
-      {
-        name: 'elevation',
-        units: 'EPSG:5030',
-        unitSymbol: 'm',
-        defaultValue: '0',
-        values: ['0', '1000', '3000'],
-        nearestValue: false,
-        multipleValues: false,
-        current: false,
-      },
+        name: 'BVF2',
+      }),
+      expect.objectContaining({
+        otherDimensions: [
+          {
+            multipleValues: true,
+            name: 'text_dimension',
+            nearestValue: false,
+            units: 'my_units',
+            values: ['first', 'second', 'third'],
+          },
+        ],
+        name: 'MNT_DIFF_2008_2012_DUNKERQUE_EST',
+      }),
+      expect.objectContaining({
+        timeDimension: {
+          current: false,
+          defaultValue: new Date('2024-12-18T00:00:00.000Z'),
+          isTime: true,
+          multipleValues: false,
+          name: 'time',
+          nearestValue: false,
+          values: [
+            new Date('2017-11-09T00:00:00.000Z'),
+            new Date('2018-03-07T00:00:00.000Z'),
+            new Date('2018-10-25T00:00:00.000Z'),
+            new Date('2019-03-27T00:00:00.000Z'),
+            new Date('2019-11-21T00:00:00.000Z'),
+            new Date('2020-06-16T00:00:00.000Z'),
+            new Date('2020-09-24T00:00:00.000Z'),
+            new Date('2021-06-23T00:00:00.000Z'),
+            new Date('2021-11-26T00:00:00.000Z'),
+            new Date('2022-05-12T00:00:00.000Z'),
+            new Date('2022-10-28T00:00:00.000Z'),
+            new Date('2023-05-04T00:00:00.000Z'),
+            new Date('2024-06-27T00:00:00.000Z'),
+            new Date('2024-12-18T00:00:00.000Z'),
+            new Date('2025-05-22T00:00:00.000Z'),
+          ],
+        },
+        otherDimensions: [
+          {
+            multipleValues: true,
+            name: 'text_dimension',
+            nearestValue: false,
+            units: 'my_units',
+            values: ['hello', 'world'],
+          },
+        ],
+        name: 'MNT_LeucateLaFranqui_2017_auj.',
+      }),
+      expect.objectContaining({
+        timeDimension: {
+          current: false,
+          defaultValue: new Date('2026-08-01T00:00:00.000Z'),
+          isTime: true,
+          multipleValues: false,
+          name: 'time',
+          nearestValue: false,
+          values: {
+            begin: new Date('2017-10-01T00:00:00.000Z'),
+            end: new Date('2026-08-01T00:00:00.000Z'),
+            period: {
+              days: 0,
+              hours: 0,
+              minutes: 1,
+              months: 0,
+              seconds: 0,
+              years: 0,
+            },
+          },
+        },
+        elevationDimension: {
+          multipleValues: false,
+          name: 'elevation',
+          nearestValue: false,
+          unitSymbol: 'm',
+          units: 'CRS:88',
+          values: {
+            begin: 0,
+            end: 10000,
+            resolution: 100,
+          },
+        },
+        otherDimensions: [
+          {
+            multipleValues: true,
+            name: 'text_dimension',
+            nearestValue: false,
+            units: 'my_units',
+            values: ['first', 'second', 'third'],
+          },
+          {
+            current: false,
+            isTime: true,
+            multipleValues: true,
+            name: 'SEASONAL_TIME',
+            nearestValue: false,
+            values: {
+              begin: new Date('2017-10-01T00:00:00.000Z'),
+              end: new Date('2026-08-01T00:00:00.000Z'),
+              period: {
+                days: 0,
+                hours: 0,
+                minutes: 1,
+                months: 0,
+                seconds: 0,
+                years: 0,
+              },
+            },
+          },
+          {
+            defaultValue: 300,
+            multipleValues: false,
+            name: 'temperature',
+            nearestValue: false,
+            unitSymbol: 'K',
+            units: 'Kelvin',
+            values: [230, 300, 400],
+          },
+        ],
+        name: 'SeasonalUserAliasLayer',
+      }),
     ];
     it('reads the dimensions (1.3.0)', () => {
-      const doc = parseXmlString(dimensions130);
-      const [layer] = readLayersFromCapabilities(doc)[0].children;
-      expect(layer.dimensions).toEqual(expectedDimensions);
+      const doc = parseXmlString(capabilitiesIfremer130);
+      const layers = readLayersFromCapabilities(doc)[0].children;
+      expect(layers).toEqual(expectedLayers);
+      expect(layers[1]).not.toHaveProperty('timeDimension');
+      expect(layers[1]).not.toHaveProperty('elevationDimension');
+      expect(layers[2]).not.toHaveProperty('elevationDimension');
     });
     it('reads the dimensions (1.1.1)', () => {
-      const doc = parseXmlString(dimensions111);
-      const [layer] = readLayersFromCapabilities(doc)[0].children;
-      expect(layer.dimensions).toEqual(expectedDimensions);
+      const doc = parseXmlString(capabilitiesIfremer111);
+      const layers = readLayersFromCapabilities(doc)[0].children;
+      expect(layers).toEqual(expectedLayers);
+      expect(layers[1]).not.toHaveProperty('timeDimension');
+      expect(layers[1]).not.toHaveProperty('elevationDimension');
+      expect(layers[2]).not.toHaveProperty('elevationDimension');
+    });
+    it('reads the dimensions (1.1.0)', () => {
+      const doc = parseXmlString(capabilitiesIfremer110);
+      const layers = readLayersFromCapabilities(doc)[0].children;
+      expect(layers).toEqual(expectedLayers);
+      expect(layers[1]).not.toHaveProperty('timeDimension');
+      expect(layers[1]).not.toHaveProperty('elevationDimension');
+      expect(layers[2]).not.toHaveProperty('elevationDimension');
     });
     it('skips a 1.1.1 Dimension with no matching Extent (no values)', () => {
       const doc = parseXmlString(`<?xml version="1.0"?>
@@ -355,7 +526,7 @@ describe('WMS capabilities', () => {
           </Capability>
         </WMT_MS_Capabilities>`);
       const [layer] = readLayersFromCapabilities(doc)[0].children;
-      expect(layer.dimensions).toBeUndefined();
+      expect(layer.timeDimension).toBeUndefined();
     });
     it('inherits parent dimensions, child redefinition overriding by name', () => {
       const doc = parseXmlString(`<?xml version="1.0"?>
@@ -374,26 +545,23 @@ describe('WMS capabilities', () => {
           </Capability>
         </WMS_Capabilities>`);
       const [layer] = readLayersFromCapabilities(doc)[0].children;
-      expect(layer.dimensions).toEqual([
-        {
-          name: 'time',
-          units: 'ISO8601',
-          defaultValue: '2024-01-01T00:00:00Z',
-          values: ['2024-01-01T00:00:00Z'],
-          nearestValue: false,
-          multipleValues: false,
-          current: false,
-        },
-        {
-          name: 'elevation',
-          units: 'EPSG:5030',
-          defaultValue: '3000',
-          values: ['3000', '5000'],
-          nearestValue: false,
-          multipleValues: false,
-          current: false,
-        },
-      ]);
+      expect(layer.timeDimension).toEqual({
+        name: 'time',
+        isTime: true,
+        defaultValue: new Date('2024-01-01T00:00:00Z'),
+        values: [new Date('2024-01-01T00:00:00Z')],
+        nearestValue: false,
+        multipleValues: false,
+        current: false,
+      });
+      expect(layer.elevationDimension).toEqual({
+        name: 'elevation',
+        units: 'EPSG:5030',
+        defaultValue: 3000,
+        values: [3000, 5000],
+        nearestValue: false,
+        multipleValues: false,
+      });
     });
   });
 

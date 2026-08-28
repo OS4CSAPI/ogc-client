@@ -3,15 +3,13 @@ import { useCache } from '../shared/cache.js';
 import { queryXmlDocument } from '../shared/http-utils.js';
 import { setQueryParams } from '../shared/url-utils.js';
 import {
-  BoundingBox,
-  CrsCode,
   GenericEndpointInfo,
   type HttpMethod,
-  MimeType,
   type OperationName,
   type OperationUrl,
 } from '../shared/models.js';
 import {
+  WmsGetMapUrlOptions,
   WmsLayerDescription,
   WmsLayerFull,
   WmsLayerSummary,
@@ -82,8 +80,8 @@ export default class WmsEndpoint {
    * Returns an array of layers in summary format; layers are organized in a tree
    * structure with each having an optional `children` property
    */
-  getLayers() {
-    function layerSummaryMapper(layerFull) {
+  getLayers(): WmsLayerSummary[] {
+    function layerSummaryMapper(layerFull: WmsLayerFull): WmsLayerSummary {
       return {
         title: layerFull.title,
         name: layerFull.name,
@@ -91,15 +89,15 @@ export default class WmsEndpoint {
         ...('children' in layerFull && {
           children: layerFull.children.map(layerSummaryMapper),
         }),
-      } as WmsLayerSummary;
+      };
     }
     return this._layers.map(layerSummaryMapper);
   }
 
   /**
-   * Returns a array of layers, same as WmsEndpoint.getLayers(), but flattened
+   * Returns an array of layers, same as WmsEndpoint.getLayers(), but flattened
    */
-  getFlattenedLayers() {
+  getFlattenedLayers(): WmsLayerSummary[] {
     return this.getLayers().flatMap(wmsLayerFlatten);
   }
 
@@ -157,32 +155,23 @@ export default class WmsEndpoint {
    * Returns a URL that can be used to query an image from one or several layers
    * @param layers List of layers to render
    * @param {Object} options
-   * @param {number} options.widthPx
-   * @param {number} options.heightPx
-   * @param {CrsCode} options.crs Coordinate reference system to use for the image
-   * @param {BoundingBox} options.extent Expressed in the requested CRS
-   * @param {MimeType} options.outputFormat
-   * @param {string} [options.styles] List of styles to use, one for each layer requested; leave out or use empty string for default style
-   * @param {Object} [options.dimensions] Dimension values keyed by uppercase dimension name (e.g. { TIME: '...' })
    * @returns Returns null if endpoint is not ready
    */
-  getMapUrl(
-    layers: string[],
-    options: {
-      widthPx: number;
-      heightPx: number;
-      crs: CrsCode;
-      extent: BoundingBox;
-      outputFormat: MimeType;
-      styles?: string[];
-      dimensions?: Record<string, string>;
-    },
-  ) {
+  getMapUrl(layers: string[], options: WmsGetMapUrlOptions) {
     if (!this._layers) {
       return null;
     }
-    const { widthPx, heightPx, crs, extent, outputFormat, styles, dimensions } =
-      options;
+    const {
+      widthPx,
+      heightPx,
+      crs,
+      extent,
+      outputFormat,
+      styles,
+      time,
+      elevation,
+      dimensions,
+    } = options;
     // TODO: check supported CRS
     // TODO: check supported output formats
     // TODO: check supported styles
@@ -196,6 +185,8 @@ export default class WmsEndpoint {
       extent,
       outputFormat,
       styles !== undefined ? styles.join(',') : '',
+      time,
+      elevation,
       dimensions,
     );
   }
@@ -262,7 +253,7 @@ export default class WmsEndpoint {
   }
 }
 
-function wmsLayerFlatten(layerFull) {
+function wmsLayerFlatten(layerFull: WmsLayerSummary): WmsLayerSummary[] {
   const layer = {
     title: layerFull.title,
     name: layerFull.name,

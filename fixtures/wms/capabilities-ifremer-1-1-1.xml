@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE WMT_MS_Capabilities SYSTEM "http://schemas.opengis.net/wms/1.1.1/capabilities_1_1_1.dtd">
+<WMT_MS_Capabilities
+        version="1.1.1"
+        updateSequence="2026-08-27T13:45:55.892Z"
+        xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Service Metadata -->
+    <Service>
+        <!-- The WMT-defined name for this type of service -->
+        <Name>OGC:WMS</Name>
+        <!-- Human-readable title for pick lists -->
+        <Title>Ifremer Thredds Data Server</Title>
+        <!-- Narrative description providing additional information -->
+        <Abstract>Scientific Data</Abstract>
+        <KeywordList>
+            <Keyword>meteorology</Keyword>
+            <Keyword>atmosphere</Keyword>
+            <Keyword>climate</Keyword>
+            <Keyword>ocean</Keyword>
+            <Keyword>earth science</Keyword>
+        </KeywordList>
+        <!-- Top-level web address of service or service provider. See also OnlineResource
+        elements under <DCPType>. -->
+        <OnlineResource xlink:type="simple" xlink:href="http://www.ifremer.fr/"/>
+        <!-- Contact information -->
+        <ContactInformation>
+            <ContactPersonPrimary>
+                <ContactPerson>Support</ContactPerson>
+                <ContactOrganization>Ifremer</ContactOrganization>
+            </ContactPersonPrimary>
+            <ContactVoiceTelephone></ContactVoiceTelephone>
+            <ContactElectronicMailAddress>assistance@ifremer.fr</ContactElectronicMailAddress>
+        </ContactInformation>
+        <!-- Fees or access constraints imposed. -->
+        <Fees>none</Fees>
+        <AccessConstraints>none</AccessConstraints>
+    </Service>
+    <Capability>
+        <Request>
+            <GetCapabilities>
+                <Format>application/vnd.ogc.wms_xml</Format>
+                <DCPType>
+                    <HTTP>
+                        <Get>
+                            <OnlineResource xlink:type="simple"
+                                            xlink:href="https://tds0.ifremer.fr/thredds/wms/LPO-GLOBAL-ISAS13-CLIM_TIME_SERIE"/>
+                        </Get>
+                    </HTTP>
+                </DCPType>
+            </GetCapabilities>
+            <GetMap>
+                <Format>image/png</Format>
+                <Format>image/png;mode=32bit</Format>
+                <Format>image/gif</Format>
+                <Format>image/jpeg</Format>
+                <Format>application/vnd.google-earth.kmz</Format>
+                <DCPType>
+                    <HTTP>
+                        <Get>
+                            <OnlineResource xlink:type="simple"
+                                            xlink:href="https://tds0.ifremer.fr/thredds/wms/LPO-GLOBAL-ISAS13-CLIM_TIME_SERIE"/>
+                        </Get>
+                    </HTTP>
+                </DCPType>
+            </GetMap>
+            <GetFeatureInfo>
+                <Format>image/png</Format>
+                <Format>text/xml</Format>
+                <DCPType>
+                    <HTTP>
+                        <Get>
+                            <OnlineResource xlink:type="simple"
+                                            xlink:href="https://tds0.ifremer.fr/thredds/wms/LPO-GLOBAL-ISAS13-CLIM_TIME_SERIE"/>
+                        </Get>
+                    </HTTP>
+                </DCPType>
+            </GetFeatureInfo>
+        </Request>
+        <Exception>
+            <Format>application/vnd.ogc.se_xml</Format>
+            <!--<Format>application/vnd.ogc.se_inimage</Format>
+            <Format>application/vnd.ogc.se_blank</Format>-->
+        </Exception>
+
+        <Layer>
+            <Title>Ifremer Thredds Data Server</Title>
+            <SRS>EPSG:4326</SRS>
+            <SRS>CRS:84</SRS>
+            <SRS>EPSG:41001</SRS>
+            <SRS>EPSG:27700</SRS>
+            <SRS>EPSG:3408</SRS>
+            <SRS>EPSG:3409</SRS>
+            <SRS>EPSG:3857</SRS>
+            <SRS>EPSG:900913</SRS>
+            <SRS>EPSG:32661</SRS>
+            <SRS>EPSG:32761</SRS>
+            <Dimension name="text_dimension" units="my_units"/>
+            <Extent name="text_dimension" multipleValues="1" nearestValue="0">first, second, third</Extent>
+            <Layer queryable="1">
+                <Name>BVF2</Name>
+                <Title>Brunt-Vaisala frequency squared</Title>
+                <Abstract>Brunt-Vaisala frequency squared</Abstract>
+                <LatLonBoundingBox minx="-180.0" maxx="179.5" miny="-77.0104751586914" maxy="89.8962631225586"/>
+                <BoundingBox SRS="EPSG:4326" minx="-180.0" maxx="179.5" miny="-77.0104751586914"
+                             maxy="89.8962631225586"/>
+                <Dimension name="elevation" units="m"/><!-- TODO: units correct? -->
+                <Dimension name="time" units="unknown"/>
+                <Extent name="elevation" default="-1.0">
+                    -1.0,-3.0,-5.0,-10.0,-15.0,-20.0,-25.0,-30.0,-35.0,-40.0,-45.0,-50.0,-55.0,-60.0,-65.0,-70.0,-75.0,-80.0,-85.0,-90.0,-95.0,-100.0,-110.0,-120.0,-130.0,-140.0,-150.0,-160.0,-170.0,-180.0,-190.0,-200.0,-210.0,-220.0,-230.0,-240.0,-250.0,-260.0,-270.0,-280.0,-290.0,-300.0,-310.0,-320.0,-330.0,-340.0,-350.0,-360.0,-370.0,-380.0,-390.0,-400.0,-410.0,-420.0,-430.0,-440.0,-450.0,-460.0,-470.0,-480.0,-490.0,-500.0,-510.0,-520.0,-530.0,-540.0,-550.0,-560.0,-570.0,-580.0,-590.0,-600.0,-610.0,-620.0,-630.0,-640.0,-650.0,-660.0,-670.0,-680.0,-690.0,-700.0,-710.0,-720.0,-730.0,-740.0,-750.0,-760.0,-770.0,-780.0,-790.0,-800.0,-820.0,-840.0,-860.0,-880.0,-900.0,-920.0,-940.0,-960.0,-980.0,-1000.0,-1020.0,-1040.0,-1060.0,-1080.0,-1100.0,-1120.0,-1140.0,-1160.0,-1180.0,-1200.0,-1220.0,-1240.0,-1260.0,-1280.0,-1300.0,-1320.0,-1340.0,-1360.0,-1380.0,-1400.0,-1420.0,-1440.0,-1460.0,-1480.0,-1500.0,-1520.0,-1540.0,-1560.0,-1580.0,-1600.0,-1620.0,-1640.0,-1660.0,-1680.0,-1700.0,-1720.0,-1740.0,-1760.0,-1780.0,-1800.0,-1820.0,-1840.0,-1860.0,-1880.0,-1900.0,-1920.0,-1940.0,-1960.0,-1980.0,-2000.0,-2500.0,-3000.0,-3500.0,-4000.0,-4500.0,-5000.0,-5500.0
+                </Extent>
+                <Extent name="time" multipleValues="1" current="1" default="2012-12-01T00:00:00.000Z">
+                    2012-01-01T00:00:00.000Z,2012-02-01T00:00:00.000Z,2012-03-01T00:00:00.000Z,2012-04-01T00:00:00.000Z,2012-05-01T00:00:00.000Z,2012-06-01T00:00:00.000Z,2012-07-01T00:00:00.000Z,2012-08-01T00:00:00.000Z,2012-09-01T00:00:00.000Z,2012-10-01T00:00:00.000Z,2012-11-01T00:00:00.000Z,2012-12-01T00:00:00.000Z
+                </Extent>
+                <Style>
+                    <Name>boxfill/rainbow</Name>
+                    <Title>boxfill/rainbow</Title>
+                    <Abstract>boxfill style, using the rainbow palette</Abstract>
+                    <LegendURL width="110" height="264">
+                        <Format>image/png</Format>
+                        <OnlineResource xlink:type="simple"
+                                        xlink:href="https://tds0.ifremer.fr/thredds/wms/LPO-GLOBAL-ISAS13-CLIM_TIME_SERIE?REQUEST=GetLegendGraphic&amp;LAYER=BVF2&amp;PALETTE=rainbow"/>
+                    </LegendURL>
+                </Style>
+                <Style>
+                    <Name>boxfill/occam</Name>
+                    <Title>boxfill/occam</Title>
+                    <Abstract>boxfill style, using the occam palette</Abstract>
+                    <LegendURL width="110" height="264">
+                        <Format>image/png</Format>
+                        <OnlineResource xlink:type="simple"
+                                        xlink:href="https://tds0.ifremer.fr/thredds/wms/LPO-GLOBAL-ISAS13-CLIM_TIME_SERIE?REQUEST=GetLegendGraphic&amp;LAYER=BVF2&amp;PALETTE=occam"/>
+                    </LegendURL>
+                </Style>
+            </Layer>
+            <Layer queryable="1" opaque="0" cascaded="0">
+                <Name>MNT_DIFF_2008_2012_DUNKERQUE_EST</Name>
+                <Title>MNT différentiel 2008-2012 Dunkerque-Est</Title>
+                <SRS>EPSG:2154</SRS>
+                <LatLonBoundingBox minx="2.43817" miny="51.0586" maxx="2.54948" maxy="51.0943"/>
+                <BoundingBox SRS="EPSG:2154"
+                             minx="660549" miny="7.10714e+06" maxx="668343" maxy="7.11107e+06"/>
+                <Dimension name="time" units="ISO8601"/>
+                <Extent name="time" default="" nearestValue="0"></Extent>
+                <Attribution>
+                    <Title>SNO DYNALIT</Title>
+                    <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="https://www.dynalit.fr/"/>
+                </Attribution>
+                <MetadataURL type="TC211">
+                    <Format>text/xml</Format>
+                    <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple"
+                                    xlink:href="https://sextant.ifremer.fr/services/wms/sno_dynalit_mapserver?request=GetMetadata&amp;layer=MNT_DIFF_2008_2012_DUNKERQUE_EST"/>
+                </MetadataURL>
+                <Style>
+                    <Name>default</Name>
+                    <Title>default</Title>
+                    <LegendURL width="99" height="90">
+                        <Format>image/png</Format>
+                        <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple"
+                                        xlink:href="https://sextant.ifremer.fr/services/wms/sno_dynalit_mapserver?version=1.1.1&amp;service=WMS&amp;request=GetLegendGraphic&amp;layer=MNT_DIFF_2008_2012_DUNKERQUE_EST&amp;format=image/png&amp;STYLE=default"/>
+                    </LegendURL>
+                </Style>
+            </Layer>
+            <Layer queryable="1" opaque="0" cascaded="0">
+                <Name>MNT_LeucateLaFranqui_2017_auj.</Name>
+                <Title>MNT de la plage de Leucate - La Franqui (WMS-T)</Title>
+                <SRS>EPSG:2154</SRS>
+                <LatLonBoundingBox minx="3.03634" miny="42.9298" maxx="3.0405" maxy="42.9375"/>
+                <BoundingBox SRS="EPSG:2154"
+                             minx="702969" miny="6.20338e+06" maxx="703309" maxy="6.20424e+06"/>
+                <Dimension name="time" units="ISO8601"/>
+                <Extent name="time" default="2024-12-18" nearestValue="0">
+                    2017-11-09,2018-03-07,2018-10-25,2019-03-27,2019-11-21,2020-06-16,2020-09-24,2021-06-23,2021-11-26,2022-05-12,2022-10-28,2023-05-04,2024-06-27,2024-12-18,2025-05-22
+                </Extent>
+                <Extent name="text_dimension">hello, world</Extent>
+                <Attribution>
+                    <Title>SNO DYNALIT</Title>
+                    <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="https://www.dynalit.fr/"/>
+                </Attribution>
+                <MetadataURL type="TC211">
+                    <Format>text/xml</Format>
+                    <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple"
+                                    xlink:href="http://sextant.ifremer.fr/geonetwork/srv/fre/csw?request=GetRecordById&amp;elementSetName=full&amp;service=CSW&amp;version=2.0.2&amp;id=50fa9051-175a-4484-b2e6-ec409657b37a&amp;OutputSchema=http://www.isotc211.org/2005/gmd"/>
+                </MetadataURL>
+                <Style>
+                    <Name>default</Name>
+                    <Title>default</Title>
+                    <LegendURL width="77" height="39">
+                        <Format>image/png</Format>
+                        <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple"
+                                        xlink:href="https://sextant.ifremer.fr/services/wms/sno_dynalit_mapserver?version=1.1.1&amp;service=WMS&amp;request=GetLegendGraphic&amp;layer=MNT_LeucateLaFranqui_2017_auj.&amp;format=image/png&amp;STYLE=default"/>
+                    </LegendURL>
+                </Style>
+            </Layer>
+            <Layer queryable="1" opaque="0" cascaded="0">
+                <Name>SeasonalUserAliasLayer</Name>
+                <Title>Seasonal Outlook - Points and Rivers</Title>
+                <Abstract>Alias layer to return data from RPG80 and rivermap_4mon in a single layer.</Abstract>
+                <KeywordList>
+                    <Keyword>queryable=true</Keyword>
+                    <Keyword>animation_dimension=SEASONAL_TIME</Keyword>
+                    <Keyword>order=9</Keyword>
+                </KeywordList>
+                <SRS>EPSG:4326</SRS>
+                <LatLonBoundingBox minx="-177.150000" miny="-51.750000" maxx="179.450000" maxy="80.150000"/>
+                <BoundingBox SRS="EPSG:3857"
+                             minx="-1.97202e+07" miny="-6.75505e+06" maxx="1.99763e+07" maxy="1.56356e+07"/>
+                <BoundingBox SRS="EPSG:900913"
+                             minx="-1.97202e+07" miny="-6.75505e+06" maxx="1.99763e+07" maxy="1.56356e+07"/>
+                <BoundingBox SRS="EPSG:4326"
+                             minx="-177.150000" miny="-51.750000" maxx="179.450000" maxy="80.150000"/>
+                <BoundingBox SRS="EPSG:66666"
+                             minx="-1.26881e+07" miny="-1.25674e+07" maxx="1.27367e+07" maxy="1.2114e+07"/>
+                <Dimension name="time" units="ISO8601"/>
+                <Extent name="time" default="2026-08" nearestValue="0">2017-10/2026-08/PT1M</Extent>
+                <Dimension name="SEASONAL_TIME" units="ISO8601"/>
+                <Extent name="SEASONAL_TIME" default="2017-10/2026-08/PT1M" multipleValues="1" nearestValue="0">
+                    2017-10/2026-08/PT1M
+                </Extent>
+                <Dimension name="elevation" units="CRS:88" unitSymbol="m"/>
+                <Extent name="elevation" default="0">0/10000/100</Extent>
+                <Dimension name="temperature" units="Kelvin" unitSymbol="K"/>
+                <Extent name="temperature" default="300">230,300,400</Extent>
+                <MetadataURL type="TC211">
+                    <Format>text/xml</Format>
+                    <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple"
+                                    xlink:href="https://ows.globalfloods.eu/glofas-ows/ows.py?request=GetMetadata&amp;layer=SeasonalUserAliasLayer"/>
+                </MetadataURL>
+            </Layer>
+        </Layer>
+    </Capability>
+</WMT_MS_Capabilities>

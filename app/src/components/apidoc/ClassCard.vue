@@ -15,8 +15,11 @@
     <MarkdownBlock :html="apiElement.importHtml"></MarkdownBlock>
     <MarkdownBlock :html="apiElement.descriptionHtml" />
 
-    <h4>📦 Constructor</h4>
-    <CodeBlock :html="apiElement.constructorSignature"></CodeBlock>
+    <h4 v-if="apiElement.constructor">📦 Constructor</h4>
+    <CodeBlock
+      v-if="apiElement.constructor"
+      :html="apiElement.constructorSignature"
+    ></CodeBlock>
     <table v-if="apiElement.constructor?.parameters?.length > 0">
       <thead>
         <tr>
@@ -51,7 +54,7 @@
       <CodeBlock :html="extended.signature"></CodeBlock>
     </template>
 
-    <h4 v-if="apiElement.properties?.length > 0">💡 Accessors</h4>
+    <h4 v-if="apiElement.properties?.length > 0">💡 Properties</h4>
     <table v-if="apiElement.properties?.length > 0">
       <thead>
         <tr>
@@ -77,7 +80,13 @@
       </tbody>
     </table>
 
-    <h4 v-if="apiElement.methods?.length > 0">⚡️ Methods</h4>
+    <h4
+      v-if="
+        apiElement.methods?.length > 0 || apiElement.staticMethods?.length > 0
+      "
+    >
+      ⚡️ Methods
+    </h4>
     <template v-for="method in apiElement.methods" style="display: contents">
       <br />
       <h5>
@@ -111,7 +120,66 @@
       <table v-if="!!method.returns">
         <thead>
           <tr>
-            <th>Return type</th>
+            <th>Return&nbsp;type</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code v-html="method.returns"></code></td>
+            <td>
+              <MarkdownBlock
+                v-if="method.returnsDescriptionHtml"
+                class="mb-2 small"
+                :html="method.returnsDescriptionHtml"
+              />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <MarkdownBlock
+        v-if="method.descriptionHtml"
+        :html="method.descriptionHtml"
+      />
+    </template>
+    <template
+      v-for="method in apiElement.staticMethods"
+      style="display: contents"
+    >
+      <br />
+      <h5>
+        <Badge type="tip" text="static" />&nbsp;
+        <code>{{ method.name }}()</code>
+      </h5>
+      <CodeBlock :html="method.signature"></CodeBlock>
+      <table v-if="method.parameters?.length > 0">
+        <thead>
+          <tr>
+            <th>Parameter</th>
+            <th>Type</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="parameter in method.parameters">
+            <td>
+              <code>{{ parameter.name }}</code>
+            </td>
+            <td><code v-html="parameter.signature"></code></td>
+            <td>
+              <MarkdownBlock
+                v-if="parameter.descriptionHtml"
+                class="mb-2 small"
+                :html="parameter.descriptionHtml"
+              />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <table v-if="!!method.returns">
+        <thead>
+          <tr>
+            <th>Return&nbsp;type</th>
             <th>Description</th>
           </tr>
         </thead>
